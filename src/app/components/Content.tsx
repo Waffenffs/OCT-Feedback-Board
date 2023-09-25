@@ -128,7 +128,12 @@ export default function Content({ option, tag }: TContentOptions) {
     if (loading) return <div>Loading content...</div>;
 
     return (
-        <div className='w-full h-full flex flex-col max-sm:items-center gap-3 mt-5'>
+        <motion.div
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 2.5 }}
+            className='w-full h-full flex flex-col max-sm:items-center gap-3 mt-5'
+        >
             <AnimatePresence>
                 {feedbacks.map((feedback, index) => {
                     return (
@@ -159,6 +164,6 @@ export default function Content({ option, tag }: TContentOptions) {
                     );
                 })}
             </AnimatePresence>
-        </div>
+        </motion.div>
     );
 }

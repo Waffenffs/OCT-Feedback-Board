@@ -49,10 +49,16 @@ export default function FeedbackContent() {
         }
     }, [feedback]);
 
-    if (isLoading) return <div>Loading page...</div>;
+    if (isLoading) {
+        return (
+            <div className='w-screen h-screen bg-white'>
+                <h1>Loading feedback...</h1>
+            </div>
+        );
+    }
 
     function handleRedirectBack() {
-        router.back();
+        router.push("/main");
     }
 
     async function upvoteFeedback() {
@@ -104,13 +110,13 @@ export default function FeedbackContent() {
         <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7'>
             <header className='flex flex-col gap-3 w-full'>
                 <div className='w-full flex items-center justify-between'>
-                    <button className='flex flex-row items-center gap-1'>
+                    <button
+                        onClick={() => handleRedirectBack()}
+                        className='flex flex-row items-center gap-1'
+                    >
                         <BiSolidChevronLeft className='text-2xl text-blue-500' />
-                        <h2
-                            onClick={() => handleRedirectBack()}
-                            className='font-semibold tracking-wider text-[#373e68]'
-                        >
-                            Go Back
+                        <h2 className='font-semibold tracking-wider text-[#373e68]'>
+                            Home
                         </h2>
                     </button>
                     {isOwner && (
@@ -120,7 +126,7 @@ export default function FeedbackContent() {
                     )}
                 </div>
 
-                <article className='mt-5 feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-full md:border transition hover:shadow-xl duration-150 hover:-translate-y-2'>
+                <article className='mt-5 feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-full md:border transition duration-150'>
                     <div className='flex flex-row gap-5'>
                         <div className='md:block'>
                             <button
@@ -141,7 +147,7 @@ export default function FeedbackContent() {
                                 <p className='text-[#373e68] tracking-wide'>
                                     {feedback.reason}
                                 </p>
-                                <div className='bg-[#f2f4ff] flex justify-center items-center w-32 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
+                                <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
                                     {feedback.tag}
                                 </div>
                             </div>

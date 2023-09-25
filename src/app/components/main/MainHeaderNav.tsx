@@ -1,6 +1,5 @@
 "use client";
 
-import { BiSolidChevronDown } from "react-icons/bi";
 import { auth } from "@/app/firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -54,7 +53,11 @@ export function MainHeaderNav({
     }
 
     return (
-        <>
+        <motion.div
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 2 }}
+        >
             <nav className='md:hidden flex flex-col'>
                 <header className='flex flex-row items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-6 px-4'>
                     <section>
@@ -75,7 +78,7 @@ export function MainHeaderNav({
 
             <div className='md:rounded-xl lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'>
                 <div className='flex flex-row items-center gap-1 relative w-48'>
-                    <div className='hidden md:flex flex-row items-center gap-2 font-bold tracking-wider text-xl mr-10'>
+                    <div className='flex flex-row items-center gap-2 font-bold tracking-wider text-lg md:text-xl mr-10'>
                         <HiOutlineLightBulb className='text-3xl' />
                         <span>
                             {" "}
@@ -145,6 +148,6 @@ export function MainHeaderNav({
                     </span>
                 </button>
             </div>
-        </>
+        </motion.div>
     );
 }

@@ -25,11 +25,8 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     }
 
     return (
-        <article className='feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border transition hover:shadow-xl duration-150 hover:-translate-y-2'>
-            <Link
-                className='flex flex-row gap-5'
-                href={`/feedback/redirect?id=${props.id}`}
-            >
+        <article className='feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border transition duration-150'>
+            <div className='flex flex-row gap-5'>
                 <div className='md:block'>
                     <button
                         onClick={(e) => handleUpvoteClick(e)}
@@ -44,12 +41,14 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                 <div className='min-sm:hidden md:flex flex-row w-full justify-between'>
                     <div className='flex flex-col gap-4'>
                         <h1 className='font-extrabold tracking-wider text-[#373e68]'>
-                            {props.title}
+                            <Link href={`/feedback/redirect?id=${props.id}`}>
+                                {props.title}
+                            </Link>
                         </h1>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}
                         </p>
-                        <div className='bg-[#f2f4ff] flex justify-center items-center w-32 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
+                        <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
                             {props.tag}
                         </div>
                     </div>
@@ -60,7 +59,7 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                         </h3>
                     </div>
                 </div>
-            </Link>
+            </div>
             <footer className='flex flex-row items-center justify-between mt-5'>
                 <button
                     onClick={(e) => handleUpvoteClick(e)}

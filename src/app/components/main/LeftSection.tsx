@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
 
 type TLeftSectionProps = {
@@ -22,7 +24,12 @@ export default function LeftSection({
     }
 
     return (
-        <section className='hidden md:flex md:flex-row lg:flex-col md:gap-6 lg:gap-3 lg:w-1/4'>
+        <motion.div
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.5 }}
+            className='hidden md:flex md:flex-row lg:flex-col md:gap-6 lg:gap-3 lg:w-1/4'
+        >
             <div className='cursor-default bg-gradient-to-tr from-green-500 to-green-700 rounded-xl text-white pt-20 pb-4 px-7 shadow'>
                 <h1 className='font-semibold tracking-wide text-xl'>
                     Olivarez College Tagaytay
@@ -58,6 +65,6 @@ export default function LeftSection({
                     })}
                 </ul>
             </div>
-        </section>
+        </motion.div>
     );
 }
