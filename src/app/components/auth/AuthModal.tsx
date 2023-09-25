@@ -68,7 +68,7 @@ export default function AuthModal({
                             Login
                         </button>
                         <footer className='text-center mt-6 text-slate-600 text-sm max-w-[15rem]'>
-                            Do&apos;t have an account yet? You can{" "}
+                            Don&apos;t have an account yet? You can{" "}
                             <Link
                                 href='/register'
                                 className='cursor-pointer text-blue-500'
