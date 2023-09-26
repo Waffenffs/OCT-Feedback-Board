@@ -5,9 +5,10 @@ import { AuthContext } from "../context/AuthProvider";
 import { useRouter } from "next/navigation";
 import { MainHeaderNav } from "../components/main/MainHeaderNav";
 import { PostCreation } from "../components/main/PostCreation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Content from "../components/Content";
 import LeftSection from "../components/main/LeftSection";
+import SuccessPostCreationModal from "../components/SuccessPostCreationModal";
 
 export default function Main() {
     const router = useRouter();
@@ -16,6 +17,10 @@ export default function Main() {
 
     const [isNotMounted, setIsNotMounted] = useState(true);
     const [postCreationToggled, setPostCreationToggled] = useState(false);
+    const [latestCreatedFeedbackId, setLatestCreatedFeedbackId] =
+        useState<string>("undefined");
+    const [postCreationSuccessful, setPostCreationSuccessful] =
+        useState<boolean>(false);
     const [currentOption, setCurrentOption] = useState<
         "Most Upvotes" | "Least Upvotes" | "Date"
     >("Most Upvotes");
@@ -41,7 +46,15 @@ export default function Main() {
     // 2. Work on content page of feedback
 
     return (
-        <main className='w-screen h-screen bg-[#f7f8fd] md:flex lg:flex-row md:flex-col md:px-20 gap-10 lg:justify-center md:pt-7 overflow-y-auto relative'>
+        <main className='w-screen h-screen bg-[#f7f8fd] md:flex lg:flex-row lg:pt-10 md:flex-col gap-10 lg:justify-center overflow-x-hidden overflow-y-auto relative'>
+            <AnimatePresence>
+                {postCreationSuccessful && (
+                    <SuccessPostCreationModal
+                        setPostCreationSuccessful={setPostCreationSuccessful}
+                        latestCreatedFeedbackId={latestCreatedFeedbackId}
+                    />
+                )}
+            </AnimatePresence>
             <LeftSection
                 currentTag={currentTag}
                 setCurrentTag={setCurrentTag}
@@ -56,16 +69,11 @@ export default function Main() {
             </section>
             <AnimatePresence>
                 {postCreationToggled && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 1 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <PostCreation
-                            setPostCreationToggled={setPostCreationToggled}
-                        />
-                    </motion.div>
+                    <PostCreation
+                        setPostCreationToggled={setPostCreationToggled}
+                        setLatestCreatedFeedbackId={setLatestCreatedFeedbackId}
+                        setPostCreationSuccessful={setPostCreationSuccessful}
+                    />
                 )}
             </AnimatePresence>
         </main>

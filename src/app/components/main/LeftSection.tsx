@@ -28,7 +28,7 @@ export default function LeftSection({
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.5 }}
-            className='hidden md:flex md:flex-row lg:flex-col md:gap-6 lg:gap-3 lg:w-1/4'
+            className='hidden md:flex md:px-10 lg:px-0 md:py-5 lg:py-0 md:flex-row lg:flex-col md:gap-6 lg:gap-3 lg:w-1/4'
         >
             <div className='cursor-default bg-gradient-to-tr from-green-500 to-green-700 rounded-xl text-white pt-20 pb-4 px-7 shadow'>
                 <h1 className='font-semibold tracking-wide text-xl'>

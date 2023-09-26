@@ -76,7 +76,7 @@ export function MainHeaderNav({
                 </header>
             </nav>
 
-            <div className='md:rounded-xl lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'>
+            <div className='md:rounded-xl md:mx-10 lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'>
                 <div className='flex flex-row items-center gap-1 relative w-48'>
                     <div className='flex flex-row items-center gap-2 font-bold tracking-wider text-lg md:text-xl mr-10'>
                         <HiOutlineLightBulb className='text-3xl' />
