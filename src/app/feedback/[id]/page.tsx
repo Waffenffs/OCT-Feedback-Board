@@ -9,6 +9,7 @@ import { AuthContext } from "@/app/context/AuthProvider";
 import { BiSolidChevronLeft, BiSolidChevronUp } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/components/Loading";
 
 export default function FeedbackContent() {
     const id = useSearchParams().get("id");
@@ -51,8 +52,8 @@ export default function FeedbackContent() {
 
     if (isLoading) {
         return (
-            <div className='w-screen h-screen bg-white'>
-                <h1>Loading feedback...</h1>
+            <div className='w-screen h-screen bg-white flex justify-center items-center'>
+                <Loading />
             </div>
         );
     }
@@ -116,7 +117,7 @@ export default function FeedbackContent() {
                     >
                         <BiSolidChevronLeft className='text-2xl text-blue-500' />
                         <h2 className='font-semibold tracking-wider text-[#373e68]'>
-                            Home
+                            Main
                         </h2>
                     </button>
                     {isOwner && (

@@ -15,6 +15,7 @@ import FeedbackCard from "./main/FeedbackCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthProvider";
 import { FeedbackContext } from "../context/FeedbackProvider";
+import Loading from "./Loading";
 
 type TContentOptions = {
     option: "Most Upvotes" | "Least Upvotes" | "Date";
@@ -125,14 +126,20 @@ export default function Content({ option, tag }: TContentOptions) {
         }
     }, [feedbacks]);
 
-    if (loading) return <div>Loading content...</div>;
+    if (loading) {
+        return (
+            <div className='w-full h-full bg-white flex justify-center items-center'>
+                <Loading />
+            </div>
+        );
+    }
 
     return (
         <motion.div
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 2.5 }}
-            className='w-full h-full flex flex-col max-sm:items-center gap-3 mt-5'
+            className='w-full h-full flex flex-col max-sm:items-center gap-3 mt-5 md:px-10'
         >
             <AnimatePresence>
                 {feedbacks.map((feedback, index) => {
