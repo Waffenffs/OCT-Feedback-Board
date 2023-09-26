@@ -1,10 +1,8 @@
 Demo Account
 -------------
 
-email
-dummy123@gmail.com
-pass
-dummy123
+* email: dummy123@gmail.com
+* pass: dummy123
 
 # Features to Be Implemented
 - [ ] Modals
