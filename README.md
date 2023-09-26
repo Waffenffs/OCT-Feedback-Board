@@ -5,6 +5,7 @@ Demo Account
 * pass: dummy123
 
 # Features to Be Implemented
+- [ ] Animated Loading Component
 - [ ] Modals
 - [ ] Button Animations
 - [ ] Feedback/Suggestion Comment Section
