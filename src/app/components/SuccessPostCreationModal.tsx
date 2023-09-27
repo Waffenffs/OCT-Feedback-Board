@@ -1,6 +1,7 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { BsCheckLg } from "react-icons/bs";
 import { ImLink } from "react-icons/im";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 type TSuccessPostCreationModalProps = {
@@ -12,6 +13,8 @@ export default function SuccessPostCreationModal({
     setPostCreationSuccessful,
     latestCreatedFeedbackId,
 }: TSuccessPostCreationModalProps) {
+    const [clicked, setClicked] = useState(false);
+
     console.log(`Latest created feedback's ID: ${latestCreatedFeedbackId}`);
 
     return (
@@ -60,11 +63,21 @@ export default function SuccessPostCreationModal({
                         navigator.clipboard.writeText(
                             `${domain}/feedback/redirect?id=${latestCreatedFeedbackId}`
                         );
+
+                        setClicked(true);
+
+                        const unsubscribe = setTimeout(() => {
+                            setClicked(false);
+                        }, 1000);
+
+                        return () => clearTimeout(unsubscribe);
                     }}
                     className='flex flex-row justify-center w-full items-center gap-1 cursor-pointer'
                 >
                     <ImLink className='text-blue-500 text-2xl' />
-                    <span className='font-bold text-blue-500'>Copy Link</span>
+                    <span className='font-bold text-blue-500 whitespace-nowrap'>
+                        {!clicked ? "Copy Link" : "Link Copied!"}
+                    </span>
                 </button>
             </div>
         </motion.article>
