@@ -9,6 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import Content from "../components/Content";
 import LeftSection from "../components/main/LeftSection";
 import SuccessPostCreationModal from "../components/SuccessPostCreationModal";
+import Loading from "../components/Loading";
 
 export default function Main() {
     const router = useRouter();
@@ -21,9 +22,6 @@ export default function Main() {
         useState<string>("undefined");
     const [postCreationSuccessful, setPostCreationSuccessful] =
         useState<boolean>(false);
-    const [currentOption, setCurrentOption] = useState<
-        "Most Upvotes" | "Least Upvotes" | "Date"
-    >("Most Upvotes");
     const [currentTag, setCurrentTag] = useState<
         "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology"
     >("All");
@@ -37,13 +35,12 @@ export default function Main() {
     }, [isNotMounted, profile, router]);
 
     if (isNotMounted) {
-        return <div>Loading...</div>;
+        return (
+            <div className='w-screen h-screen bg-white flex justify-center items-center'>
+                <Loading />
+            </div>
+        );
     }
-
-    // TO-DO:
-    // 1. Work on desktop port of main
-    // Work on right section
-    // 2. Work on content page of feedback
 
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] md:flex lg:flex-row lg:pt-10 md:flex-col gap-10 lg:justify-center overflow-x-hidden overflow-y-auto relative'>
@@ -61,11 +58,9 @@ export default function Main() {
             />
             <section className='lg:w-3/5 '>
                 <MainHeaderNav
-                    currentOption={currentOption}
-                    setCurrentOption={setCurrentOption}
                     setPostCreationToggled={setPostCreationToggled}
                 />
-                <Content option={currentOption} tag={currentTag} />
+                <Content tag={currentTag} />
             </section>
             <AnimatePresence>
                 {postCreationToggled && (

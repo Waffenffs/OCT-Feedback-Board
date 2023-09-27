@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { BiSolidChevronLeft, BiSolidChevronUp } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/components/Loading";
 
@@ -110,7 +111,12 @@ export default function FeedbackContent() {
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7'>
             <header className='flex flex-col gap-3 w-full'>
-                <div className='w-full flex items-center justify-between'>
+                <motion.div
+                    initial={{ opacity: 0, scale: 1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className='w-full flex items-center justify-between'
+                >
                     <button
                         onClick={() => handleRedirectBack()}
                         className='flex flex-row items-center gap-1'
@@ -125,9 +131,14 @@ export default function FeedbackContent() {
                             Edit Feedback
                         </button>
                     )}
-                </div>
+                </motion.div>
 
-                <article className='mt-5 feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-full md:border transition duration-150'>
+                <motion.article
+                    initial={{ opacity: 0, scale: 1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1 }}
+                    className='mt-5 feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-full md:border transition duration-150'
+                >
                     <div className='flex flex-row gap-5'>
                         <div className='md:block'>
                             <button
@@ -177,7 +188,7 @@ export default function FeedbackContent() {
                             </h3>
                         </div>
                     </footer>
-                </article>
+                </motion.article>
             </header>
         </main>
     );

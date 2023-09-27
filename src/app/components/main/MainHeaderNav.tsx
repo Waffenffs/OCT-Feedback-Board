@@ -10,17 +10,9 @@ import { HiOutlineLightBulb } from "react-icons/hi";
 
 type TMainHeaderNav = {
     setPostCreationToggled: React.Dispatch<React.SetStateAction<boolean>>;
-    currentOption: "Most Upvotes" | "Least Upvotes" | "Date";
-    setCurrentOption: React.Dispatch<
-        React.SetStateAction<"Most Upvotes" | "Least Upvotes" | "Date">
-    >;
 };
 
-export function MainHeaderNav({
-    setPostCreationToggled,
-    currentOption,
-    setCurrentOption,
-}: TMainHeaderNav) {
+export function MainHeaderNav({ setPostCreationToggled }: TMainHeaderNav) {
     const contextValue = useContext(FeedbackContext);
     const { feedbackAmount } = contextValue || {};
 
@@ -43,13 +35,6 @@ export function MainHeaderNav({
             .catch((error) => {
                 console.log(`Error with signing out: ${error}`);
             });
-    }
-
-    function handleOptionSelection(
-        option: "Most Upvotes" | "Least Upvotes" | "Date"
-    ) {
-        setCurrentOption(option);
-        setOptionsActive((prevState) => !prevState);
     }
 
     return (
@@ -98,7 +83,7 @@ export function MainHeaderNav({
                         {currentOption}{" "}
                         <BiSolidChevronDown className='text-xl' />
                     </button> */}
-                    <AnimatePresence>
+                    {/* <AnimatePresence>
                         {optionsActive && (
                             <motion.div
                                 initial={{ opacity: 0, scale: 1 }}
@@ -137,7 +122,7 @@ export function MainHeaderNav({
                                 </ul>
                             </motion.div>
                         )}
-                    </AnimatePresence>
+                    </AnimatePresence> */}
                 </div>
                 <button
                     onClick={() => setPostCreationToggled(true)}
