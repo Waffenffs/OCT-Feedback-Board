@@ -10,6 +10,7 @@ import {
     updateDoc,
     doc,
     getDoc,
+    where,
 } from "firebase/firestore";
 import FeedbackCard from "./main/FeedbackCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,22 +19,28 @@ import { FeedbackContext } from "../context/FeedbackProvider";
 import Loading from "./Loading";
 
 type TContentOptions = {
-    option: "Most Upvotes" | "Least Upvotes" | "Date";
     tag: "All" | "Academic" | "Extracurricular" | "Technology" | "Faculty";
 };
 
-export default function Content({ option, tag }: TContentOptions) {
+export default function Content({ tag }: TContentOptions) {
     const [feedbacks, setFeedbacks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const { ...profileProps } = useContext(AuthContext);
     const contextValue = useContext(FeedbackContext);
-    const { feedbackAmount, setFeedbackContext } = contextValue || {};
+    const { setFeedbackContext } = contextValue || {};
     const { profile } = profileProps;
 
-    async function fetchContentByMostUpvotes() {
+    async function fetchContentInitially() {
         const postRef = collection(db, "posts");
-        const q = query(postRef, orderBy("upvotes", "desc"));
+
+        let q;
+
+        if (tag === "All") {
+            q = query(postRef, orderBy("upvotes", "desc"));
+        } else {
+            q = query(postRef, where("tag", "==", tag));
+        }
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const firestoreFeedbacks: any = [];
@@ -50,12 +57,12 @@ export default function Content({ option, tag }: TContentOptions) {
         return () => unsubscribe();
     }
 
-    async function upvoteFeedback(id: string) {
+    async function upvoteFeedback(userId: string) {
         try {
-            const feedbackRef = doc(db, "posts", id);
+            const feedbackRef = doc(db, "posts", userId);
             const feedbackSnap = await getDoc(feedbackRef);
 
-            if (alreadyUpvoted(id)) {
+            if (alreadyUpvoted(userId)) {
                 const filteredUpvoters = feedbackSnap
                     .data()
                     ?.upvoters.filter(
@@ -80,8 +87,8 @@ export default function Content({ option, tag }: TContentOptions) {
         }
     }
 
-    function alreadyUpvoted(id: string): boolean {
-        const feedback = feedbacks.filter((feedback) => feedback.id === id);
+    function alreadyUpvoted(userId: string): boolean {
+        const feedback = feedbacks.filter((feedback) => feedback.id === userId);
         const email = profile && profile.email;
 
         if (email !== undefined && email !== null) {
@@ -96,7 +103,6 @@ export default function Content({ option, tag }: TContentOptions) {
     }
 
     function sortFeedbacksByTag() {
-        // unshift & push
         let tagUpdatedFeedbacks: any[] = [];
 
         feedbacks.map((feedback) => {
@@ -111,7 +117,7 @@ export default function Content({ option, tag }: TContentOptions) {
     }
 
     useEffect(() => {
-        fetchContentByMostUpvotes();
+        fetchContentInitially();
         setLoading(false);
     }, [loading]);
 
