@@ -6,10 +6,8 @@ Demo Account
 
 # Features to Be Implemented
 - [x] Animated Loading Component
-- [ ] Modals
-- [ ] Button Animations
+- [ ] Modals (Posting Feedbacks, Comments)
 - [ ] Feedback/Suggestion Comment Section
-- [ ] Anonymity Options
-- [ ] Admin Powers (Review & Delete Feedbacks/Suggestions)
-- [ ] Feedback/Suggestion Review Phase
+- [ ] User Anonymity Options (Posting Feedbacks)
+- [ ] Admin Users (Review & Delete Feedbacks)
 - [ ] Rate Limit Features (Authentication & Posting)
