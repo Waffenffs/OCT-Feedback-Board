@@ -17,6 +17,9 @@ export default function Home() {
 
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
+    const [success, setSuccess] = useState<"Success" | "Unsuccessful" | null>(
+        null
+    );
 
     function loginUser(email: string, password: string) {
         signInWithEmailAndPassword(auth, email, password)
@@ -27,7 +30,11 @@ export default function Home() {
                     uid: userCredential.user.uid,
                 });
 
-                return router.push("/main");
+                setSuccess("Success");
+
+                setTimeout(() => {
+                    return router.push("/main");
+                }, 6000);
             })
             .catch((error) => {
                 setProfile({
@@ -35,6 +42,8 @@ export default function Home() {
                     email: "undefined",
                     uid: "undefined",
                 });
+
+                setSuccess("Unsuccessful");
 
                 console.error(`Error with authencation: ${error}`);
             });
@@ -54,6 +63,8 @@ export default function Home() {
                     passwordValue={loginPassword}
                     passwordHandler={setLoginPassword}
                     authHandler={loginUser}
+                    result={success}
+                    setResult={setSuccess}
                 />
             </motion.div>
             <motion.div
