@@ -1,4 +1,10 @@
+"use client";
+
 import { motion } from "framer-motion";
+import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "@/app/context/AuthProvider";
+import { db } from "@/app/firebase/firebaseConfig";
 
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
 
@@ -11,6 +17,17 @@ export default function LeftSection({
     currentTag,
     setCurrentTag,
 }: TLeftSectionProps) {
+    const [nameChangeDisabled, setNameChangeDisabled] = useState(true);
+    const [currentFeedbackCount, setCurrentFeedbackCount] = useState<
+        number | null
+    >(null);
+    const [currentIdentifier, setCurrentIdentifier] = useState<any | null>(
+        null
+    );
+
+    const { ...profileProps } = useContext(AuthContext);
+    const { profile } = profileProps;
+
     const tags: TTags[] = [
         "All",
         "Academic",
@@ -22,6 +39,40 @@ export default function LeftSection({
     function handleTagClick(tag: TTags) {
         setCurrentTag(tag);
     }
+
+    async function getUserProfile() {
+        const docRef = doc(db, "users", profile?.uid as string);
+        const unsubscribe = onSnapshot(docRef, (doc) => {
+            setCurrentIdentifier(doc.data()?.user_identifier);
+        });
+
+        return () => unsubscribe();
+    }
+
+    async function getUserFeedbacks() {
+        const postRef = collection(db, "posts");
+
+        let q = query(postRef, where("creator", "==", profile?.uid as string));
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const firestoreFeedbacks: any[] = [];
+
+            querySnapshot.forEach((doc) => {
+                firestoreFeedbacks.push(doc.data());
+            });
+
+            setCurrentFeedbackCount(firestoreFeedbacks.length);
+        });
+
+        return () => unsubscribe();
+    }
+
+    useEffect(() => {
+        if (profile) {
+            getUserProfile();
+            getUserFeedbacks();
+        }
+    }, []);
 
     return (
         <motion.div
@@ -65,6 +116,28 @@ export default function LeftSection({
                     })}
                 </ul>
             </div>
+
+            {currentIdentifier && (
+                <article className='mt-5 bg-white shadow border flex flex-col justify-start gap-1 p-5 text-sm'>
+                    <input
+                        value={currentIdentifier}
+                        disabled={nameChangeDisabled}
+                        className='font-semibold text-lg tracking-wider text-[#373e68] focus:outline-none cursor-pointer transition duration-150 hover:bg-gray-400 hover:text-white px-2 rounded'
+                    />
+                    <h4 className='text-sm font-semibold tracking-wider text-slate-500 px-2'>
+                        {profile?.email}
+                    </h4>
+
+                    <footer className='px-2 mt-5 flex flex-col justify-center items-center w-full'>
+                        <h1 className='text-2xl font-extrabold tracking-wider text-[#373e68]'>
+                            Feedbacks
+                        </h1>
+                        <h2 className='text-center self-center font-extrabold text-4xl tracking-wider text-blue-500'>
+                            {currentFeedbackCount}
+                        </h2>
+                    </footer>
+                </article>
+            )}
         </motion.div>
     );
 }

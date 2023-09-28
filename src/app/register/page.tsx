@@ -16,14 +16,18 @@ export default function Register() {
 
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
+    const [success, setSuccess] = useState<"Success" | "Unsuccessful" | null>(
+        null
+    );
 
     const { ...profileProps } = useContext(AuthContext);
-    const { profile, setProfile } = profileProps;
+    const { setProfile } = profileProps;
 
     async function initializeUserInstance(email: string, uid: any) {
         try {
             await setDoc(doc(db, "users", uid), {
                 email: email,
+                user_identifier: `User ${uid}`,
             });
         } catch (error) {
             throw new Error(`Error: ${error}`);
@@ -34,6 +38,8 @@ export default function Register() {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // If successful,
+                setSuccess("Success");
+
                 setProfile({
                     authenticated: true,
                     email: userCredential.user.email,
@@ -46,6 +52,8 @@ export default function Register() {
             })
             .catch((error) => {
                 // If unsuccessful, render an unsuccessful message.
+                setSuccess("Unsuccessful");
+
                 setProfile({
                     authenticated: false,
                     email: "undefined",
@@ -55,6 +63,8 @@ export default function Register() {
                 console.error(`Error with authentication: ${error}`);
             });
     }
+
+    // write data in storage in this format: /profile_pictures/${user_id_here}/${image_file_here}
 
     return (
         <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-3 justify-center items-center relative'>
@@ -70,6 +80,8 @@ export default function Register() {
                     passwordValue={registerPassword}
                     passwordHandler={setRegisterPassword}
                     authHandler={registerUser}
+                    result={success}
+                    setResult={setSuccess}
                 />
             </motion.div>
             <motion.div
