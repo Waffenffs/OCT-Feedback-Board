@@ -5,6 +5,9 @@ import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db } from "@/app/firebase/firebaseConfig";
+import { BiLogOutCircle } from "react-icons/bi";
+import { auth } from "@/app/firebase/firebaseConfig";
+import { signOut } from "firebase/auth";
 
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
 
@@ -65,6 +68,16 @@ export default function LeftSection({
         });
 
         return () => unsubscribe();
+    }
+
+    async function handleUserSignOut() {
+        signOut(auth)
+            .then(() => {
+                console.log("Successfully signed out.");
+            })
+            .catch((error) => {
+                throw new Error(`Error with signing out: ${error}`);
+            });
     }
 
     useEffect(() => {
@@ -128,7 +141,7 @@ export default function LeftSection({
                         {profile?.email}
                     </h4>
 
-                    <footer className='px-2 mt-5 flex flex-col justify-center items-center w-full'>
+                    <footer className='px-2 mt-10 flex flex-col justify-center items-center w-full'>
                         <h1 className='text-2xl font-extrabold tracking-wider text-[#373e68]'>
                             Feedbacks
                         </h1>
@@ -136,6 +149,14 @@ export default function LeftSection({
                             {currentFeedbackCount}
                         </h2>
                     </footer>
+
+                    <button
+                        onClick={() => handleUserSignOut()}
+                        className='mt-10 tracking-wider flex flex-row items-center gap-2 text-slate-400'
+                    >
+                        <BiLogOutCircle className='text-xl' />
+                        <h2 className='font-bold'>SIGN OUT</h2>
+                    </button>
                 </article>
             )}
         </motion.div>

@@ -67,7 +67,7 @@ export default function AuthModal({
                             placeholder='Your student email here...'
                             value={emailValue}
                             onChange={(e) => emailHandler(e.target.value)}
-                            className='placeholder:text-sm placeholder:tracking-wide mt-1 border rounded indent-2 outline-none py-2 w-full'
+                            className='placeholder:text-sm focus:outline-blue-400 placeholder:tracking-wide mt-1 border rounded indent-2 outline-none py-2 w-full'
                         />
                         <h3 className='font-semibold text-slate-500 tracking-wide text-sm mt-5'>
                             Password
@@ -77,7 +77,7 @@ export default function AuthModal({
                             placeholder='Your password here...'
                             value={passwordValue}
                             onChange={(e) => passwordHandler(e.target.value)}
-                            className='placeholder:text-sm placeholder:tracking-wide mt-1 border rounded indent-2 outline-none py-2 w-full'
+                            className='placeholder:text-sm placeholder:tracking-wide focus:outline-blue-400 mt-1 border rounded indent-2 outline-none py-2 w-full'
                         />
                     </div>
                     <div className='w-full flex flex-col justify-center items-center pb-5'>
@@ -118,7 +118,7 @@ export default function AuthModal({
                             placeholder='Your student email here...'
                             value={emailValue}
                             onChange={(e) => emailHandler(e.target.value)}
-                            className='placeholder:text-sm placeholder:tracking-wide mt-1 border rounded indent-2 outline-none py-2 w-full'
+                            className='placeholder:text-sm placeholder:tracking-wide focus:outline-blue-400 mt-1 border rounded indent-2 outline-none py-2 w-full'
                         />
                         <h3 className='font-semibold text-slate-500 tracking-wide text-sm mt-5'>
                             Password
@@ -128,7 +128,7 @@ export default function AuthModal({
                             placeholder='Your password here...'
                             value={passwordValue}
                             onChange={(e) => passwordHandler(e.target.value)}
-                            className='placeholder:text-sm placeholder:tracking-wide mt-1 border rounded indent-2 outline-none py-2 w-full'
+                            className='placeholder:text-sm placeholder:tracking-wide focus:outline-blue-400 mt-1 border rounded indent-2 outline-none py-2 w-full'
                         />
                     </div>
                     <div className='w-full flex flex-col justify-center items-center pb-5'>

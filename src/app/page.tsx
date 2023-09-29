@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/AuthProvider";
 import AuthModal from "./components/auth/AuthModal";
 import ImageModal from "./components/ImageModal";
@@ -9,6 +9,8 @@ import { motion } from "framer-motion";
 import { auth } from "./firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { AiOutlineArrowRight } from "react-icons/ai";
+import Link from "next/link";
 
 export default function Home() {
     const { ...profileProps } = useContext(AuthContext);
@@ -49,8 +51,12 @@ export default function Home() {
             });
     }
 
+    useEffect(() => {
+        console.log(`Authenticated: ${profile?.authenticated}`);
+    }, []);
+
     return (
-        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-3 justify-center items-center relative'>
+        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-7 justify-center items-center relative'>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -66,6 +72,17 @@ export default function Home() {
                     result={success}
                     setResult={setSuccess}
                 />
+                {profile?.authenticated && (
+                    <button className='transition hover mt-3 bg-green-600 rounded-xl shadow py-2 px-3'>
+                        <Link
+                            href='/main'
+                            className='font-extrabold text-sm tracking-wider text-white flex flex-row items-center gap-1'
+                        >
+                            <h3>Redirect to Main</h3>
+                            <AiOutlineArrowRight className='text-white text-xl' />
+                        </Link>
+                    </button>
+                )}
             </motion.div>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
