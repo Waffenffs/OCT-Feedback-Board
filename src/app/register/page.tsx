@@ -62,7 +62,9 @@ export default function Register() {
                     setShowModal(false);
                 }, 5000);
 
-                return router.push("/");
+                setTimeout(() => {
+                    return router.push("/");
+                }, 6000);
             })
             .catch((error) => {
                 setProfile({
