@@ -4,20 +4,27 @@ import AuthModal from "../components/auth/AuthModal";
 import { useState, useContext } from "react";
 import ImageModal from "../components/ImageModal";
 import IntroNavModal from "../components/IntroNavModal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { TStatusModalProps } from "../components/StatusModal";
+import StatusModal from "../components/StatusModal";
 
 export default function Register() {
     const router = useRouter();
 
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
-    const [success, setSuccess] = useState<"Success" | "Unsuccessful" | null>(
-        null
+    const [showModal, setShowModal] = useState(false);
+    const [statusModalProps, setStatusModalProps] = useState<TStatusModalProps>(
+        {
+            type: undefined,
+            isSuccess: undefined,
+            message: undefined,
+        }
     );
 
     const { ...profileProps } = useContext(AuthContext);
@@ -37,9 +44,6 @@ export default function Register() {
     function registerUser(email: string, password: string) {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // If successful,
-                setSuccess("Success");
-
                 setProfile({
                     authenticated: true,
                     email: userCredential.user.email,
@@ -48,17 +52,39 @@ export default function Register() {
 
                 initializeUserInstance(email, userCredential.user.uid);
 
+                setStatusModalProps({
+                    type: "user_authentication",
+                    isSuccess: true,
+                    message:
+                        "Successfully registered! We are pleased to have you as a member..",
+                });
+
+                setShowModal(true);
+
+                setTimeout(() => {
+                    setShowModal(false);
+                }, 5000);
+
                 return router.push("/");
             })
             .catch((error) => {
-                // If unsuccessful, render an unsuccessful message.
-                setSuccess("Unsuccessful");
-
                 setProfile({
                     authenticated: false,
                     email: "undefined",
                     uid: "undefined",
                 });
+
+                setStatusModalProps({
+                    type: "user_authentication",
+                    isSuccess: false,
+                    message: "Failed registering! You may shortly try again.",
+                });
+
+                setShowModal(true);
+
+                setTimeout(() => {
+                    setShowModal(false);
+                }, 5000);
 
                 console.error(`Error with authentication: ${error}`);
             });
@@ -68,6 +94,9 @@ export default function Register() {
 
     return (
         <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-3 justify-center items-center relative'>
+            <AnimatePresence>
+                {showModal && <StatusModal key={3} {...statusModalProps} />}
+            </AnimatePresence>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -80,8 +109,6 @@ export default function Register() {
                     passwordValue={registerPassword}
                     passwordHandler={setRegisterPassword}
                     authHandler={registerUser}
-                    result={success}
-                    setResult={setSuccess}
                 />
             </motion.div>
             <motion.div

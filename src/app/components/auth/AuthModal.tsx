@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import ButtonLoadingAnim from "../ButtonLoadingAnim";
-import { useEffect } from "react";
 
 type TAuthModalProps = {
     mode: "register" | "login";
@@ -11,10 +9,6 @@ type TAuthModalProps = {
     passwordValue: string;
     passwordHandler: React.Dispatch<React.SetStateAction<string>>;
     authHandler(email: string, password: string): void;
-    result: "Success" | "Unsuccessful" | null;
-    setResult: React.Dispatch<
-        React.SetStateAction<"Success" | "Unsuccessful" | null>
-    >;
 };
 
 export default function AuthModal({
@@ -24,24 +18,10 @@ export default function AuthModal({
     passwordValue,
     passwordHandler,
     authHandler,
-    result,
-    setResult,
 }: TAuthModalProps) {
     function handleSubmit(e: any) {
         e.preventDefault();
     }
-
-    function hideResult() {
-        const unsubscribe = setTimeout(() => {
-            setResult(null);
-        }, 5000);
-
-        return () => clearTimeout(unsubscribe);
-    }
-
-    useEffect(() => {
-        hideResult();
-    }, [result]);
 
     return (
         <form
@@ -87,13 +67,7 @@ export default function AuthModal({
                             }
                             className='w-36 mt-7 flex justify-center h-10 items-center md:mt-14 text-white font-semibold tracking-wide bg-gradient-to-tr from-emerald-500 to-lime-600 rounded py-2 px-10'
                         >
-                            {result === null && "Login"}
-                            {result !== null && (
-                                <ButtonLoadingAnim
-                                    key={"anim"}
-                                    result={result}
-                                />
-                            )}
+                            Login
                         </button>
                         <footer className='text-center mt-6 text-slate-600 text-sm max-w-[15rem]'>
                             Don&apos;t have an account yet? You can{" "}
@@ -138,13 +112,7 @@ export default function AuthModal({
                             }
                             className='w-36 mt-7 flex justify-center h-10 items-center md:mt-14 text-white font-semibold tracking-wide bg-gradient-to-tr from-emerald-500 to-lime-600 transition hover:bg-blue-500 rounded py-2 px-10'
                         >
-                            {result === null && "Register"}
-                            {result !== null && (
-                                <ButtonLoadingAnim
-                                    key={"anim"}
-                                    result={result}
-                                />
-                            )}
+                            Register
                         </button>
                         <footer className='text-center mt-6 text-slate-600 text-sm max-w-[15rem]'>
                             Already have an account? You can{" "}

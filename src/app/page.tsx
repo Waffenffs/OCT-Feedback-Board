@@ -5,12 +5,14 @@ import { AuthContext } from "./context/AuthProvider";
 import AuthModal from "./components/auth/AuthModal";
 import ImageModal from "./components/ImageModal";
 import IntroNavModal from "./components/IntroNavModal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "./firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import StatuSmodal from "./components/StatusModal";
 import Link from "next/link";
+import { TStatusModalProps } from "./components/StatusModal";
 
 export default function Home() {
     const { ...profileProps } = useContext(AuthContext);
@@ -19,8 +21,13 @@ export default function Home() {
 
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
-    const [success, setSuccess] = useState<"Success" | "Unsuccessful" | null>(
-        null
+    const [showModal, setShowModal] = useState(false);
+    const [statusModalProps, setStatusModalProps] = useState<TStatusModalProps>(
+        {
+            type: undefined,
+            isSuccess: undefined,
+            message: undefined,
+        }
     );
 
     function loginUser(email: string, password: string) {
@@ -32,7 +39,17 @@ export default function Home() {
                     uid: userCredential.user.uid,
                 });
 
-                setSuccess("Success");
+                setStatusModalProps({
+                    type: "user_authentication",
+                    isSuccess: true,
+                    message:
+                        "Successfully authenticated! We are shortly redirecting you.",
+                });
+                setShowModal(true);
+
+                setTimeout(() => {
+                    setShowModal(false);
+                }, 5000);
 
                 setTimeout(() => {
                     return router.push("/main");
@@ -45,9 +62,19 @@ export default function Home() {
                     uid: "undefined",
                 });
 
-                setSuccess("Unsuccessful");
-
                 console.error(`Error with authencation: ${error}`);
+
+                setStatusModalProps({
+                    type: "user_authentication",
+                    isSuccess: false,
+                    message:
+                        "Failed authenticating! You may shortly try again.",
+                });
+                setShowModal(true);
+
+                setTimeout(() => {
+                    setShowModal(false);
+                }, 5000);
             });
     }
 
@@ -57,10 +84,14 @@ export default function Home() {
 
     return (
         <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-7 justify-center items-center relative'>
+            <AnimatePresence>
+                {showModal && <StatuSmodal key={4} {...statusModalProps} />}
+            </AnimatePresence>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5 }}
+                className='relative'
             >
                 <AuthModal
                     mode='login'
@@ -69,11 +100,14 @@ export default function Home() {
                     passwordValue={loginPassword}
                     passwordHandler={setLoginPassword}
                     authHandler={loginUser}
-                    result={success}
-                    setResult={setSuccess}
                 />
                 {profile?.authenticated && (
-                    <button className='transition hover mt-3 bg-green-600 rounded-xl shadow py-2 px-3'>
+                    <motion.button
+                        initial={{ opacity: 0, scale: 1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1.5 }}
+                        className='transition absolute hover mt-3 bg-green-600 rounded-xl shadow py-2 px-3'
+                    >
                         <Link
                             href='/main'
                             className='font-extrabold text-sm tracking-wider text-white flex flex-row items-center gap-1'
@@ -81,7 +115,7 @@ export default function Home() {
                             <h3>Redirect to Main</h3>
                             <AiOutlineArrowRight className='text-white text-xl' />
                         </Link>
-                    </button>
+                    </motion.button>
                 )}
             </motion.div>
             <motion.div
