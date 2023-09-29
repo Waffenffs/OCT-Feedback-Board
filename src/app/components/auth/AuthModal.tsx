@@ -26,7 +26,7 @@ export default function AuthModal({
     return (
         <form
             onSubmit={(e) => handleSubmit(e)}
-            className='shadow-xl rounded-xl mt-8 z-10 bg-white md:w-96 md:h-[30rem]'
+            className='shadow-xl rounded-xl mt-8 z-10 bg-white w-80 md:w-96 md:h-[30rem]'
         >
             <header className='py-4 px-10 bg-gradient-to-tr from-emerald-500 to-lime-600 rounded-t-xl'>
                 <h1 className='text-center text-white text-xl tracking-wide font-semibold'>

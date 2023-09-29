@@ -10,7 +10,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { TStatusModalProps } from "../components/StatusModal";
 import StatusModal from "../components/StatusModal";
 
 export default function Register() {
@@ -19,13 +18,11 @@ export default function Register() {
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [statusModalProps, setStatusModalProps] = useState<TStatusModalProps>(
-        {
-            type: undefined,
-            isSuccess: undefined,
-            message: undefined,
-        }
-    );
+    const [statusModalProps, setStatusModalProps] = useState<any>({
+        type: undefined,
+        isSuccess: undefined,
+        message: undefined,
+    });
 
     const { ...profileProps } = useContext(AuthContext);
     const { setProfile } = profileProps;
@@ -93,14 +90,21 @@ export default function Register() {
     // write data in storage in this format: /profile_pictures/${user_id_here}/${image_file_here}
 
     return (
-        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-3 justify-center items-center relative'>
+        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row md:gap-3 justify-center items-center relative'>
             <AnimatePresence>
-                {showModal && <StatusModal key={3} {...statusModalProps} />}
+                {showModal && (
+                    <StatusModal
+                        key={3}
+                        {...statusModalProps}
+                        setShowModal={setShowModal}
+                    />
+                )}
             </AnimatePresence>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5 }}
+                className='max-sm:w-full flex justify-center items-center'
             >
                 <AuthModal
                     mode='register'

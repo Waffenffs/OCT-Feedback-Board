@@ -5,18 +5,20 @@ export type TStatusModalProps = {
     type: "user_authentication" | "user_database_write" | undefined;
     isSuccess: boolean | undefined;
     message: string | undefined;
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function StatusModal({
     type,
     isSuccess,
     message,
+    setShowModal,
 }: TStatusModalProps) {
     return (
         <motion.article
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -100 }}
+            exit={{ opacity: 0 }}
             className={`absolute top-0 ${
                 isSuccess ? "bg-green-500" : "bg-red-500"
             } mt-3 px-6 py-3 rounded shadow-xl text-sm text-white flex flex-row justify-between md:w-96 w-80`}
@@ -30,7 +32,7 @@ export default function StatusModal({
                 <p>{message}</p>
             </div>
 
-            <button>
+            <button onClick={() => setShowModal(false)}>
                 <AiOutlineClose className={`text-white text-2xl`} />
             </button>
         </motion.article>

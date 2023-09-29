@@ -10,9 +10,8 @@ import { auth } from "./firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import StatuSmodal from "./components/StatusModal";
+import StatusModal from "./components/StatusModal";
 import Link from "next/link";
-import { TStatusModalProps } from "./components/StatusModal";
 
 export default function Home() {
     const { ...profileProps } = useContext(AuthContext);
@@ -22,13 +21,11 @@ export default function Home() {
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [statusModalProps, setStatusModalProps] = useState<TStatusModalProps>(
-        {
-            type: undefined,
-            isSuccess: undefined,
-            message: undefined,
-        }
-    );
+    const [statusModalProps, setStatusModalProps] = useState<any>({
+        type: undefined,
+        isSuccess: undefined,
+        message: undefined,
+    });
 
     function loginUser(email: string, password: string) {
         signInWithEmailAndPassword(auth, email, password)
@@ -83,15 +80,22 @@ export default function Home() {
     }, []);
 
     return (
-        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row gap-7 justify-center items-center relative'>
+        <main className='w-screen h-screen bg-gradient-to-r from-gray-100 flex flex-row md:gap-3 justify-center items-center to-gray-300 relative'>
             <AnimatePresence>
-                {showModal && <StatuSmodal key={4} {...statusModalProps} />}
+                {showModal && (
+                    <StatusModal
+                        key={4}
+                        {...statusModalProps}
+                        setShowModal={setShowModal}
+                    />
+                )}
             </AnimatePresence>
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5 }}
-                className='relative'
+                // className='relative'
+                className='relative max-sm:w-full flex justify-center items-center'
             >
                 <AuthModal
                     mode='login'
