@@ -1,22 +1,22 @@
 "use client";
 
-import AuthModal from "../components/auth/AuthModal";
 import { useState, useContext } from "react";
-import ImageModal from "../components/ImageModal";
-import IntroNavModal from "../components/IntroNavModal";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { PiEyeClosedBold, PiEyeBold } from "react-icons/pi";
 import StatusModal from "../components/StatusModal";
+import Link from "next/link";
 
 export default function Register() {
     const router = useRouter();
 
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [statusModalProps, setStatusModalProps] = useState<any>({
         type: undefined,
@@ -92,41 +92,124 @@ export default function Register() {
     // write data in storage in this format: /profile_pictures/${user_id_here}/${image_file_here}
 
     return (
-        <main className='w-full h-full bg-gradient-to-r from-gray-100 to-gray-300 flex flex-row md:gap-3 justify-center items-center relative'>
+        <main className='w-screen h-screen relative flex max-sm:justify-center md:bg-[#e9e9e9] md:justify-between max-sm:items-center overflow-hidden'>
             <AnimatePresence>
                 {showModal && (
                     <StatusModal
-                        key={3}
+                        key={4}
                         {...statusModalProps}
                         setShowModal={setShowModal}
                     />
                 )}
             </AnimatePresence>
+
             <motion.div
-                initial={{ opacity: 0, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.5 }}
-                className='max-sm:w-full flex justify-center items-center'
+                // initial={{ opacity: 0 }}
+                // animate={{ opacity: 1 }}
+                // transition={{ delay: 0.5 }}
+                className='hidden md:flex w-full h-full items-center px-10'
             >
-                <AuthModal
-                    mode='register'
-                    emailValue={registerEmail}
-                    emailHandler={setRegisterEmail}
-                    passwordValue={registerPassword}
-                    passwordHandler={setRegisterPassword}
-                    authHandler={registerUser}
-                />
+                <img src='/icon2.svg' alt='' />
             </motion.div>
-            <motion.div
-                initial={{ opacity: 0, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2 }}
+
+            <motion.article
+                // initial={{ opacity: 0, y: 700 }}
+                // animate={{ opacity: 1, y: 0 }}
+                // transition={{ duration: 0.4, delay: 0.7 }}
+                // {...animationAttributes}
+                className='bg-white w-full h-full lg:w-[37rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'
             >
-                <section className='hidden lg:flex flex-col gap-5 justify-start w-[34rem]'>
-                    <ImageModal image_src='https://scontent.fmnl33-2.fna.fbcdn.net/v/t39.30808-6/370539419_699418412200273_5572877249608660172_n.jpg?stp=dst-jpg_s600x600&_nc_cat=106&ccb=1-7&_nc_sid=813123&_nc_eui2=AeESkJ1b7B-uH4E41tcDFtKF8ZL3aIQk8AzxkvdohCTwDOsRNn3VuiBrNwvzk7CL9nUTNwDYHe1Y66-6g12jryIB&_nc_ohc=BUV6wVn5_M0AX_aRJXm&_nc_ht=scontent.fmnl33-2.fna&oh=00_AfBEwDcVQkXU5dlv2dxJqxahdqOewYF7r6aGq4Qx3E9rfQ&oe=6511B799' />
-                    <IntroNavModal />
-                </section>
-            </motion.div>
+                <div className='w-28 h-28 mt-14 md:w-24 md:h-24 md:mt-8'>
+                    <img src='/oct-logo.png' className='object-cover' />
+                </div>
+
+                <header className='text-center'>
+                    <h1 className='font-extrabold tracking-wider text-3xl md:text-2xl mb-3 text-slate-800'>
+                        We&apos;re pleased to have you!
+                    </h1>
+                    <h3 className='font-semibold text-sm tracking-wide text-slate-500'>
+                        Please enter your details
+                    </h3>
+                </header>
+
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        registerUser(registerEmail, registerPassword);
+                    }}
+                    className='w-80 md:w-64 lg:w-72 flex flex-col gap-10 relative'
+                >
+                    <div className='relative z-0'>
+                        <input
+                            type='text'
+                            id='floating_standard'
+                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                            placeholder=' '
+                            value={registerEmail}
+                            onChange={(e) => setRegisterEmail(e.target.value)}
+                        />
+                        <label
+                            htmlFor='floating_standard'
+                            className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
+                        >
+                            Email
+                        </label>
+                    </div>
+
+                    <div className='relative z-0 flex items-center'>
+                        <input
+                            type={`${showPassword ? "text" : "password"}`}
+                            id='floating_standard'
+                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                            placeholder=' '
+                            value={registerPassword}
+                            onChange={(e) =>
+                                setRegisterPassword(e.target.value)
+                            }
+                        />
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowPassword((prevState) => !prevState);
+                            }}
+                            className='absolute right-3 cursor-pointer bg-white'
+                        >
+                            {showPassword ? (
+                                <PiEyeBold className='text-xl' />
+                            ) : (
+                                <PiEyeClosedBold className='text-xl' />
+                            )}
+                        </button>
+                        <label
+                            htmlFor='floating_standard'
+                            className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
+                        >
+                            Password
+                        </label>
+                    </div>
+
+                    <footer className='mt-10 flex flex-col'>
+                        <button
+                            onClick={() =>
+                                registerUser(registerEmail, registerEmail)
+                            }
+                            className='w-full focus:outline-none rounded-2xl bg-green-600 text-white py-2 text-xl font-semibold shadow'
+                        >
+                            <h2>Sign Up</h2>
+                        </button>
+                    </footer>
+                </form>
+
+                <h4 className='text-sm font-semibold text-slate-500 text-center absolute bottom-8 tracking-wider'>
+                    Already have an account?{" "}
+                    <Link
+                        href='/'
+                        className='font-extrabold text-blue-400 tracking-wider'
+                    >
+                        Log In
+                    </Link>
+                </h4>
+            </motion.article>
         </main>
     );
 }
