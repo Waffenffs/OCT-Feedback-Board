@@ -77,10 +77,6 @@ export default function Home() {
         console.log(`Authenticated: ${profile?.authenticated}`);
     }, []);
 
-    // TO-DO:
-    // 1. Rework /register
-    // 2. Add animations for /page and /register
-
     return (
         <main className='w-screen h-screen relative flex max-sm:justify-center md:bg-[#e9e9e9] md:justify-between max-sm:items-center overflow-hidden'>
             <AnimatePresence>
@@ -93,22 +89,11 @@ export default function Home() {
                 )}
             </AnimatePresence>
 
-            <motion.div
-                // initial={{ opacity: 0 }}
-                // animate={{ opacity: 1 }}
-                // transition={{ delay: 0.5 }}
-                className='hidden md:flex w-full h-full items-center px-10'
-            >
+            <motion.div className='hidden md:flex w-full h-full items-center px-10'>
                 <img src='/icon1.svg' alt='' />
             </motion.div>
 
-            <motion.article
-                // initial={{ opacity: 0, y: 700 }}
-                // animate={{ opacity: 1, y: 0 }}
-                // transition={{ duration: 0.4, delay: 0.7 }}
-                // {...animationAttributes}
-                className='bg-white w-full h-full lg:w-[34rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'
-            >
+            <motion.article className='bg-white w-full h-full lg:w-[34rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'>
                 <div className='w-28 h-28 mt-14 md:w-24 md:h-24 md:mt-8'>
                     <img src='/oct-logo.png' className='object-cover' />
                 </div>

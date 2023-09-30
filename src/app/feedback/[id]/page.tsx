@@ -105,9 +105,6 @@ export default function FeedbackContent() {
         }
     }
 
-    // TO-DO:
-    // 1. If there is no previous history like /main, then remove the go back button.
-
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7'>
             <header className='flex flex-col gap-3 w-full'>
