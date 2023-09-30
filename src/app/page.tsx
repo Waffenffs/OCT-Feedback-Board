@@ -187,7 +187,7 @@ export default function Home() {
                 </form>
 
                 <h4 className='text-sm font-semibold text-slate-500 text-center absolute bottom-8 tracking-wider'>
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link
                         href='/register'
                         className='font-extrabold text-blue-400 tracking-wider'
