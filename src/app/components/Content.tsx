@@ -145,10 +145,12 @@ export default function Content({ tag }: TContentOptions) {
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 2.5 }}
-            className='w-full h-full flex flex-col max-sm:items-center gap-3 mt-5 md:px-10'
+            className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
         >
             <AnimatePresence>
                 {feedbacks.map((feedback, index) => {
+                    const isLastFeedback = index === feedbacks.length - 1;
+
                     return (
                         <motion.div
                             key={index}
@@ -172,6 +174,7 @@ export default function Content({ tag }: TContentOptions) {
                                 post_comments={feedback.post_comments}
                                 upvotes={feedback.upvotes}
                                 upvoteFeedback={upvoteFeedback}
+                                isLastFeedback={isLastFeedback}
                             />
                         </motion.div>
                     );

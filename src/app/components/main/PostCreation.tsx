@@ -93,6 +93,7 @@ export function PostCreation({
 
     // TO-DO:
     // 1. Re-design the scroll bar to make it more modern/sleek
+    // 2. Bug: On mobile, users can't scroll so the buttons on the bottom are not really clickable.
 
     return (
         <motion.div
@@ -102,8 +103,8 @@ export function PostCreation({
             transition={{ duration: 0.2 }}
             className='w-screen h-screen flex z-50 inset-0 justify-center items-center fixed bg-black/30'
         >
-            <article className='w-full h-full md:w-[34rem] md:h-auto md:rounded-xl md:p-10 lg:w-[43rem] lg:h-[41rem] lg:overflow-x-auto bg-white p-5'>
-                <header className='w-full flex justify-between items-center'>
+            <article className='w-full h-full md:w-[34rem] md:h-auto md:rounded md:p-10 lg:w-[43rem] lg:h-[41rem] bg-white p-5'>
+                <header className='lg:hidden w-full flex justify-between items-center'>
                     <h1 className='text-2xl font-extrabold tracking-wider text-[#373e68]'>
                         Write a feedback
                     </h1>
@@ -116,7 +117,7 @@ export function PostCreation({
                     onSubmit={(e) => {
                         e.preventDefault();
                     }}
-                    className='flex flex-col justify-start mt-14 gap-5'
+                    className='flex flex-col justify-start max-lg:mt-14 gap-5'
                 >
                     <div className='flex flex-col gap-1'>
                         <h2 className='text-sm font-bold tracking-wider text-slate-400'>
@@ -153,7 +154,7 @@ export function PostCreation({
                             onChange={(e) =>
                                 setFeedbackDescription(e.target.value)
                             }
-                            rows={7}
+                            rows={6}
                             className='border border-slate-300 text-lg text-slate-600 font-semibold w-full focus:outline-none resize-none px-3 py-1'
                         />
                     </div>

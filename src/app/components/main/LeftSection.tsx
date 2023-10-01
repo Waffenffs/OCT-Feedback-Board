@@ -105,7 +105,7 @@ export default function LeftSection({
                 <h2 className='mb-5 font-bold tracking-wider text-[#373e68]'>
                     Tags
                 </h2>
-                <ul className='flex flex-row flex-wrap gap-4'>
+                <ul className='flex lg:flex-row md:flex-col flex-wrap gap-4'>
                     {tags.map((tag, index) => {
                         return (
                             <li

@@ -15,6 +15,7 @@ export type TFeedbackCardProps = {
     upvotes: number;
     upvoters: string[];
     upvoteFeedback(id: string): Promise<void>;
+    isLastFeedback: boolean;
 };
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
@@ -25,7 +26,11 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     }
 
     return (
-        <article className='feedback-card bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border transition duration-150'>
+        <article
+            className={`${
+                props.isLastFeedback && "mb-24"
+            } bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border transition duration-150`}
+        >
             <div className='flex flex-row gap-5'>
                 <div className='md:block'>
                     <button
