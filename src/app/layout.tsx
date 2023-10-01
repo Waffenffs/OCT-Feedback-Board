@@ -17,7 +17,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang='en'>
-            <body className={`${inter.className} h-screen w-screen text-black`}>
+            <body
+                className={`${inter.className} h-screen w-screen text-black relative`}
+            >
                 <AuthProvider>
                     <FeedbackProvider>{children}</FeedbackProvider>
                 </AuthProvider>

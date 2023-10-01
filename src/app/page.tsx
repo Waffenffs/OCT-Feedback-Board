@@ -118,7 +118,7 @@ export default function Home() {
                         <input
                             type='text'
                             id='floating_standard'
-                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
                             placeholder=' '
                             value={loginEmail}
                             onChange={(e) => setLoginEmail(e.target.value)}
@@ -135,7 +135,7 @@ export default function Home() {
                         <input
                             type={`${showPassword ? "text" : "password"}`}
                             id='floating_standard'
-                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
                             placeholder=' '
                             value={loginPassword}
                             onChange={(e) => setLoginPassword(e.target.value)}
