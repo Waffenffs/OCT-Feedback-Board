@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useContext } from "react";
-import { AiOutlineArrowRight } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db } from "@/app/firebase/firebaseConfig";
@@ -16,7 +15,7 @@ type TPostCreationProps = {
 
 type TFeedbackTag = "Academic" | "Faculty" | "Extracurricular" | "Technology";
 
-export function PostCreation({
+export default function PostCreation({
     setPostCreationToggled,
     setLatestCreatedFeedbackId,
     setPostCreationSuccessful,

@@ -3,9 +3,10 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useRouter } from "next/navigation";
-import { MainHeaderNav } from "../components/main/MainHeaderNav";
-import { PostCreation } from "../components/main/PostCreation";
 import { AnimatePresence } from "framer-motion";
+
+import PostCreation from "../components/main/PostCreation";
+import MainHeaderNav from "../components/main/MainHeaderNav";
 import Content from "../components/Content";
 import LeftSection from "../components/main/LeftSection";
 import SuccessPostCreationModal from "../components/SuccessPostCreationModal";

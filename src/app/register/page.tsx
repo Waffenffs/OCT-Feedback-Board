@@ -8,8 +8,9 @@ import { AuthContext } from "../context/AuthProvider";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { PiEyeClosedBold, PiEyeBold } from "react-icons/pi";
-import StatusModal from "../components/StatusModal";
+
 import Link from "next/link";
+import StatusModal from "../components/StatusModal";
 
 export default function Register() {
     const router = useRouter();

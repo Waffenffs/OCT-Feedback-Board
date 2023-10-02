@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { BiSolidChevronUp } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
+
+import Link from "next/link";
 
 export type TFeedbackCardProps = {
     creation_date: any;

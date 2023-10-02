@@ -12,10 +12,11 @@ import {
     getDoc,
     where,
 } from "firebase/firestore";
-import FeedbackCard from "./main/FeedbackCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthProvider";
 import { FeedbackContext } from "../context/FeedbackProvider";
+
+import FeedbackCard from "./main/FeedbackCard";
 import Loading from "./Loading";
 
 type TContentOptions = {

@@ -10,6 +10,7 @@ import { BiSolidChevronLeft, BiSolidChevronUp } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+
 import Loading from "@/app/components/Loading";
 
 export default function FeedbackContent() {

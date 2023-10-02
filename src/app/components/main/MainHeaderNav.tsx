@@ -4,7 +4,7 @@ import { auth } from "@/app/firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState, useContext } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FeedbackContext } from "@/app/context/FeedbackProvider";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -13,7 +13,9 @@ type TMainHeaderNav = {
     setPostCreationToggled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function MainHeaderNav({ setPostCreationToggled }: TMainHeaderNav) {
+export default function MainHeaderNav({
+    setPostCreationToggled,
+}: TMainHeaderNav) {
     const contextValue = useContext(FeedbackContext);
     const { feedbackAmount } = contextValue || {};
 
