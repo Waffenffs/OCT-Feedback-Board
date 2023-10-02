@@ -90,11 +90,15 @@ export default function Home() {
                 )}
             </AnimatePresence>
 
-            <motion.div className='hidden md:flex w-full h-full items-center px-10'>
+            <motion.div
+                initial={{ opacity: 0, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className='hidden md:flex w-full h-full items-center px-10'
+            >
                 <img src='/icon1.svg' alt='' />
             </motion.div>
 
-            <motion.article className='bg-white w-full h-full lg:w-[34rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'>
+            <article className='bg-white w-full h-full lg:w-[34rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'>
                 <div className='w-28 h-28 mt-14 md:w-24 md:h-24 md:mt-8'>
                     <img src='/oct-logo.png' className='object-cover' />
                 </div>
@@ -181,7 +185,7 @@ export default function Home() {
                         Sign Up
                     </Link>
                 </h4>
-            </motion.article>
+            </article>
         </main>
     );
 }
