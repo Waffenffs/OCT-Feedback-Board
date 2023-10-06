@@ -1,6 +1,10 @@
-import { BiSolidChevronUp } from "react-icons/bi";
-import { BsFillChatFill } from "react-icons/bs";
+"use client";
 
+import { BiSolidChevronUp, BiTime } from "react-icons/bi";
+import { BsFillChatFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
+
+import moment from "moment";
 import Link from "next/link";
 
 export type TFeedbackCardProps = {
@@ -20,11 +24,25 @@ export type TFeedbackCardProps = {
 };
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
+    const [relativeTime, setRelativeTime] = useState("");
+
     function handleUpvoteClick(e: any) {
         e.stopPropagation();
         e.nativeEvent.preventDefault();
         props.upvoteFeedback(props.id);
     }
+
+    if (props.creation_date) {
+    }
+
+    useEffect(() => {
+        if (!props.creation_date) return; // do nothing my friend.
+
+        const convertedDate = props.creation_date.toDate();
+        const momentDate = moment(convertedDate).fromNow();
+
+        setRelativeTime(momentDate);
+    }, []);
 
     return (
         <article
@@ -51,6 +69,10 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                                 {props.title}
                             </Link>
                         </h1>
+                        <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
+                            {relativeTime && <BiTime />}{" "}
+                            {relativeTime && relativeTime}
+                        </span>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}
                         </p>

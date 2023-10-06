@@ -10,10 +10,15 @@ import { BiSolidChevronLeft, BiSolidChevronUp } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { BiTime } from "react-icons/bi";
 
+import moment from "moment";
 import Loading from "@/app/components/Loading";
 
 export default function FeedbackContent() {
+    // TO-DO:
+    // 1. Add a toggle/bar to show the description of the post.
+
     const id = useSearchParams().get("id");
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -22,21 +27,22 @@ export default function FeedbackContent() {
     const [isLoading, setIsLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
     const [feedback, setFeedback] = useState<any>();
+    const [relativeTime, setRelativeTime] = useState("");
 
     async function fetchDataFromFirebase() {
-        if (id) {
-            const docRef = doc(db, "posts", id as string);
+        if (!id) return;
 
-            try {
-                const docSnap = await getDoc(docRef);
+        const docRef = doc(db, "posts", id as string);
 
-                if (docSnap.exists()) {
-                    setFeedback(docSnap.data());
-                    setIsLoading(false);
-                }
-            } catch (error) {
-                console.log(`Error with fetching slug data: ${error}`);
+        try {
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setFeedback(docSnap.data());
+                setIsLoading(false);
             }
+        } catch (error) {
+            console.log(`Error with fetching slug data: ${error}`);
         }
     }
 
@@ -50,6 +56,11 @@ export default function FeedbackContent() {
         if (feedback.creator_email === profile?.email) {
             setIsOwner(true);
         }
+
+        const convertedDate = feedback.creation_date.toDate();
+        const momentDate = moment(convertedDate).fromNow();
+
+        setRelativeTime(momentDate);
     }, [feedback]);
 
     if (isLoading) {
@@ -154,6 +165,9 @@ export default function FeedbackContent() {
                                 <h1 className='font-extrabold tracking-wider text-[#373e68]'>
                                     {feedback.title}
                                 </h1>
+                                <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
+                                    <BiTime /> {relativeTime}
+                                </span>
                                 <p className='text-[#373e68] tracking-wide'>
                                     {feedback.reason}
                                 </p>
