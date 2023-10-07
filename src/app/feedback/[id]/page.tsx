@@ -61,6 +61,8 @@ export default function FeedbackContent() {
         const momentDate = moment(convertedDate).fromNow();
 
         setRelativeTime(momentDate);
+
+        console.log(feedback.description);
     }, [feedback]);
 
     if (isLoading) {
@@ -116,7 +118,7 @@ export default function FeedbackContent() {
     }
 
     return (
-        <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7'>
+        <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7 overflow-y-auto'>
             <header className='flex flex-col gap-3 w-full'>
                 <motion.div
                     initial={{ opacity: 0, scale: 1 }}
@@ -172,6 +174,11 @@ export default function FeedbackContent() {
                                 <p className='text-[#373e68] tracking-wide'>
                                     {feedback.reason}
                                 </p>
+                                <div className='p-2 mr-4 rounded bg-[#fefce8]'>
+                                    <p className='text-lg tracking-wide text-[#373e68] whitespace-pre-wrap'>
+                                        {feedback.description}
+                                    </p>
+                                </div>
                                 <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
                                     {feedback.tag}
                                 </div>
