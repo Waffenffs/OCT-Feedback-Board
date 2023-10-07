@@ -16,9 +16,6 @@ import moment from "moment";
 import Loading from "@/app/components/Loading";
 
 export default function FeedbackContent() {
-    // TO-DO:
-    // 1. Add a toggle/bar to show the description of the post.
-
     const id = useSearchParams().get("id");
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -61,8 +58,6 @@ export default function FeedbackContent() {
         const momentDate = moment(convertedDate).fromNow();
 
         setRelativeTime(momentDate);
-
-        console.log(feedback.description);
     }, [feedback]);
 
     if (isLoading) {

@@ -182,7 +182,7 @@ export default function PostCreation({
                                 onClick={() => setPostCreationToggled(false)}
                                 className='w-24 border-2 rounded py-2'
                             >
-                                <span className='text-sm font-bold tracking-wider text-[#373e68]'>
+                                <span className='text-sm font-bold tracking-wider text-red-500'>
                                     Cancel
                                 </span>
                             </button>

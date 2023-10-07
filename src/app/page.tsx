@@ -90,36 +90,41 @@ export default function Home() {
                     />
                 )}
             </AnimatePresence>
-            {profile && profile?.authenticated && (
-                <article className='z-20 absolute top-0 max-sm:right-0 md:left-0 shadow-xl flex flex-row justify-between items-center gap-2 text-black bg-green-600 max-sm:rounded-bl-3xl md:rounded-br-3xl font-semibold text-white tracking-wide max-sm:pl-7 max-sm:pr-1 md:pl-2 md:pr-10 md:pb-3 lg:w-[35rem] md:w-[23rem] py-2'>
-                    <div>
-                        <span>Skip to </span>
-                        <Link
-                            href='/main'
-                            className='py-1 px-5 bg-orange-400 border-2 border-orange-400 rounded-md transition duration-300 hover:bg-green-600 shadow'
-                        >
-                            <span>Main</span>
-                        </Link>
-                    </div>
 
-                    <div className='hidden md:flex'>
-                        <a
-                            href='https://github.com/Waffenffs/OCT-Feedback-Board'
-                            target='_blank'
-                        >
-                            <BsGithub className='text-slate-200 text-xl' />
-                        </a>
-                    </div>
-                </article>
-            )}
+            <AnimatePresence>
+                {profile && profile?.authenticated && (
+                    <motion.article
+                        initial={{ opacity: 1, y: -30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className='z-20 absolute top-0 max-sm:right-0 md:left-0 shadow-xl flex flex-row justify-between items-center gap-2 text-black bg-green-600 max-sm:rounded-bl-3xl md:rounded-br-3xl font-semibold text-white tracking-wide max-sm:pl-7 max-sm:pr-1 md:pl-2 md:pr-10 md:pb-3 lg:w-[35rem] md:w-[23rem] py-2'
+                    >
+                        <div>
+                            <span>Skip to </span>
+                            <Link
+                                href='/main'
+                                className='py-1 px-5 bg-orange-400 border-2 border-orange-400 rounded-md transition duration-300 hover:bg-green-600 shadow'
+                            >
+                                <span>Main</span>
+                            </Link>
+                        </div>
 
-            <motion.div
-                initial={{ opacity: 0, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className='hidden md:flex w-full h-full items-center px-10'
-            >
+                        <div className='hidden md:flex'>
+                            <a
+                                href='https://github.com/Waffenffs/OCT-Feedback-Board'
+                                target='_blank'
+                            >
+                                <BsGithub className='text-slate-200 text-xl' />
+                            </a>
+                        </div>
+                    </motion.article>
+                )}
+            </AnimatePresence>
+
+            <div className='hidden md:flex w-full h-full justify-center items-center px-10'>
                 <img src='/icon1.svg' alt='' />
-            </motion.div>
+            </div>
 
             <article className='bg-white w-full h-full lg:w-[34rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'>
                 <div className='w-28 h-28 mt-14 md:w-24 md:h-24 md:mt-8'>
