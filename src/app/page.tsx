@@ -7,6 +7,7 @@ import { auth } from "./firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { PiEyeClosedBold, PiEyeBold } from "react-icons/pi";
+import { BsGithub } from "react-icons/bs";
 
 import StatusModal from "./components/StatusModal";
 import Link from "next/link";
@@ -89,6 +90,28 @@ export default function Home() {
                     />
                 )}
             </AnimatePresence>
+            {profile && profile?.authenticated && (
+                <article className='z-20 absolute top-0 max-sm:right-0 md:left-0 shadow-xl flex flex-row justify-between items-center gap-2 text-black bg-green-600 max-sm:rounded-bl-3xl md:rounded-br-3xl font-semibold text-white tracking-wide max-sm:pl-7 max-sm:pr-1 md:pl-2 md:pr-10 md:pb-3 lg:w-[35rem] md:w-[23rem] py-2'>
+                    <div>
+                        <span>Skip to </span>
+                        <Link
+                            href='/main'
+                            className='py-1 px-5 bg-orange-400 border-2 border-orange-400 rounded-md transition duration-300 hover:bg-green-600 shadow'
+                        >
+                            <span>Main</span>
+                        </Link>
+                    </div>
+
+                    <div className='hidden md:flex'>
+                        <a
+                            href='https://github.com/Waffenffs/OCT-Feedback-Board'
+                            target='_blank'
+                        >
+                            <BsGithub className='text-slate-200 text-xl' />
+                        </a>
+                    </div>
+                </article>
+            )}
 
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}

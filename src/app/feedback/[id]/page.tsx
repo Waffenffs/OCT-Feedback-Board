@@ -80,37 +80,35 @@ export default function FeedbackContent() {
             const docRef = doc(db, "posts", id as string);
             const feedbackSnap = await getDoc(docRef);
 
-            if (!feedbackSnap) {
+            if (!feedbackSnap || !feedbackSnap.exists()) {
                 throw new Error(
                     "Error, feedback reference does not seem to be caught."
                 );
             }
 
-            if (feedbackSnap.exists()) {
-                if (feedbackSnap.data().upvoters.includes(profile?.email)) {
-                    const filteredUpvoters = feedbackSnap
-                        .data()
-                        .upvoters.filter(
-                            (upvoter: any) => upvoter !== profile?.email
-                        );
+            if (feedbackSnap.data().upvoters.includes(profile?.email)) {
+                const filteredUpvoters = feedbackSnap
+                    .data()
+                    .upvoters.filter(
+                        (upvoter: any) => upvoter !== profile?.email
+                    );
 
-                    await updateDoc(docRef, {
-                        upvotes: feedbackSnap.data().upvotes - 1,
-                        upvoters: filteredUpvoters,
-                    });
+                await updateDoc(docRef, {
+                    upvotes: feedbackSnap.data().upvotes - 1,
+                    upvoters: filteredUpvoters,
+                });
 
-                    fetchDataFromFirebase();
-                } else {
-                    const updatedVoters = feedbackSnap.data().upvoters;
-                    updatedVoters.push(profile?.email);
+                fetchDataFromFirebase();
+            } else {
+                const updatedVoters = feedbackSnap.data().upvoters;
+                updatedVoters.push(profile?.email);
 
-                    await updateDoc(docRef, {
-                        upvotes: feedbackSnap.data().upvotes + 1,
-                        upvoters: updatedVoters,
-                    });
+                await updateDoc(docRef, {
+                    upvotes: feedbackSnap.data().upvotes + 1,
+                    upvoters: updatedVoters,
+                });
 
-                    fetchDataFromFirebase();
-                }
+                fetchDataFromFirebase();
             }
         } catch (error) {
             console.error(`Error with upvoting feedback: ${error}`);
@@ -166,7 +164,10 @@ export default function FeedbackContent() {
                                     {feedback.title}
                                 </h1>
                                 <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                                    <BiTime /> {relativeTime}
+                                    <BiTime />{" "}
+                                    {relativeTime !== ""
+                                        ? relativeTime
+                                        : "Just now"}
                                 </span>
                                 <p className='text-[#373e68] tracking-wide'>
                                     {feedback.reason}

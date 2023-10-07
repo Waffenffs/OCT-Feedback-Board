@@ -70,8 +70,8 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                             </Link>
                         </h1>
                         <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                            {relativeTime && <BiTime />}{" "}
-                            {relativeTime && relativeTime}
+                            <BiTime />{" "}
+                            {relativeTime !== "" ? relativeTime : "Just now"}
                         </span>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}
