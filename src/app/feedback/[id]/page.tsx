@@ -14,6 +14,7 @@ import { BiTime } from "react-icons/bi";
 
 import moment from "moment";
 import Loading from "@/app/components/Loading";
+import Link from "next/link";
 
 export default function FeedbackContent() {
     const id = useSearchParams().get("id");
@@ -25,6 +26,9 @@ export default function FeedbackContent() {
     const [isOwner, setIsOwner] = useState(false);
     const [feedback, setFeedback] = useState<any>();
     const [relativeTime, setRelativeTime] = useState("");
+    const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
+        boolean | undefined
+    >(undefined);
 
     async function fetchDataFromFirebase() {
         if (!id) return;
@@ -34,12 +38,18 @@ export default function FeedbackContent() {
         try {
             const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-                setFeedback(docSnap.data());
-                setIsLoading(false);
-            }
+            if (!docSnap.exists())
+                throw new Error(
+                    "Error with fetching slug data. Document may not exist."
+                );
+
+            setFeedback(docSnap.data());
+            setIsLoading(false);
         } catch (error) {
-            console.log(`Error with fetching slug data: ${error}`);
+            console.log(error);
+
+            setIsLoading(false);
+            setDocumentDoesNotExist(true);
         }
     }
 
@@ -64,6 +74,30 @@ export default function FeedbackContent() {
         return (
             <div className='w-screen h-screen bg-white flex justify-center items-center'>
                 <Loading />
+            </div>
+        );
+    }
+
+    if (documentDoesNotExist) {
+        return (
+            <div className='w-screen h-screen bg-white flex flex-col justify-center items-center'>
+                <h1 className='text-8xl font-extrabold tracking-wider text-green-600'>
+                    404
+                </h1>
+                <div className='w-64 h-64 mt-6'>
+                    <img src='/404_icon.svg' alt='' className='object-cover' />
+                </div>
+                <h3 className='font-semibold tracking-wider text-slate-600 text-sm'>
+                    Seems like spilled paint.
+                </h3>
+                <button className='mt-9'>
+                    <Link
+                        href='/main'
+                        className='py-1 text-white font-semibold tracking-wider px-10 bg-orange-400 border-2 border-orange-400 rounded-md transition duration-300 hover:bg-green-600 shadow'
+                    >
+                        <span>Back To Main</span>
+                    </Link>
+                </button>
             </div>
         );
     }
