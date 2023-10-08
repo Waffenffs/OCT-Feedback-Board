@@ -102,8 +102,8 @@ export default function PostCreation({
             transition={{ duration: 0.2 }}
             className='w-screen h-screen flex z-50 inset-0 justify-center items-center fixed bg-black/30'
         >
-            <article className='w-full h-full md:w-[34rem] md:h-auto md:rounded md:p-10 lg:w-[43rem] lg:h-[41rem] bg-white p-5'>
-                <header className='lg:hidden w-full flex justify-between items-center'>
+            <article className='w-full h-full md:w-[34rem] md:h-auto md:rounded md:px-10 md:pb-10 lg:w-[43rem] lg:h-[41rem] bg-white max-md:p-5 lg:py-3'>
+                <header className='w-full flex justify-between items-center max-lg:my-3 lg:mb-4'>
                     <h1 className='text-2xl font-extrabold tracking-wider text-[#373e68]'>
                         Write a feedback
                     </h1>
@@ -116,10 +116,10 @@ export default function PostCreation({
                     onSubmit={(e) => {
                         e.preventDefault();
                     }}
-                    className='flex flex-col justify-start max-lg:mt-14 gap-5'
+                    className='flex flex-col justify-start gap-5'
                 >
                     <div className='flex flex-col gap-1'>
-                        <h2 className='text-sm font-bold tracking-wider text-slate-400'>
+                        <h2 className='text-sm lg:text-xs font-bold tracking-wider text-slate-400'>
                             FEEDBACK TITLE
                         </h2>
                         <textarea
@@ -132,7 +132,7 @@ export default function PostCreation({
                     </div>
 
                     <div className='flex flex-col gap-1'>
-                        <h2 className='text-sm font-bold tracking-wider text-slate-400'>
+                        <h2 className='text-sm lg:text-xs font-bold tracking-wider text-slate-400'>
                             FEEDBACK REASON
                         </h2>
                         <textarea
@@ -145,7 +145,7 @@ export default function PostCreation({
                     </div>
 
                     <div className='flex flex-col gap-1'>
-                        <h2 className='text-sm font-bold tracking-wider text-slate-400'>
+                        <h2 className='text-sm lg:text-xs font-bold tracking-wider text-slate-400'>
                             FEEDBACK DESCRIPTION
                         </h2>
                         <textarea

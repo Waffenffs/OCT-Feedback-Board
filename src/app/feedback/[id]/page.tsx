@@ -17,9 +17,9 @@ import Loading from "@/app/components/Loading";
 
 export default function FeedbackContent() {
     const id = useSearchParams().get("id");
+    const router = useRouter();
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
-    const router = useRouter();
 
     const [isLoading, setIsLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
