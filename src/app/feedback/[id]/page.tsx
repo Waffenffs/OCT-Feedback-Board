@@ -6,12 +6,13 @@ import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { BiSolidChevronLeft, BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
+import { LiaEditSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import moment from "moment";
 import Loading from "@/app/components/Loading";
-import Link from "next/link";
+import FallbackContent from "@/app/components/FallbackContent";
 
 export default function FeedbackContent() {
     const id = useSearchParams().get("id");
@@ -76,30 +77,14 @@ export default function FeedbackContent() {
     }
 
     if (documentDoesNotExist) {
-        return (
-            <div className='w-screen h-screen bg-white flex flex-col justify-center items-center'>
-                <h1 className='text-8xl font-extrabold tracking-wider text-green-600'>
-                    404
-                </h1>
-                <div className='w-64 h-64 mt-6'>
-                    <img src='/404_icon.svg' alt='' className='object-cover' />
-                </div>
-                <h3 className='font-semibold tracking-wider text-slate-600 text-sm'>
-                    Seems like spilled paint.
-                </h3>
-                <button className='mt-9'>
-                    <Link
-                        href='/main'
-                        className='py-1 text-white font-semibold tracking-wider px-10 bg-orange-400 border-2 border-orange-400 rounded-md transition duration-300 hover:bg-green-600 shadow'
-                    >
-                        <span>Back To Main</span>
-                    </Link>
-                </button>
-            </div>
-        );
+        return <FallbackContent />;
     }
 
     function handleRedirectBack() {
+        if (!profile?.authenticated) {
+            return router.push("/");
+        }
+
         router.push("/main");
     }
 
@@ -158,12 +143,13 @@ export default function FeedbackContent() {
                     >
                         <BiSolidChevronLeft className='text-2xl text-blue-500' />
                         <h2 className='font-semibold tracking-wider text-[#373e68]'>
-                            Main
+                            {profile?.authenticated ? "Main" : "Log In"}
                         </h2>
                     </button>
                     {isOwner && (
-                        <button className='font-semibold tracking-wider text-sm py-4 px-5 text-white bg-[#4661e6] rounded-xl'>
-                            Edit Feedback
+                        <button className='flex flex-row gap-1 items-center font-semibold tracking-wider text-sm py-4 px-5 text-white bg-[#4661e6] rounded-xl'>
+                            <LiaEditSolid className='text-xl' />
+                            <span>Edit Feedback</span>
                         </button>
                     )}
                 </motion.div>
@@ -187,7 +173,7 @@ export default function FeedbackContent() {
                             </button>
                         </div>
                         <div className='min-sm:hidden md:flex flex-row w-full justify-between'>
-                            <div className='flex flex-col gap-4'>
+                            <div className='flex flex-col gap-4 w-full'>
                                 <h1 className='font-extrabold tracking-wider text-[#373e68]'>
                                     {feedback.title}
                                 </h1>
