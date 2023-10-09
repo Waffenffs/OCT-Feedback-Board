@@ -1,16 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useSearchParams } from "next/navigation";
-import { useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
-import { BiSolidChevronLeft, BiSolidChevronUp } from "react-icons/bi";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { BiSolidChevronLeft, BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { BiTime } from "react-icons/bi";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import moment from "moment";
 import Loading from "@/app/components/Loading";

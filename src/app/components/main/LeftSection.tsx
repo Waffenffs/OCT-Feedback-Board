@@ -2,12 +2,11 @@
 
 import { motion } from "framer-motion";
 import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
-import { db } from "@/app/firebase/firebaseConfig";
+import { db, auth } from "@/app/firebase/firebaseConfig";
 import { BiLogOutCircle } from "react-icons/bi";
-import { auth } from "@/app/firebase/firebaseConfig";
-import { signOut } from "firebase/auth";
 
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
 
