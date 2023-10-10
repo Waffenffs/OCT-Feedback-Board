@@ -3,6 +3,7 @@
 import { BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 import Link from "next/link";
 
@@ -35,8 +36,11 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
         if (!props.creation_date) return; // do nothing
 
         const thisFeedbackDate = new Date(props.creation_date.seconds * 1000);
+        const relativeTime = formatDistanceToNow(thisFeedbackDate, {
+            addSuffix: true,
+        });
 
-        setFeedbackDate(thisFeedbackDate.toLocaleDateString());
+        setFeedbackDate(relativeTime);
     }, []);
 
     return (

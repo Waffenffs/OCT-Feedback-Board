@@ -9,6 +9,7 @@ import { BsFillChatFill } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
 
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
@@ -64,8 +65,11 @@ export default function FeedbackContent() {
         const thisFeedbackDate = new Date(
             feedback.creation_date.seconds * 1000
         );
+        const relativeDate = formatDistanceToNow(thisFeedbackDate, {
+            addSuffix: true,
+        });
 
-        setConvertedFeedbackDate(thisFeedbackDate.toLocaleDateString());
+        setConvertedFeedbackDate(relativeDate);
     }, [feedback]);
 
     if (isLoading) {
