@@ -7,7 +7,7 @@ Demo Account
 # Features to Be Implemented
 - [x] Animated Loading Component
 - [ ] Feedback/Suggestion Comment Section
-- [ ] Modals (Posting Feedbacks, Comments)
+- [ ] Modals (Posting Comments)
 - [ ] Admin Users (Review & Delete Feedbacks)
 - [ ] Rate Limit Features (Authentication & Posting)
 
