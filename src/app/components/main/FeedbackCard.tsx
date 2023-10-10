@@ -25,6 +25,7 @@ export type TFeedbackCardProps = {
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     const [feedbackDate, setFeedbackDate] = useState<any>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     function handleUpvoteClick(e: any) {
         e.stopPropagation();
@@ -33,15 +34,21 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     }
 
     useEffect(() => {
-        if (!props.creation_date) return; // do nothing
-
-        const thisFeedbackDate = new Date(props.creation_date.seconds * 1000);
-        const relativeTime = formatDistanceToNow(thisFeedbackDate, {
-            addSuffix: true,
-        });
-
-        setFeedbackDate(relativeTime);
+        setIsLoading(true); // has loaded
     }, []);
+
+    useEffect(() => {
+        if (!isLoading) {
+            const thisFeedbackDate = new Date(
+                props.creation_date.seconds * 1000
+            );
+            const relativeTime = formatDistanceToNow(thisFeedbackDate, {
+                addSuffix: true,
+            });
+
+            setFeedbackDate(relativeTime);
+        }
+    }, [isLoading]);
 
     return (
         <article
