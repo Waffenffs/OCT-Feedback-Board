@@ -25,7 +25,6 @@ export type TFeedbackCardProps = {
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     const [feedbackDate, setFeedbackDate] = useState<any>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
 
     function handleUpvoteClick(e: any) {
         e.stopPropagation();
@@ -34,21 +33,15 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     }
 
     useEffect(() => {
-        setIsLoading(true); // has loaded
+        if (!props.creation_date) return; // do nothing
+
+        const thisFeedbackDate = new Date(props.creation_date.seconds * 1000);
+        const relativeTime = formatDistanceToNow(thisFeedbackDate, {
+            addSuffix: true,
+        });
+
+        setFeedbackDate(relativeTime);
     }, []);
-
-    useEffect(() => {
-        if (!isLoading) {
-            const thisFeedbackDate = new Date(
-                props.creation_date.seconds * 1000
-            );
-            const relativeTime = formatDistanceToNow(thisFeedbackDate, {
-                addSuffix: true,
-            });
-
-            setFeedbackDate(relativeTime);
-        }
-    }, [isLoading]);
 
     return (
         <article
@@ -76,9 +69,7 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                             </Link>
                         </h1>
                         <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                            <BiTime />{" "}
-                            {/* {relativeTime !== "" ? relativeTime : "Just now"} */}
-                            {!feedbackDate ? "" : feedbackDate}
+                            <BiTime /> {!feedbackDate ? "" : feedbackDate}
                         </span>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}
