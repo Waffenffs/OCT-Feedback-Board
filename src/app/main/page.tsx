@@ -43,6 +43,8 @@ export default function Main() {
         );
     }
 
+    // use profile?.uid and give the user the option to rewrite their user_identifier
+
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] md:flex lg:flex-row lg:pt-10 md:flex-col gap-10 lg:justify-center overflow-x-hidden overflow-y-auto relative'>
             <AnimatePresence>

@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
+import {
+    doc,
+    onSnapshot,
+    collection,
+    query,
+    where,
+    updateDoc,
+} from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
@@ -19,10 +26,12 @@ export default function LeftSection({
     currentTag,
     setCurrentTag,
 }: TLeftSectionProps) {
-    const [nameChangeDisabled, setNameChangeDisabled] = useState(true);
     const [currentFeedbackCount, setCurrentFeedbackCount] = useState<
         number | null
     >(null);
+    const [editedUserIdentifier, setEditedUserIdentifier] = useState("");
+    const [isEditingUserIdentifier, setIsEditingUserIdentifier] =
+        useState(false);
     const [currentIdentifier, setCurrentIdentifier] = useState<any | null>(
         null
     );
@@ -79,6 +88,39 @@ export default function LeftSection({
             });
     }
 
+    async function updateUserIdentifier() {
+        try {
+            checkUserIdentifierValidity();
+
+            const userRef = doc(db, "users", profile?.uid as string);
+
+            await updateDoc(userRef, {
+                user_identifier: editedUserIdentifier,
+            });
+
+            console.log("Successfully changed user_identifier");
+
+            setCurrentIdentifier(editedUserIdentifier);
+            setIsEditingUserIdentifier(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function checkUserIdentifierValidity() {
+        const invalidCharacters = '!@#$%^&*()-_=+`~[]{}:;".><?/';
+
+        if (!editedUserIdentifier || editedUserIdentifier.trim().length < 5) {
+            throw new Error("Invalid new User Identifier!");
+        }
+
+        for (let i of editedUserIdentifier) {
+            if (invalidCharacters.includes(i)) {
+                throw new Error("Invalid new User Identifier!");
+            }
+        }
+    }
+
     useEffect(() => {
         if (profile) {
             getUserProfile();
@@ -104,7 +146,6 @@ export default function LeftSection({
                 </div>
                 <img className='lg:hidden' src='/oct-logo.png' alt='' />
             </div>
-
             <div className='bg-white shadow rounded px-3 py-7'>
                 <h2 className='mb-5 font-bold tracking-wider text-[#373e68]'>
                     Tags
@@ -133,18 +174,43 @@ export default function LeftSection({
                     })}
                 </ul>
             </div>
-
             {currentIdentifier && (
                 <article className='mt-5 bg-white shadow border flex flex-col justify-start gap-1 p-5 text-sm'>
                     <input
-                        value={currentIdentifier}
-                        disabled={nameChangeDisabled}
-                        className='font-semibold text-lg tracking-wider text-[#373e68] focus:outline-none cursor-pointer transition duration-150 hover:bg-gray-400 hover:text-white px-2 rounded'
+                        value={`${
+                            isEditingUserIdentifier
+                                ? editedUserIdentifier
+                                : currentIdentifier
+                        }`}
+                        onChange={(e) => {
+                            setEditedUserIdentifier(e.target.value);
+                        }}
+                        onClick={() => setIsEditingUserIdentifier(true)}
+                        className={`${
+                            isEditingUserIdentifier && "bg-gray-400 text-white"
+                        } font-semibold text-lg tracking-wider text-[#373e68] focus:outline-none cursor-pointer transition duration-150 hover:bg-gray-400 hover:text-white px-2 rounded`}
                     />
+                    {isEditingUserIdentifier && (
+                        <div className='w-full flex justify-between items-center text-white font-semibold tracking-wider text-xs'>
+                            <button
+                                onClick={() =>
+                                    setIsEditingUserIdentifier(false)
+                                }
+                                className='rounded bg-red-500 py-1 px-3 transition hover:bg-red-600'
+                            >
+                                <span>Discard</span>
+                            </button>
+                            <button
+                                onClick={() => updateUserIdentifier()}
+                                className='rounded bg-green-500 py-1 px-3 transition hover:bg-blue-500'
+                            >
+                                <span>Edit</span>
+                            </button>
+                        </div>
+                    )}
                     <h4 className='text-sm font-semibold tracking-wider text-slate-500 px-2'>
                         {profile?.email}
                     </h4>
-
                     <footer className='px-2 mt-10 flex flex-col justify-center items-center w-full'>
                         <h1 className='text-2xl font-extrabold tracking-wider text-[#373e68]'>
                             Feedbacks
@@ -153,7 +219,6 @@ export default function LeftSection({
                             {currentFeedbackCount}
                         </h2>
                     </footer>
-
                     <button
                         onClick={() => handleUserSignOut()}
                         className='mt-10 tracking-wider flex flex-row items-center gap-2 text-slate-400'
