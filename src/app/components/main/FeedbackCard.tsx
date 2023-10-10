@@ -2,9 +2,8 @@
 
 import { BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-import moment from "moment";
 import Link from "next/link";
 
 export type TFeedbackCardProps = {
@@ -24,7 +23,7 @@ export type TFeedbackCardProps = {
 };
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
-    const [relativeTime, setRelativeTime] = useState("");
+    const [feedbackDate, setFeedbackDate] = useState<any>(undefined);
 
     function handleUpvoteClick(e: any) {
         e.stopPropagation();
@@ -32,16 +31,12 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
         props.upvoteFeedback(props.id);
     }
 
-    if (props.creation_date) {
-    }
-
     useEffect(() => {
-        if (!props.creation_date) return; // do nothing my friend.
+        if (!props.creation_date) return; // do nothing
 
-        const convertedDate = props.creation_date.toDate();
-        const momentDate = moment(convertedDate).fromNow();
+        const thisFeedbackDate = new Date(props.creation_date.seconds * 1000);
 
-        setRelativeTime(momentDate);
+        setFeedbackDate(thisFeedbackDate.toLocaleDateString());
     }, []);
 
     return (
@@ -71,7 +66,8 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                         </h1>
                         <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
                             <BiTime />{" "}
-                            {relativeTime !== "" ? relativeTime : "Just now"}
+                            {/* {relativeTime !== "" ? relativeTime : "Just now"} */}
+                            {!feedbackDate ? "" : feedbackDate}
                         </span>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}

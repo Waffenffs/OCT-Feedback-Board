@@ -10,7 +10,6 @@ import { LiaEditSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 
-import moment from "moment";
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
 
@@ -23,7 +22,7 @@ export default function FeedbackContent() {
     const [isLoading, setIsLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
     const [feedback, setFeedback] = useState<any>();
-    const [relativeTime, setRelativeTime] = useState("");
+    const [convertedFeedbackDate, setConvertedFeedbackDate] = useState("");
     const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
         boolean | undefined
     >(undefined);
@@ -62,10 +61,11 @@ export default function FeedbackContent() {
             setIsOwner(true);
         }
 
-        const convertedDate = feedback.creation_date.toDate();
-        const momentDate = moment(convertedDate).fromNow();
+        const thisFeedbackDate = new Date(
+            feedback.creation_date.seconds * 1000
+        );
 
-        setRelativeTime(momentDate);
+        setConvertedFeedbackDate(thisFeedbackDate.toLocaleDateString());
     }, [feedback]);
 
     if (isLoading) {
@@ -178,10 +178,7 @@ export default function FeedbackContent() {
                                     {feedback.title}
                                 </h1>
                                 <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                                    <BiTime />{" "}
-                                    {relativeTime !== ""
-                                        ? relativeTime
-                                        : "Just now"}
+                                    <BiTime /> {convertedFeedbackDate}
                                 </span>
                                 <p className='text-[#373e68] tracking-wide'>
                                     {feedback.reason}
