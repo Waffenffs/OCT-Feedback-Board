@@ -24,6 +24,7 @@ export default function PostCreation({
     const [feedbackReason, setFeedbackReason] = useState("");
     const [feedbackDescription, setFeedbackDescription] = useState("");
     const [feedbackTag, setFeedbackTag] = useState<TFeedbackTag>("Academic"); // default
+    const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -41,6 +42,10 @@ export default function PostCreation({
         post_description: string,
         post_tag: TFeedbackTag
     ) {
+        if (alreadySubmitted) return; // do nothing
+
+        console.log(alreadySubmitted);
+
         if (!checkPostValidity()) {
             console.error(`Invalid fields!`);
             return; // don't do anything.
@@ -91,8 +96,7 @@ export default function PostCreation({
     }
 
     // TO-DO:
-    // 1. Re-design the scroll bar to make it more modern/sleek
-    // 2. Bug: On mobile, users can't scroll so the buttons on the bottom are not really clickable.
+    // 1. Make it so the users can't press the submit button numerous times, leading to equal amount of posts.
 
     return (
         <motion.div
@@ -187,14 +191,22 @@ export default function PostCreation({
                                 </span>
                             </button>
                             <button
-                                onClick={() =>
+                                onClick={() => {
+                                    setAlreadySubmitted(true);
+
+                                    const unsubscribe = setTimeout(() => {
+                                        setAlreadySubmitted(false);
+                                    }, 4000);
+
+                                    clearTimeout(unsubscribe);
+
                                     createPost(
                                         feedbackTitle,
                                         feedbackReason,
                                         feedbackDescription,
                                         feedbackTag
-                                    )
-                                }
+                                    );
+                                }}
                                 className='w-24 border rounded py-2 bg-blue-500'
                             >
                                 <span className='text-sm font-bold tracking-wider text-white'>

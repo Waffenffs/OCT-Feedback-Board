@@ -140,79 +140,85 @@ export default function Home() {
                     </h3>
                 </header>
 
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        loginUser(loginEmail, loginPassword);
-                    }}
-                    className='w-80 md:w-64 lg:w-72 flex flex-col gap-10 relative'
-                >
-                    <div className='relative z-0'>
-                        <input
-                            type='text'
-                            id='floating_standard'
-                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                            placeholder=' '
-                            value={loginEmail}
-                            onChange={(e) => setLoginEmail(e.target.value)}
-                        />
-                        <label
-                            htmlFor='floating_standard'
-                            className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-                        >
-                            Email
-                        </label>
-                    </div>
-
-                    <div className='relative z-0 flex items-center'>
-                        <input
-                            type={`${showPassword ? "text" : "password"}`}
-                            id='floating_standard'
-                            className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                            placeholder=' '
-                            value={loginPassword}
-                            onChange={(e) => setLoginPassword(e.target.value)}
-                        />
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setShowPassword((prevState) => !prevState);
-                            }}
-                            className='absolute right-3 cursor-pointer bg-white'
-                        >
-                            {showPassword ? (
-                                <PiEyeBold className='text-xl' />
-                            ) : (
-                                <PiEyeClosedBold className='text-xl' />
-                            )}
-                        </button>
-                        <label
-                            htmlFor='floating_standard'
-                            className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-                        >
-                            Password
-                        </label>
-                    </div>
-
-                    <footer className='mt-10 flex flex-col'>
-                        <button
-                            onClick={() => loginUser(loginEmail, loginPassword)}
-                            className='w-full focus:outline-none rounded-2xl bg-green-600 text-white py-2 text-xl font-semibold shadow'
-                        >
-                            <h2>Log In</h2>
-                        </button>
-                    </footer>
-                </form>
-
-                <h4 className='text-sm font-semibold text-slate-500 text-center absolute bottom-8 tracking-wider'>
-                    Don&apos;t have an account?{" "}
-                    <Link
-                        href='/register'
-                        className='font-extrabold text-blue-400 tracking-wider'
+                <div className='w-80 md:w-64 lg:w-72 flex flex-col gap-10 '>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            loginUser(loginEmail, loginPassword);
+                        }}
+                        className='flex flex-col gap-10'
                     >
-                        Sign Up
-                    </Link>
-                </h4>
+                        <div className='relative z-0'>
+                            <input
+                                type='text'
+                                id='floating_standard'
+                                className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 peer'
+                                placeholder=' '
+                                value={loginEmail}
+                                onChange={(e) => setLoginEmail(e.target.value)}
+                            />
+                            <label
+                                htmlFor='floating_standard'
+                                className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
+                            >
+                                Email
+                            </label>
+                        </div>
+
+                        <div className='relative z-0 flex items-center'>
+                            <input
+                                type={`${showPassword ? "text" : "password"}`}
+                                id='floating_standard'
+                                className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                                placeholder=' '
+                                value={loginPassword}
+                                onChange={(e) =>
+                                    setLoginPassword(e.target.value)
+                                }
+                            />
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setShowPassword((prevState) => !prevState);
+                                }}
+                                className='absolute right-3 cursor-pointer bg-white'
+                            >
+                                {showPassword ? (
+                                    <PiEyeBold className='text-xl' />
+                                ) : (
+                                    <PiEyeClosedBold className='text-xl' />
+                                )}
+                            </button>
+                            <label
+                                htmlFor='floating_standard'
+                                className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
+                            >
+                                Password
+                            </label>
+                        </div>
+
+                        <footer className='mt-10 flex flex-col'>
+                            <button
+                                onClick={() =>
+                                    loginUser(loginEmail, loginPassword)
+                                }
+                                className='w-full focus:outline-none rounded-2xl bg-green-600 text-white py-2 text-xl font-semibold shadow'
+                            >
+                                <h2>Log In</h2>
+                            </button>
+                        </footer>
+                    </form>
+
+                    <h4 className='text-sm font-semibold text-slate-500 text-center tracking-wider'>
+                        Don&apos;t have an account?{" "}
+                        <Link
+                            href='/register'
+                            className='font-extrabold text-blue-400 tracking-wider'
+                        >
+                            Sign Up
+                        </Link>
+                    </h4>
+                </div>
             </article>
         </main>
     );

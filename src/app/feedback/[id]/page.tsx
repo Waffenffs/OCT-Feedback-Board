@@ -4,9 +4,15 @@ import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { BiSolidChevronLeft, BiSolidChevronUp, BiTime } from "react-icons/bi";
+import {
+    BiSolidChevronLeft,
+    BiSolidChevronUp,
+    BiTime,
+    BiUser,
+} from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
+// import { CiUser } from "react-icons/ci";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
@@ -21,12 +27,17 @@ export default function FeedbackContent() {
     const { profile } = profileProps;
 
     const [isLoading, setIsLoading] = useState(true);
+    const [authorUserIdentifier, setAuthorUserIdentifier] = useState<
+        string | undefined
+    >(undefined);
     const [isOwner, setIsOwner] = useState(false);
     const [feedback, setFeedback] = useState<any>();
     const [convertedFeedbackDate, setConvertedFeedbackDate] = useState("");
     const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
         boolean | undefined
     >(undefined);
+
+    // get creator uid, then fetch the user identifier
 
     async function fetchDataFromFirebase() {
         if (!id) return;
@@ -62,27 +73,21 @@ export default function FeedbackContent() {
             setIsOwner(true);
         }
 
-        const thisFeedbackDate = new Date(
-            feedback.creation_date.seconds * 1000
-        );
-        const relativeDate = formatDistanceToNow(thisFeedbackDate, {
-            addSuffix: true,
-        });
+        getAuthorUserIdentifier(feedback.creator);
 
-        setConvertedFeedbackDate(relativeDate);
+        const timestamp = feedback.creation_date;
+        const thisFeedbackDate = new Date(timestamp.seconds * 1000);
+        const formattedDate = new Intl.DateTimeFormat("en-us", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(thisFeedbackDate);
+
+        setConvertedFeedbackDate(formattedDate);
     }, [feedback]);
-
-    if (isLoading) {
-        return (
-            <div className='w-screen h-screen bg-white flex justify-center items-center'>
-                <Loading />
-            </div>
-        );
-    }
-
-    if (documentDoesNotExist) {
-        return <FallbackContent />;
-    }
 
     function handleRedirectBack() {
         if (!profile?.authenticated) {
@@ -90,6 +95,21 @@ export default function FeedbackContent() {
         }
 
         router.push("/main");
+    }
+
+    async function getAuthorUserIdentifier(uid: string) {
+        // get creator uid
+        try {
+            const authorUserIdentifier = doc(db, "users", uid);
+            const authorSnap = await getDoc(authorUserIdentifier);
+
+            if (!authorSnap.exists())
+                throw new Error("Author User Identifier does not exist!");
+
+            setAuthorUserIdentifier(authorSnap.data().user_identifier);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function upvoteFeedback() {
@@ -131,6 +151,22 @@ export default function FeedbackContent() {
             console.error(`Error with upvoting feedback: ${error}`);
         }
     }
+
+    if (isLoading) {
+        return (
+            <div className='w-screen h-screen bg-white flex justify-center items-center'>
+                <Loading />
+            </div>
+        );
+    }
+
+    if (documentDoesNotExist) {
+        return <FallbackContent />;
+    }
+
+    // TO-DO:
+    // 1. Add an anonymity option for post creation
+    // 2. Work no the Edit Feedback feature
 
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7 overflow-y-auto'>
@@ -178,13 +214,22 @@ export default function FeedbackContent() {
                         </div>
                         <div className='min-sm:hidden md:flex flex-row w-full justify-between'>
                             <div className='flex flex-col gap-4 w-full'>
-                                <h1 className='font-extrabold tracking-wider text-[#373e68]'>
+                                <h1 className='font-extrabold tracking-wider text-[#373e68] text-xl'>
                                     {feedback.title}
                                 </h1>
-                                <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                                    <BiTime /> {convertedFeedbackDate}
-                                </span>
-                                <p className='text-[#373e68] tracking-wide'>
+                                <div className='flex items-center justify-between w-full -mt-2'>
+                                    <h2 className='flex flex-row items-center gap-1 font-semibold tracking-wider text-slate-600 text-sm'>
+                                        <BiUser className='text-xl' />
+                                        {authorUserIdentifier &&
+                                            authorUserIdentifier}
+                                    </h2>
+
+                                    <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
+                                        <BiTime /> Posted{" "}
+                                        {convertedFeedbackDate}
+                                    </span>
+                                </div>
+                                <p className='text-[#373e68] tracking-wide mt-7'>
                                     {feedback.reason}
                                 </p>
                                 <div className='p-2 mr-4 rounded bg-[#fefce8]'>
@@ -192,15 +237,18 @@ export default function FeedbackContent() {
                                         {feedback.description}
                                     </p>
                                 </div>
-                                <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
-                                    {feedback.tag}
+                                <div className='w-full flex items-center justify-between mt-10'>
+                                    <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>
+                                        {feedback.tag}
+                                    </div>
+
+                                    <div className='hidden md:flex flex-row items-center gap-2'>
+                                        <BsFillChatFill className='text-[#cdd2ef]' />
+                                        <h3 className='font-bold tracking-wider text-[#373e68]'>
+                                            {feedback.post_comments.length}
+                                        </h3>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='hidden md:flex flex-row items-center gap-2'>
-                                <BsFillChatFill className='text-[#cdd2ef]' />
-                                <h3 className='font-bold tracking-wider text-[#373e68]'>
-                                    {feedback.post_comments.length}
-                                </h3>
                             </div>
                         </div>
                     </div>

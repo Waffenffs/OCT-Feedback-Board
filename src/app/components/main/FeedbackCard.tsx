@@ -3,7 +3,6 @@
 import { BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
-import { formatDistanceToNow } from "date-fns";
 
 import Link from "next/link";
 
@@ -35,12 +34,18 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     useEffect(() => {
         if (!props.creation_date) return; // do nothing
 
-        const thisFeedbackDate = new Date(props.creation_date.seconds * 1000);
-        const relativeTime = formatDistanceToNow(thisFeedbackDate, {
-            addSuffix: true,
-        });
+        const timestamp = props.creation_date;
+        const thisFeedbackDate = new Date(timestamp.seconds * 1000);
+        const formattedDate = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(thisFeedbackDate);
 
-        setFeedbackDate(relativeTime);
+        setFeedbackDate(formattedDate);
     }, []);
 
     return (
@@ -69,7 +74,8 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                             </Link>
                         </h1>
                         <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
-                            <BiTime /> {!feedbackDate ? "" : feedbackDate}
+                            <BiTime /> Posted{" "}
+                            {!feedbackDate ? "recently" : feedbackDate}
                         </span>
                         <p className='text-[#373e68] tracking-wide'>
                             {props.reason}
