@@ -12,10 +12,8 @@ import {
 } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
-// import { CiUser } from "react-icons/ci";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
 
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
