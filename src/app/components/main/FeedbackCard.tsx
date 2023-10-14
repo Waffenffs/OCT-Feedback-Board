@@ -73,11 +73,11 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                                 {props.title}
                             </Link>
                         </h1>
-                        <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
+                        <span className='flex -mt-3 flex-row gap-1 max-sm:items-start max-sm:text-xs md:items-center font-semibold tracking-wide text-sm text-slate-600'>
                             <BiTime /> Posted{" "}
                             {!feedbackDate ? "recently" : feedbackDate}
                         </span>
-                        <p className='text-[#373e68] tracking-wide'>
+                        <p className='text-[#373e68] tracking-wide max-sm:my-2'>
                             {props.reason}
                         </p>
                         <div className='bg-[#f2f4ff] flex justify-center items-center w-32 transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider text-blue-500'>

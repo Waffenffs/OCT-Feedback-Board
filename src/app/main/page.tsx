@@ -12,6 +12,8 @@ import LeftSection from "../components/main/LeftSection";
 import SuccessPostCreationModal from "../components/SuccessPostCreationModal";
 import Loading from "../components/Loading";
 
+type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
+
 export default function Main() {
     const router = useRouter();
     const { ...profileProps } = useContext(AuthContext);
@@ -23,9 +25,7 @@ export default function Main() {
         useState<string>("undefined");
     const [postCreationSuccessful, setPostCreationSuccessful] =
         useState<boolean>(false);
-    const [currentTag, setCurrentTag] = useState<
-        "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology"
-    >("All");
+    const [currentTag, setCurrentTag] = useState<TTags>("All");
 
     useEffect(() => {
         if (profile === undefined) return; // wait for it to load

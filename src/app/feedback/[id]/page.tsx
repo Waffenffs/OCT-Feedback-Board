@@ -208,7 +208,7 @@ export default function FeedbackContent() {
                                 <h1 className='font-extrabold tracking-wider text-[#373e68] text-xl'>
                                     {feedback.title}
                                 </h1>
-                                <div className='flex items-center justify-between w-full -mt-2'>
+                                <div className='flex max-sm:flex-col md:items-center md:justify-between w-full -mt-2'>
                                     <h2 className='flex flex-row items-center gap-1 font-semibold tracking-wider text-slate-600 text-sm'>
                                         <BiUser className='text-xl' />
                                         {feedback?.creator_anonymity
@@ -216,7 +216,7 @@ export default function FeedbackContent() {
                                             : authorUserIdentifier}
                                     </h2>
 
-                                    <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>
+                                    <span className='flex flex-row gap-1 max-sm:mt-2 max-sm:text-xs md:items-center font-semibold tracking-wide text-sm text-slate-600'>
                                         <BiTime /> Posted{" "}
                                         {convertedFeedbackDate}
                                     </span>
