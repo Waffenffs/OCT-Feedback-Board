@@ -75,10 +75,6 @@ export default function Home() {
             });
     }
 
-    useEffect(() => {
-        console.log(`Authenticated: ${profile?.authenticated}`);
-    }, []);
-
     return (
         <main className='w-screen h-screen relative flex max-sm:justify-center md:bg-[#e9e9e9] md:justify-between max-sm:items-center overflow-hidden'>
             <AnimatePresence>

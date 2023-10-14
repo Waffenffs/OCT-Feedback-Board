@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useContext } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { auth, db } from "../firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";

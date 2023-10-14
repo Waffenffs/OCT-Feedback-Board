@@ -15,8 +15,6 @@ export default function SuccessPostCreationModal({
 }: TSuccessPostCreationModalProps) {
     const [clicked, setClicked] = useState(false);
 
-    console.log(`Latest created feedback's ID: ${latestCreatedFeedbackId}`);
-
     return (
         <motion.article
             initial={{ opacity: 0, scale: 1 }}

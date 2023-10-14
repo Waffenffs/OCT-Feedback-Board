@@ -4,16 +4,16 @@ import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { BsFillChatFill } from "react-icons/bs";
+import { LiaEditSolid } from "react-icons/lia";
+import { motion } from "framer-motion";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
     BiSolidChevronLeft,
     BiSolidChevronUp,
     BiTime,
     BiUser,
 } from "react-icons/bi";
-import { BsFillChatFill } from "react-icons/bs";
-import { LiaEditSolid } from "react-icons/lia";
-import { motion } from "framer-motion";
-import { useSearchParams, useRouter } from "next/navigation";
 
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
@@ -34,8 +34,6 @@ export default function FeedbackContent() {
     const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
         boolean | undefined
     >(undefined);
-
-    // get creator uid, then fetch the user identifier
 
     async function fetchDataFromFirebase() {
         if (!id) return;
@@ -96,15 +94,15 @@ export default function FeedbackContent() {
     }
 
     async function getAuthorUserIdentifier(uid: string) {
-        // get creator uid
         try {
             const authorUserIdentifier = doc(db, "users", uid);
             const authorSnap = await getDoc(authorUserIdentifier);
 
-            if (!authorSnap.exists())
-                throw new Error("Author User Identifier does not exist!");
+            if (!authorSnap.exists()) throw new Error("Author does not exist!");
 
-            setAuthorUserIdentifier(authorSnap.data().user_identifier);
+            const author = authorSnap.data();
+
+            setAuthorUserIdentifier(author.user_identifier);
         } catch (error) {
             console.error(error);
         }
@@ -151,11 +149,7 @@ export default function FeedbackContent() {
     }
 
     if (isLoading) {
-        return (
-            <div className='w-screen h-screen bg-white flex justify-center items-center'>
-                <Loading />
-            </div>
-        );
+        return <Loading />;
     }
 
     if (documentDoesNotExist) {
@@ -163,7 +157,6 @@ export default function FeedbackContent() {
     }
 
     // TO-DO:
-    // 1. Add an anonymity option for post creation
     // 2. Work no the Edit Feedback feature
 
     return (
@@ -218,8 +211,9 @@ export default function FeedbackContent() {
                                 <div className='flex items-center justify-between w-full -mt-2'>
                                     <h2 className='flex flex-row items-center gap-1 font-semibold tracking-wider text-slate-600 text-sm'>
                                         <BiUser className='text-xl' />
-                                        {authorUserIdentifier &&
-                                            authorUserIdentifier}
+                                        {feedback?.creator_anonymity
+                                            ? "Anonymous"
+                                            : authorUserIdentifier}
                                     </h2>
 
                                     <span className='flex -mt-3 flex-row gap-1 items-center font-semibold tracking-wide text-sm text-slate-600'>

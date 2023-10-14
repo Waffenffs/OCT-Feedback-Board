@@ -12,7 +12,7 @@ import {
     getDoc,
     where,
 } from "firebase/firestore";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthProvider";
 import { FeedbackContext } from "../context/FeedbackProvider";
 
@@ -123,7 +123,6 @@ export default function Content({ tag }: TContentOptions) {
     }, [loading]);
 
     useEffect(() => {
-        console.log(`Tag changed: ${tag}`);
         sortFeedbacksByTag();
     }, [tag]);
 
@@ -153,7 +152,7 @@ export default function Content({ tag }: TContentOptions) {
 
                 return (
                     <motion.div
-                        key={feedback}
+                        key={index}
                         layout
                         initial={{ opacity: 0, scale: 1, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}

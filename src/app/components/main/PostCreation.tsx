@@ -24,6 +24,7 @@ export default function PostCreation({
     const [feedbackReason, setFeedbackReason] = useState("");
     const [feedbackDescription, setFeedbackDescription] = useState("");
     const [feedbackTag, setFeedbackTag] = useState<TFeedbackTag>("Academic"); // default
+    const [creatorAnonymity, setCreatorAnonymity] = useState(false);
     const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
     const { ...profileProps } = useContext(AuthContext);
@@ -40,11 +41,10 @@ export default function PostCreation({
         post_title: string,
         post_reason: string,
         post_description: string,
-        post_tag: TFeedbackTag
+        post_tag: TFeedbackTag,
+        anonymity: boolean
     ) {
         if (alreadySubmitted) return; // do nothing
-
-        console.log(alreadySubmitted);
 
         if (!checkPostValidity()) {
             console.error(`Invalid fields!`);
@@ -54,6 +54,7 @@ export default function PostCreation({
         const feedback = {
             creator: profile?.uid,
             creator_email: profile?.email,
+            creator_anonymity: anonymity,
             creation_date: serverTimestamp(),
             title: post_title,
             reason: post_reason,
@@ -66,10 +67,6 @@ export default function PostCreation({
 
         try {
             const feedbackRef = await addDoc(collection(db, "posts"), feedback);
-
-            console.log(
-                `Successfully created post with the id: ${feedbackRef.id}`
-            );
 
             setLatestCreatedFeedbackId(feedbackRef.id);
             setPostCreationSuccessful(true);
@@ -94,9 +91,6 @@ export default function PostCreation({
 
         return true;
     }
-
-    // TO-DO:
-    // 1. Make it so the users can't press the submit button numerous times, leading to equal amount of posts.
 
     return (
         <motion.div
@@ -162,7 +156,7 @@ export default function PostCreation({
                         />
                     </div>
 
-                    <footer className='flex flex-col gap-10'>
+                    <footer className='flex flex-col gap-4'>
                         <ul className='flex flex-row gap-2 max-sm:flex-wrap mt-2 justify-around items-center'>
                             {feedbackTags.map((tag, index) => {
                                 return (
@@ -181,7 +175,30 @@ export default function PostCreation({
                             })}
                         </ul>
 
-                        <section className='flex flex-row items-center justify-end gap-5'>
+                        <div className='w-full flex flex-row gap-2 items-center justify-start'>
+                            <input
+                                type='checkbox'
+                                checked={creatorAnonymity}
+                                onClick={() =>
+                                    setCreatorAnonymity(
+                                        (prevState) => !prevState
+                                    )
+                                }
+                            />
+                            <button
+                                onClick={() =>
+                                    setCreatorAnonymity(
+                                        (prevState) => !prevState
+                                    )
+                                }
+                            >
+                                <span className='font-semibold tracking-wider text-sm text-slate-500'>
+                                    Post with Anonymity
+                                </span>
+                            </button>
+                        </div>
+
+                        <section className='flex flex-row items-center justify-end gap-5 lg:-mt-4'>
                             <button
                                 onClick={() => setPostCreationToggled(false)}
                                 className='w-24 border-2 rounded py-2'
@@ -204,7 +221,8 @@ export default function PostCreation({
                                         feedbackTitle,
                                         feedbackReason,
                                         feedbackDescription,
-                                        feedbackTag
+                                        feedbackTag,
+                                        creatorAnonymity
                                     );
                                 }}
                                 className='w-24 border rounded py-2 bg-blue-500'

@@ -3,7 +3,7 @@
 import { auth } from "@/app/firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { motion } from "framer-motion";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FeedbackContext } from "@/app/context/FeedbackProvider";
@@ -17,16 +17,8 @@ export default function MainHeaderNav({
     setPostCreationToggled,
 }: TMainHeaderNav) {
     const contextValue = useContext(FeedbackContext);
-    const { feedbackAmount } = contextValue || {};
-
-    const [optionsActive, setOptionsActive] = useState(false); // hidden by default
-
-    const options: ("Most Upvotes" | "Least Upvotes" | "Date")[] = [
-        "Most Upvotes",
-        "Least Upvotes",
-        "Date",
-    ]; // Filter through items that aren't the current optionp
     const router = useRouter();
+    const { feedbackAmount } = contextValue || {};
 
     function handleSignOut() {
         signOut(auth)
@@ -76,57 +68,6 @@ export default function MainHeaderNav({
                         </span>
                         <span>Suggestions</span>
                     </div>
-                    {/* <span>Sort By</span>
-                    <span>:</span>
-                    <button
-                        onClick={() =>
-                            setOptionsActive((prevState) => !prevState)
-                        }
-                        className='font-bold flex flex-row items-center gap-1'
-                    >
-                        {currentOption}{" "}
-                        <BiSolidChevronDown className='text-xl' />
-                    </button> */}
-                    {/* <AnimatePresence>
-                        {optionsActive && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 1 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <ul className='absolute z-10 bg-white rounded top-7 right-1 lg:-right-[14.5rem] border-2 shadow-xl'>
-                                    {options
-                                        .filter(
-                                            (option) => option !== currentOption
-                                        )
-                                        .map(
-                                            (
-                                                option:
-                                                    | "Most Upvotes"
-                                                    | "Least Upvotes"
-                                                    | "Date",
-                                                index
-                                            ) => {
-                                                return (
-                                                    <li
-                                                        onClick={() =>
-                                                            handleOptionSelection(
-                                                                option
-                                                            )
-                                                        }
-                                                        key={index}
-                                                        className='cursor-pointer rounded hover:bg-gray-200 transition py-1 px-3 tracking-wider font-semibold text-sm text-blue-500'
-                                                    >
-                                                        {option}
-                                                    </li>
-                                                );
-                                            }
-                                        )}
-                                </ul>
-                            </motion.div>
-                        )}
-                    </AnimatePresence> */}
                 </div>
                 <button
                     onClick={() => setPostCreationToggled(true)}

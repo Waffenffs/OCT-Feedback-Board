@@ -98,8 +98,6 @@ export default function LeftSection({
                 user_identifier: editedUserIdentifier,
             });
 
-            console.log("Successfully changed user_identifier");
-
             setCurrentIdentifier(editedUserIdentifier);
             setIsEditingUserIdentifier(false);
         } catch (error) {
@@ -110,8 +108,14 @@ export default function LeftSection({
     function checkUserIdentifierValidity() {
         const invalidCharacters = '!@#$%^&*()-_=+`~[]{}:;".><?/';
 
-        if (!editedUserIdentifier || editedUserIdentifier.trim().length < 5) {
-            throw new Error("Invalid new User Identifier!");
+        if (
+            !editedUserIdentifier ||
+            editedUserIdentifier.trim().length < 5 ||
+            editedUserIdentifier.toLowerCase() === "anonymous"
+        ) {
+            throw new Error(
+                `Invalid new User Identifier! ${editedUserIdentifier}`
+            );
         }
 
         for (let i of editedUserIdentifier) {
@@ -193,9 +197,10 @@ export default function LeftSection({
                     {isEditingUserIdentifier && (
                         <div className='w-full flex justify-between items-center text-white font-semibold tracking-wider text-xs'>
                             <button
-                                onClick={() =>
-                                    setIsEditingUserIdentifier(false)
-                                }
+                                onClick={() => {
+                                    setIsEditingUserIdentifier(false);
+                                    setEditedUserIdentifier(currentIdentifier);
+                                }}
                                 className='rounded bg-red-500 py-1 px-3 transition hover:bg-red-600'
                             >
                                 <span>Discard</span>
