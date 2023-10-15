@@ -11,6 +11,7 @@ import Content from "../components/Content";
 import LeftSection from "../components/main/LeftSection";
 import SuccessPostCreationModal from "../components/SuccessPostCreationModal";
 import Loading from "../components/Loading";
+import FeedbackCardLoading from "../components/main/FeedbackCardLoading";
 
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
 

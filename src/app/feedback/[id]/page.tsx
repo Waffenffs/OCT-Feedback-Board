@@ -4,10 +4,10 @@ import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { BsFillChatFill } from "react-icons/bs";
-import { LiaEditSolid } from "react-icons/lia";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { BsFillChatFill } from "react-icons/bs";
+import { LiaEditSolid } from "react-icons/lia";
 import {
     BiSolidChevronLeft,
     BiSolidChevronUp,
@@ -56,41 +56,6 @@ export default function FeedbackContent() {
             setIsLoading(false);
             setDocumentDoesNotExist(true);
         }
-    }
-
-    useEffect(() => {
-        fetchDataFromFirebase();
-    }, []);
-
-    useEffect(() => {
-        if (isLoading) return; // wait for it to load
-
-        if (feedback.creator_email === profile?.email) {
-            setIsOwner(true);
-        }
-
-        getAuthorUserIdentifier(feedback.creator);
-
-        const timestamp = feedback.creation_date;
-        const thisFeedbackDate = new Date(timestamp.seconds * 1000);
-        const formattedDate = new Intl.DateTimeFormat("en-us", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        }).format(thisFeedbackDate);
-
-        setConvertedFeedbackDate(formattedDate);
-    }, [feedback]);
-
-    function handleRedirectBack() {
-        if (!profile?.authenticated) {
-            return router.push("/");
-        }
-
-        router.push("/main");
     }
 
     async function getAuthorUserIdentifier(uid: string) {
@@ -147,6 +112,41 @@ export default function FeedbackContent() {
             console.error(`Error with upvoting feedback: ${error}`);
         }
     }
+
+    function handleRedirectBack() {
+        if (!profile?.authenticated) {
+            return router.push("/");
+        }
+
+        router.push("/main");
+    }
+
+    useEffect(() => {
+        fetchDataFromFirebase();
+    }, []);
+
+    useEffect(() => {
+        if (isLoading) return; // wait for it to load
+
+        if (feedback.creator_email === profile?.email) {
+            setIsOwner(true);
+        }
+
+        getAuthorUserIdentifier(feedback.creator);
+
+        const timestamp = feedback.creation_date;
+        const thisFeedbackDate = new Date(timestamp.seconds * 1000);
+        const formattedDate = new Intl.DateTimeFormat("en-us", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(thisFeedbackDate);
+
+        setConvertedFeedbackDate(formattedDate);
+    }, [feedback]);
 
     if (isLoading) {
         return <Loading />;

@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthProvider";
 import { FeedbackContext } from "../context/FeedbackProvider";
 
+import FeedbackCardLoading from "./main/FeedbackCardLoading";
 import FeedbackCard from "./main/FeedbackCard";
 import Loading from "./Loading";
 
@@ -132,54 +133,67 @@ export default function Content({ tag }: TContentOptions) {
         }
     }, [feedbacks]);
 
-    if (loading) {
+    const ContentLoading = () => {
         return (
-            <div className='w-full h-full bg-white flex justify-center items-center'>
-                <Loading />
-            </div>
+            <motion.div
+                initial={{ opacity: 0, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 2.5 }}
+                className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
+            >
+                <FeedbackCardLoading />
+                <FeedbackCardLoading />
+                <FeedbackCardLoading />
+                <FeedbackCardLoading />
+            </motion.div>
         );
-    }
+    };
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 2.5 }}
-            className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
-        >
-            {feedbacks.map((feedback, index) => {
-                const isLastFeedback = index === feedbacks.length - 1;
+    const ContentLoaded = () => {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
+            >
+                {feedbacks.map((feedback, index) => {
+                    const isLastFeedback = index === feedbacks.length - 1;
 
-                return (
-                    <motion.div
-                        key={index}
-                        layout
-                        initial={{ opacity: 0, scale: 1, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{
-                            delay: 0.1,
-                            duration: 0.5,
-                        }}
-                    >
-                        <FeedbackCard
-                            creation_date={feedback.creation_date}
-                            creator_email={feedback.creator_email}
-                            id={feedback.id}
-                            post_comments_length={feedback.post_comments.length}
-                            reason={feedback.reason}
-                            tag={feedback.tag}
-                            title={feedback.title}
-                            upvotes_count={feedback.upvotes}
-                            upvoters={feedback.upvoters}
-                            post_comments={feedback.post_comments}
-                            upvotes={feedback.upvotes}
-                            upvoteFeedback={upvoteFeedback}
-                            isLastFeedback={isLastFeedback}
-                        />
-                    </motion.div>
-                );
-            })}
-        </motion.div>
-    );
+                    return (
+                        <motion.div
+                            key={index}
+                            layout
+                            initial={{ opacity: 0, scale: 1, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{
+                                delay: 0.1,
+                                duration: 0.5,
+                            }}
+                        >
+                            <FeedbackCard
+                                creation_date={feedback.creation_date}
+                                creator_email={feedback.creator_email}
+                                id={feedback.id}
+                                post_comments_length={
+                                    feedback.post_comments.length
+                                }
+                                reason={feedback.reason}
+                                tag={feedback.tag}
+                                title={feedback.title}
+                                upvotes_count={feedback.upvotes}
+                                upvoters={feedback.upvoters}
+                                post_comments={feedback.post_comments}
+                                upvotes={feedback.upvotes}
+                                upvoteFeedback={upvoteFeedback}
+                                isLastFeedback={isLastFeedback}
+                            />
+                        </motion.div>
+                    );
+                })}
+            </motion.div>
+        );
+    };
+
+    return feedbacks.length === 0 ? <ContentLoading /> : <ContentLoaded />;
 }

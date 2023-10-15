@@ -60,9 +60,9 @@ export default function PostCreation({
             reason: post_reason,
             description: post_description,
             tag: post_tag,
-            upvotes: 0, // initially zero because it is a newly created post
-            post_comments: [], // 0 length because it is a newly created post
-            upvoters: [], // initilaly zero because it is a newly created post
+            upvotes: 0,
+            post_comments: [],
+            upvoters: [],
         };
 
         try {
