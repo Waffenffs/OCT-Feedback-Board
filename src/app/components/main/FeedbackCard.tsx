@@ -25,6 +25,11 @@ export type TFeedbackCardProps = {
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     const [feedbackDate, setFeedbackDate] = useState<any>(undefined);
 
+    const formattedFeedbackTitle = props.title
+        .split(" ")
+        .join("_")
+        .toLowerCase();
+
     function handleUpvoteClick(e: any) {
         e.stopPropagation();
         e.nativeEvent.preventDefault();
@@ -69,7 +74,9 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
                 <div className='min-sm:hidden md:flex flex-row w-full justify-between'>
                     <div className='flex flex-col gap-4'>
                         <h1 className='font-extrabold tracking-wider text-[#373e68]'>
-                            <Link href={`/feedback/redirect?id=${props.id}`}>
+                            <Link
+                                href={`/feedback/redirect?id=${props.id}/${formattedFeedbackTitle}`}
+                            >
                                 {props.title}
                             </Link>
                         </h1>

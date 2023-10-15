@@ -19,7 +19,7 @@ import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
 
 export default function FeedbackContent() {
-    const id = useSearchParams().get("id");
+    const id = useSearchParams().get("id")?.split("/")[0];
     const router = useRouter();
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -121,9 +121,30 @@ export default function FeedbackContent() {
         router.push("/main");
     }
 
+    function checkURLTitle(formattedTitle: string, id: string) {
+        const url = new URL(window.location.href);
+
+        if (url.pathname !== `/feedback/redirect?id=${id}/${formattedTitle}`) {
+            const newURL = `/feedback/redirect?id=${id}/${formattedTitle}`;
+
+            window.history.replaceState(null, "title", newURL);
+        }
+    }
+
     useEffect(() => {
         fetchDataFromFirebase();
     }, []);
+
+    useEffect(() => {
+        if (!feedback || !id) return;
+
+        const formattedTitle = feedback.title
+            .split(" ")
+            .join("_")
+            .toLowerCase();
+
+        checkURLTitle(formattedTitle, id);
+    }, [feedback, id]);
 
     useEffect(() => {
         if (isLoading) return; // wait for it to load
@@ -135,7 +156,7 @@ export default function FeedbackContent() {
         getAuthorUserIdentifier(feedback.creator);
 
         const timestamp = feedback.creation_date;
-        const thisFeedbackDate = new Date(timestamp.seconds * 1000);
+        const timestampToDate = new Date(timestamp.seconds * 1000);
         const formattedDate = new Intl.DateTimeFormat("en-us", {
             year: "numeric",
             month: "long",
@@ -143,7 +164,7 @@ export default function FeedbackContent() {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
-        }).format(thisFeedbackDate);
+        }).format(timestampToDate);
 
         setConvertedFeedbackDate(formattedDate);
     }, [feedback]);

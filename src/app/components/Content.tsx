@@ -138,7 +138,6 @@ export default function Content({ tag }: TContentOptions) {
             <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2.5 }}
                 className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
             >
                 <FeedbackCardLoading />

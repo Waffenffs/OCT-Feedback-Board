@@ -36,7 +36,7 @@ export default function MainHeaderNav({
         <motion.div
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 2 }}
+            transition={{ delay: 0.2 }}
         >
             <nav className='md:hidden flex flex-col'>
                 <header className='flex flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-6 px-4'>

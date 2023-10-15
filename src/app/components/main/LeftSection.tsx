@@ -136,7 +136,7 @@ export default function LeftSection({
         <motion.div
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.5 }}
+            transition={{ delay: 0.1 }}
             className='hidden md:flex md:px-10 lg:px-0 md:py-5 lg:py-0 md:flex-row lg:flex-col md:gap-6 lg:gap-3 lg:w-1/4'
         >
             <div className='max-lg:flex max-lg:justify-center max-lg:items-center  cursor-default bg-gradient-to-tr from-green-500 to-green-700 rounded-xl text-white pt-20 pb-4 px-7 max-lg:p-0 max-lg:px-5 shadow'>
