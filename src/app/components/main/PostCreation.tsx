@@ -179,7 +179,7 @@ export default function PostCreation({
                             <input
                                 type='checkbox'
                                 checked={creatorAnonymity}
-                                onClick={() =>
+                                onChange={() =>
                                     setCreatorAnonymity(
                                         (prevState) => !prevState
                                     )

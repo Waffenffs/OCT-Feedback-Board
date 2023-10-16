@@ -7,7 +7,8 @@ import { FeedbackProvider } from "./context/FeedbackProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "OlivFeedbacks | A platform of expression for Olivarians",
+    title: "OlivFeedbacks",
+    description: "A platform of expression for Olivarians.",
 };
 
 export default function RootLayout({

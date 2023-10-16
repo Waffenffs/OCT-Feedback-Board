@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import { db } from "../firebase/firebaseConfig";
 import {
     query,
@@ -18,7 +18,6 @@ import { FeedbackContext } from "../context/FeedbackProvider";
 
 import FeedbackCardLoading from "./main/FeedbackCardLoading";
 import FeedbackCard from "./main/FeedbackCard";
-import Loading from "./Loading";
 
 type TContentOptions = {
     tag: "All" | "Academic" | "Extracurricular" | "Technology" | "Faculty";
@@ -26,7 +25,7 @@ type TContentOptions = {
 
 export default function Content({ tag }: TContentOptions) {
     const [feedbacks, setFeedbacks] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const memoizedFeedbacks = useMemo(() => [...feedbacks], [feedbacks, tag]);
 
     const { ...profileProps } = useContext(AuthContext);
     const contextValue = useContext(FeedbackContext);
@@ -55,6 +54,8 @@ export default function Content({ tag }: TContentOptions) {
 
             setFeedbacks(firestoreFeedbacks);
         });
+
+        console.log("fetched content");
 
         return () => unsubscribe();
     }
@@ -120,8 +121,7 @@ export default function Content({ tag }: TContentOptions) {
 
     useEffect(() => {
         fetchContentInitially();
-        setLoading(false);
-    }, [loading]);
+    }, []);
 
     useEffect(() => {
         sortFeedbacksByTag();
@@ -150,26 +150,12 @@ export default function Content({ tag }: TContentOptions) {
 
     const ContentLoaded = () => {
         return (
-            <motion.div
-                initial={{ opacity: 0, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
-            >
-                {feedbacks.map((feedback, index) => {
+            <div className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'>
+                {memoizedFeedbacks.map((feedback, index) => {
                     const isLastFeedback = index === feedbacks.length - 1;
 
                     return (
-                        <motion.div
-                            key={index}
-                            layout
-                            initial={{ opacity: 0, scale: 1, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{
-                                delay: 0.1,
-                                duration: 0.5,
-                            }}
-                        >
+                        <div key={index}>
                             <FeedbackCard
                                 creation_date={feedback.creation_date}
                                 creator_email={feedback.creator_email}
@@ -187,10 +173,10 @@ export default function Content({ tag }: TContentOptions) {
                                 upvoteFeedback={upvoteFeedback}
                                 isLastFeedback={isLastFeedback}
                             />
-                        </motion.div>
+                        </div>
                     );
                 })}
-            </motion.div>
+            </div>
         );
     };
 
