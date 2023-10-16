@@ -7,9 +7,9 @@ import { AnimatePresence } from "framer-motion";
 
 import PostCreation from "../components/main/PostCreation";
 import MainHeaderNav from "../components/main/MainHeaderNav";
-import Content from "../components/Content";
+import Content from "../components/main/Content";
 import LeftSection from "../components/main/LeftSection";
-import SuccessPostCreationModal from "../components/SuccessPostCreationModal";
+import SuccessPostCreationModal from "../components/main/SuccessPostCreationModal";
 import Loading from "../components/Loading";
 
 type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";

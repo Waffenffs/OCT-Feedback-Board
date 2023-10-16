@@ -29,7 +29,7 @@ export async function generateMetadata() {
     }
 
     const metadata: Metadata = {
-        title: title,
+        title: `${title} | OlivFeedbacks`,
     };
 
     return metadata;

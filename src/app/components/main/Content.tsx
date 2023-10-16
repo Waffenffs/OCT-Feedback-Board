@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useContext, useMemo } from "react";
-import { db } from "../firebase/firebaseConfig";
+import { db } from "../../firebase/firebaseConfig";
 import {
     query,
     orderBy,
@@ -13,11 +13,11 @@ import {
     where,
 } from "firebase/firestore";
 import { motion } from "framer-motion";
-import { AuthContext } from "../context/AuthProvider";
-import { FeedbackContext } from "../context/FeedbackProvider";
+import { AuthContext } from "../../context/AuthProvider";
+import { FeedbackContext } from "../../context/FeedbackProvider";
 
-import FeedbackCardLoading from "./main/FeedbackCardLoading";
-import FeedbackCard from "./main/FeedbackCard";
+import FeedbackCardLoading from "./FeedbackCardLoading";
+import FeedbackCard from "./FeedbackCard";
 
 type TContentOptions = {
     tag: "All" | "Academic" | "Extracurricular" | "Technology" | "Faculty";
