@@ -18,6 +18,7 @@ import {
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
 import EditFeedbackModal from "@/app/components/feedback/EditFeedbackModal";
+import CommentInput from "@/app/components/feedback/CommentInput";
 
 export default function FeedbackContent() {
     const id = useSearchParams().get("id")?.split("/")[0];
@@ -300,6 +301,8 @@ export default function FeedbackContent() {
                     </footer>
                 </motion.article>
             </header>
+
+            <CommentInput />
         </main>
     );
 }

@@ -37,13 +37,7 @@ export default function PostCreation({
         "Technology",
     ];
 
-    async function createPost(
-        post_title: string,
-        post_reason: string,
-        post_description: string,
-        post_tag: TFeedbackTag,
-        anonymity: boolean
-    ) {
+    async function createPost() {
         if (alreadySubmitted) return; // do nothing
 
         if (!checkPostValidity()) {
@@ -54,12 +48,12 @@ export default function PostCreation({
         const feedback = {
             creator: profile?.uid,
             creator_email: profile?.email,
-            creator_anonymity: anonymity,
+            creator_anonymity: creatorAnonymity,
             creation_date: serverTimestamp(),
-            title: post_title,
-            reason: post_reason,
-            description: post_description,
-            tag: post_tag,
+            title: feedbackTitle,
+            reason: feedbackReason,
+            description: feedbackDescription,
+            tag: feedbackTag,
             upvotes: 0,
             post_comments: [],
             upvoters: [],
@@ -217,13 +211,7 @@ export default function PostCreation({
 
                                     clearTimeout(unsubscribe);
 
-                                    createPost(
-                                        feedbackTitle,
-                                        feedbackReason,
-                                        feedbackDescription,
-                                        feedbackTag,
-                                        creatorAnonymity
-                                    );
+                                    createPost();
                                 }}
                                 className='w-24 border rounded py-2 bg-blue-500'
                             >

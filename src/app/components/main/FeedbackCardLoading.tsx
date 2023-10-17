@@ -2,7 +2,7 @@ export default function FeedbackCardLoading() {
     return (
         <article
             role='status'
-            className='animate-pulse bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border transition duration-150'
+            className='animate-pulse bg-white rounded md:rounded-xl py-6 px-5 w-80 md:w-full md:border dark:border-0 transition duration-150'
         >
             <div className='flex flex-row gap-5'>
                 <div className='md:block'>

@@ -1,14 +1,26 @@
 import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "./context/AuthProvider";
 import { FeedbackProvider } from "./context/FeedbackProvider";
+
+import type { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "OlivFeedbacks",
     description: "A platform of expression for Olivarians.",
+    keywords: [
+        "education",
+        "feedbacks",
+        "olivarez",
+        "olivarian",
+        "oct",
+        "thesis",
+    ],
+    openGraph: {
+        images: "/oct-logo.png",
+    },
 };
 
 export default function RootLayout({
