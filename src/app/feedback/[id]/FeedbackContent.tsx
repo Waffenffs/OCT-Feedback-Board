@@ -183,15 +183,6 @@ export default function FeedbackContent() {
         setConvertedFeedbackDate(formattedDate);
 
         if (feedback?.last_edited) {
-            const INTLFormat: Intl.DateTimeFormatOptions = {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-            };
-
             const lastEditedTimestamp = feedback?.last_edited;
             const lastEditedTimeStampToDate = new Date(
                 lastEditedTimestamp.seconds * 1000
