@@ -181,31 +181,53 @@ export default function FeedbackContent() {
         ).format(timestampToDate);
 
         setConvertedFeedbackDate(formattedDate);
+
+        if (feedback?.last_edited) {
+            const INTLFormat: Intl.DateTimeFormatOptions = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+            };
+
+            const lastEditedTimestamp = feedback?.last_edited;
+            const lastEditedTimeStampToDate = new Date(
+                lastEditedTimestamp.seconds * 1000
+            );
+            const formattedLastEditedTimestamp = new Intl.DateTimeFormat(
+                "en-us",
+                INTLFormat
+            ).format(lastEditedTimeStampToDate);
+
+            setConvertedEditDate(formattedLastEditedTimestamp);
+        }
     }, [feedback]);
 
-    useEffect(() => {
-        if (!feedback?.last_edited) return; // do nothing
+    // useEffect(() => {
+    //     if (!feedback?.last_edited) return; // do nothing
 
-        const INTLFormat: Intl.DateTimeFormatOptions = {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        };
+    //     const INTLFormat: Intl.DateTimeFormatOptions = {
+    //         year: "numeric",
+    //         month: "long",
+    //         day: "numeric",
+    //         hour: "numeric",
+    //         minute: "numeric",
+    //         hour12: true,
+    //     };
 
-        const lastEditedTimestamp = feedback?.last_edited;
-        const lastEditedTimeStampToDate = new Date(
-            lastEditedTimestamp.seconds * 1000
-        );
-        const formattedLastEditedTimestamp = new Intl.DateTimeFormat(
-            "en-us",
-            INTLFormat
-        ).format(lastEditedTimeStampToDate);
+    //     const lastEditedTimestamp = feedback?.last_edited;
+    //     const lastEditedTimeStampToDate = new Date(
+    //         lastEditedTimestamp.seconds * 1000
+    //     );
+    //     const formattedLastEditedTimestamp = new Intl.DateTimeFormat(
+    //         "en-us",
+    //         INTLFormat
+    //     ).format(lastEditedTimeStampToDate);
 
-        setConvertedEditDate(formattedLastEditedTimestamp);
-    }, [feedback?.last_edited]);
+    //     setConvertedEditDate(formattedLastEditedTimestamp);
+    // }, [feedback?.last_edited]);
 
     if (isLoading) {
         return <Loading />;
