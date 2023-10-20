@@ -164,36 +164,35 @@ export default function FeedbackContent() {
 
         getAuthorUserIdentifier(feedback.creator);
 
-        const INTLFormat: Intl.DateTimeFormatOptions = {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        };
+        function formatTimestamp(timestamp: any) {
+            if (!timestamp) return null;
 
-        const timestamp = feedback.creation_date;
-        const timestampToDate = new Date(timestamp.seconds * 1000);
-        const formattedDate = new Intl.DateTimeFormat(
-            "en-us",
-            INTLFormat
-        ).format(timestampToDate);
+            const INTLFormat: Intl.DateTimeFormatOptions = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+            };
 
-        setConvertedFeedbackDate(formattedDate);
+            const timestampToDate = new Date(timestamp.seconds * 1000);
 
-        if (feedback?.last_edited) {
-            const lastEditedTimestamp = feedback?.last_edited;
-            const lastEditedTimeStampToDate = new Date(
-                lastEditedTimestamp.seconds * 1000
+            return new Intl.DateTimeFormat("en-us", INTLFormat).format(
+                timestampToDate
             );
-            const formattedLastEditedTimestamp = new Intl.DateTimeFormat(
-                "en-us",
-                INTLFormat
-            ).format(lastEditedTimeStampToDate);
-
-            setConvertedEditDate(formattedLastEditedTimestamp);
         }
+
+        const creationTimestamp = feedback.creation_date;
+        const formattedCreationTimestamp = formatTimestamp(creationTimestamp);
+
+        setConvertedFeedbackDate(formattedCreationTimestamp as string);
+
+        const lastEditedTimestamp = feedback.last_edited;
+        const formattedLastEditedTimestamp =
+            formatTimestamp(lastEditedTimestamp);
+
+        setConvertedEditDate(formattedLastEditedTimestamp as string);
     }, [feedback]);
 
     if (isLoading) {
@@ -301,12 +300,20 @@ export default function FeedbackContent() {
                                         </h3>
                                     </div>
                                 </div>
-                                {convertedEditDate && (
-                                    <span className='hidden md:flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'>
-                                        <BiEditAlt /> Edited: (
-                                        {convertedEditDate})
-                                    </span>
-                                )}
+                                <AnimatePresence>
+                                    {convertedEditDate && (
+                                        <motion.span
+                                            initial={{ opacity: 0, scale: 1 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ delay: 1 }}
+                                            className='hidden md:flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'
+                                        >
+                                            <BiEditAlt /> Edited: (
+                                            {convertedEditDate})
+                                        </motion.span>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
                     </div>
@@ -328,11 +335,19 @@ export default function FeedbackContent() {
                                 </h3>
                             </div>
                         </footer>
-                        {convertedEditDate && (
-                            <span className='md:hidden flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'>
-                                <BiEditAlt /> Edited: ({convertedEditDate})
-                            </span>
-                        )}
+                        <AnimatePresence>
+                            {convertedEditDate && (
+                                <motion.span
+                                    initial={{ opacity: 0, scale: 1 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ delay: 1 }}
+                                    className='md:hidden flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'
+                                >
+                                    <BiEditAlt /> Edited: ({convertedEditDate})
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </motion.article>
             </header>
