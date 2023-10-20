@@ -9,6 +9,7 @@ export default function CommentInput() {
     const [userIdentifier, setUserIdentifier] = useState<string | undefined>(
         undefined
     );
+    const [commentContent, setCommentContent] = useState("");
 
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -29,7 +30,15 @@ export default function CommentInput() {
     }
 
     async function postComment() {
-        // directly post comment to database
+        // Accept a prop (the feedback id)
+        // Update the feedback's comments array
+        // return a profile of the commenter:
+        // {
+        //     uid: 'user_uid_here';
+        //     email: 'user_email_here';
+        //     comment_content: 'comment_content_here';
+        //     comment_upvotes: 'comment_upvotes_here';
+        // }
     }
 
     async function handlePostComment() {
@@ -63,11 +72,13 @@ export default function CommentInput() {
                 <textarea
                     cols={30}
                     rows={5}
+                    value={commentContent}
+                    onChange={(e) => setCommentContent(e.target.value)}
                     className='border border-slate-300 w-full px-5 pt-2 focus:outline-none resize-none'
                     placeholder='What are your thoughts?'
                 />
                 <div className='w-full rounded-b-xl flex flex-row justify-end bg-slate-300 py-2 px-4'>
-                    <button className='rounded-full bg-blue-400 font-semibold text-white tracking-wider px-5 py-1 text-sm'>
+                    <button className='rounded-xl bg-blue-400 font-semibold text-white tracking-wider px-5 py-1 text-sm'>
                         Comment
                     </button>
                 </div>

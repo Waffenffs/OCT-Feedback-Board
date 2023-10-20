@@ -1,8 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
+import { db } from "@/app/firebase/firebaseConfig";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 type TEditFeedbackProps = {
     previous_title: string;
@@ -10,6 +12,7 @@ type TEditFeedbackProps = {
     previous_description: string;
     previous_tag: TFeedbackTag;
     toggleEditing: React.Dispatch<React.SetStateAction<boolean>>;
+    feedback_uid: string;
 };
 
 type TFeedbackTag = "Academic" | "Faculty" | "Extracurricular" | "Technology";
@@ -20,11 +23,14 @@ export default function EditFeedbackModal({
     previous_description,
     previous_tag,
     toggleEditing,
+    feedback_uid,
 }: TEditFeedbackProps) {
-    const [editedTitle, setEditedTitle] = useState("empty");
-    const [editedReason, setEditedReason] = useState("empty");
-    const [editedDescription, setEditedDescription] = useState("empty");
+    const [editedTitle, setEditedTitle] = useState(previous_title);
+    const [editedReason, setEditedReason] = useState(previous_reason);
+    const [editedDescription, setEditedDescription] =
+        useState(previous_description);
     const [editedTag, setEditedTag] = useState<TFeedbackTag>(previous_tag);
+    const [showInvalidFieldsError, setShowInvalidFieldsError] = useState(false);
 
     const feedbackTags: TFeedbackTag[] = [
         "Academic",
@@ -33,16 +39,65 @@ export default function EditFeedbackModal({
         "Technology",
     ];
 
+    const noChangesMade =
+        editedTitle === previous_title &&
+        editedReason === previous_reason &&
+        editedDescription === previous_description &&
+        editedTag === previous_tag;
+
     async function editFeedback() {
-        // this is where u do the code
+        const feedbackRef = doc(db, "posts", feedback_uid);
+
+        await updateDoc(feedbackRef, {
+            title: editedTitle,
+            tag: editedTag,
+            reason: editedReason,
+            description: editedDescription,
+            last_edited: serverTimestamp(),
+        });
     }
 
     async function handleEditFeedback() {
-        // call some editing function and do some checks.
+        try {
+            checkEditValidity();
+            editFeedback();
+
+            toggleEditing(false);
+        } catch (error) {
+            console.error(error);
+
+            handleShowInvalidFieldsError();
+        }
+    }
+
+    function handleShowInvalidFieldsError() {
+        setShowInvalidFieldsError(true);
+
+        const unsubscribe = setTimeout(() => {
+            setShowInvalidFieldsError(false);
+        }, 2000);
+
+        () => clearTimeout(unsubscribe);
     }
 
     function checkEditValidity() {
-        // check validity
+        const invalidCharacters = "~!@#$%^&*()_+-=;:[{]}".split("");
+        const minimumLength = 5;
+
+        for (let i of editedTitle) {
+            if (invalidCharacters.includes(i))
+                throw new Error("Invalid Fields!");
+        }
+
+        if (
+            editedTitle.trim() === "" ||
+            editedReason.trim() === "" ||
+            editedDescription.trim() === "" ||
+            editedTitle.trim().length <= minimumLength ||
+            editedReason.trim().length <= minimumLength ||
+            editedDescription.trim().length <= minimumLength
+        )
+            throw new Error("Invalid fields!");
     }
 
     return (
@@ -74,11 +129,7 @@ export default function EditFeedbackModal({
                             FEEDBACK TITLE
                         </h2>
                         <textarea
-                            value={
-                                editedTitle !== "empty"
-                                    ? editedTitle
-                                    : previous_title
-                            }
+                            value={editedTitle}
                             onChange={(e) => setEditedTitle(e.target.value)}
                             maxLength={68}
                             rows={2}
@@ -91,11 +142,7 @@ export default function EditFeedbackModal({
                             FEEDBACK REASON
                         </h2>
                         <textarea
-                            value={
-                                editedReason !== "empty"
-                                    ? editedReason
-                                    : previous_reason
-                            }
+                            value={editedReason}
                             onChange={(e) => setEditedReason(e.target.value)}
                             maxLength={80}
                             rows={3.5}
@@ -108,11 +155,7 @@ export default function EditFeedbackModal({
                             FEEDBACK DESCRIPTION
                         </h2>
                         <textarea
-                            value={
-                                editedDescription !== "empty"
-                                    ? editedDescription
-                                    : previous_description
-                            }
+                            value={editedDescription}
                             onChange={(e) =>
                                 setEditedDescription(e.target.value)
                             }
@@ -140,20 +183,45 @@ export default function EditFeedbackModal({
                             })}
                         </ul>
 
-                        <section className='flex flex-row items-center justify-end gap-5 lg:-mt-4'>
-                            <button
-                                onClick={() => toggleEditing(false)}
-                                className='w-24 border-2 rounded py-2'
-                            >
-                                <span className='text-sm font-bold tracking-wider text-red-500'>
-                                    Discard
-                                </span>
-                            </button>
-                            <button className='w-24 border rounded py-2 bg-blue-500'>
-                                <span className='text-sm font-bold tracking-wider text-white'>
-                                    Edit
-                                </span>
-                            </button>
+                        <section className='flex flex-row items-center justify-between gap-5 lg:-mt-4'>
+                            <div className='animate-bounce'>
+                                <AnimatePresence>
+                                    {showInvalidFieldsError && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                        >
+                                            <span className='text-sm  text-red-500 tracking-wider italic'>
+                                                Invalid Fields!*
+                                            </span>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => toggleEditing(false)}
+                                    className='w-24 border-2 rounded py-2'
+                                >
+                                    <span className='text-sm font-bold tracking-wider text-red-500'>
+                                        Discard
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => handleEditFeedback()}
+                                    className={`w-24 border rounded py-2 ${
+                                        noChangesMade
+                                            ? "bg-gray-300"
+                                            : "bg-blue-500"
+                                    }`}
+                                    disabled={noChangesMade}
+                                >
+                                    <span className='text-sm font-bold tracking-wider text-white'>
+                                        Edit
+                                    </span>
+                                </button>
+                            </div>
                         </section>
                     </footer>
                 </form>

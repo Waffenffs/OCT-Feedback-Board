@@ -3,7 +3,7 @@
 import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AuthContext } from "@/app/context/AuthProvider";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BsFillChatFill } from "react-icons/bs";
@@ -13,6 +13,7 @@ import {
     BiSolidChevronUp,
     BiTime,
     BiUser,
+    BiEditAlt,
 } from "react-icons/bi";
 
 import Loading from "@/app/components/Loading";
@@ -34,6 +35,7 @@ export default function FeedbackContent() {
     const [isEditingFeedback, setIsEditingFeedback] = useState(false);
     const [feedback, setFeedback] = useState<any>();
     const [convertedFeedbackDate, setConvertedFeedbackDate] = useState("");
+    const [convertedEditDate, setConvertedEditDate] = useState("");
     const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
         boolean | undefined
     >(undefined);
@@ -44,15 +46,17 @@ export default function FeedbackContent() {
         const docRef = doc(db, "posts", id as string);
 
         try {
-            const docSnap = await getDoc(docRef);
+            const unsubscribe = onSnapshot(docRef, (doc) => {
+                if (!doc.exists())
+                    throw new Error(
+                        "Error with fetching slug data. Document may not exist."
+                    );
 
-            if (!docSnap.exists())
-                throw new Error(
-                    "Error with fetching slug data. Document may not exist."
-                );
+                setFeedback(doc.data());
+                setIsLoading(false);
+            });
 
-            setFeedback(docSnap.data());
-            setIsLoading(false);
+            return () => unsubscribe();
         } catch (error) {
             console.log(error);
 
@@ -124,13 +128,20 @@ export default function FeedbackContent() {
         router.push("/main");
     }
 
-    function checkURLTitle(formattedTitle: string, id: string) {
-        const url = new URL(window.location.href);
+    function checkURLTitle() {
+        const formattedTitle = feedback.title
+            .split(" ")
+            .join("_")
+            .toLowerCase();
+        const currentURL = new URL(window.location.href);
 
-        if (url.pathname !== `/feedback/redirect?id=${id}/${formattedTitle}`) {
+        if (
+            currentURL.pathname !==
+            `/feedback/redirect?id=${id}/${formattedTitle}`
+        ) {
             const newURL = `/feedback/redirect?id=${id}/${formattedTitle}`;
 
-            window.history.replaceState(null, "title", newURL);
+            router.replace(newURL);
         }
     }
 
@@ -141,12 +152,7 @@ export default function FeedbackContent() {
     useEffect(() => {
         if (!feedback || !id) return;
 
-        const formattedTitle = feedback.title
-            .split(" ")
-            .join("_")
-            .toLowerCase();
-
-        checkURLTitle(formattedTitle, id);
+        checkURLTitle();
     }, [feedback, id]);
 
     useEffect(() => {
@@ -158,19 +164,48 @@ export default function FeedbackContent() {
 
         getAuthorUserIdentifier(feedback.creator);
 
-        const timestamp = feedback.creation_date;
-        const timestampToDate = new Date(timestamp.seconds * 1000);
-        const formattedDate = new Intl.DateTimeFormat("en-us", {
+        const INTLFormat: Intl.DateTimeFormatOptions = {
             year: "numeric",
             month: "long",
             day: "numeric",
             hour: "numeric",
             minute: "numeric",
             hour12: true,
-        }).format(timestampToDate);
+        };
+
+        const timestamp = feedback.creation_date;
+        const timestampToDate = new Date(timestamp.seconds * 1000);
+        const formattedDate = new Intl.DateTimeFormat(
+            "en-us",
+            INTLFormat
+        ).format(timestampToDate);
 
         setConvertedFeedbackDate(formattedDate);
     }, [feedback]);
+
+    useEffect(() => {
+        if (!feedback?.last_edited) return; // do nothing
+
+        const INTLFormat: Intl.DateTimeFormatOptions = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        };
+
+        const lastEditedTimestamp = feedback?.last_edited;
+        const lastEditedTimeStampToDate = new Date(
+            lastEditedTimestamp.seconds * 1000
+        );
+        const formattedLastEditedTimestamp = new Intl.DateTimeFormat(
+            "en-us",
+            INTLFormat
+        ).format(lastEditedTimeStampToDate);
+
+        setConvertedEditDate(formattedLastEditedTimestamp);
+    }, [feedback?.last_edited]);
 
     if (isLoading) {
         return <Loading />;
@@ -179,9 +214,6 @@ export default function FeedbackContent() {
     if (documentDoesNotExist) {
         return <FallbackContent />;
     }
-
-    // TO-DO:
-    // 2. Work no the Edit Feedback feature
 
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] px-5 lg:px-24 py-7 overflow-y-auto relative'>
@@ -193,6 +225,7 @@ export default function FeedbackContent() {
                         previous_description={feedback.description}
                         previous_tag={feedback.tag}
                         toggleEditing={setIsEditingFeedback}
+                        feedback_uid={id as string}
                     />
                 )}
             </AnimatePresence>
@@ -279,30 +312,51 @@ export default function FeedbackContent() {
                                         </h3>
                                     </div>
                                 </div>
+                                {convertedEditDate && (
+                                    <span className='hidden md:flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'>
+                                        <BiEditAlt /> Edited: (
+                                        {convertedEditDate})
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
-                    <footer className='flex flex-row items-center justify-between mt-5 px-5'>
-                        <button
-                            onClick={() => upvoteFeedback()}
-                            className='z-10 md:hidden bg-[#f2f4ff] gap-2 flex justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
-                        >
-                            <BiSolidChevronUp className='text-2xl text-blue-500' />
-                            <h3 className='font-bold tracking-wider text-[#373e68]'>
-                                {feedback.upvotes}
-                            </h3>
-                        </button>
-                        <div className='flex md:hidden flex-row items-center gap-2'>
-                            <BsFillChatFill className='text-[#cdd2ef]' />
-                            <h3 className='font-bold tracking-wider text-[#373e68]'>
-                                {feedback.post_comments.length}
-                            </h3>
-                        </div>
-                    </footer>
+                    <div className=' mt-5 px-5'>
+                        <footer className='flex flex-row items-center justify-between mb-5'>
+                            <button
+                                onClick={() => upvoteFeedback()}
+                                className='z-10 md:hidden bg-[#f2f4ff] gap-2 flex justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
+                            >
+                                <BiSolidChevronUp className='text-2xl text-blue-500' />
+                                <h3 className='font-bold tracking-wider text-[#373e68]'>
+                                    {feedback.upvotes}
+                                </h3>
+                            </button>
+                            <div className='flex md:hidden flex-row items-center gap-2'>
+                                <BsFillChatFill className='text-[#cdd2ef]' />
+                                <h3 className='font-bold tracking-wider text-[#373e68]'>
+                                    {feedback.post_comments.length}
+                                </h3>
+                            </div>
+                        </footer>
+                        {convertedEditDate && (
+                            <span className='md:hidden flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'>
+                                <BiEditAlt /> Edited: ({convertedEditDate})
+                            </span>
+                        )}
+                    </div>
                 </motion.article>
             </header>
 
-            <CommentInput />
+            <AnimatePresence>
+                <motion.div
+                    initial={{ opacity: 0, scale: 1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.5 }}
+                >
+                    <CommentInput />
+                </motion.div>
+            </AnimatePresence>
         </main>
     );
 }

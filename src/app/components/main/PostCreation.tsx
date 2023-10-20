@@ -5,7 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db } from "@/app/firebase/firebaseConfig";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 type TPostCreationProps = {
     setPostCreationToggled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +26,7 @@ export default function PostCreation({
     const [feedbackTag, setFeedbackTag] = useState<TFeedbackTag>("Academic"); // default
     const [creatorAnonymity, setCreatorAnonymity] = useState(false);
     const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+    const [showInvalidFieldsError, setShowInvalidFieldsError] = useState(false);
 
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -42,6 +43,9 @@ export default function PostCreation({
 
         if (!checkPostValidity()) {
             console.error(`Invalid fields!`);
+
+            handleShowInvalidFieldsError();
+
             return; // don't do anything.
         }
 
@@ -84,6 +88,16 @@ export default function PostCreation({
         }
 
         return true;
+    }
+
+    function handleShowInvalidFieldsError() {
+        setShowInvalidFieldsError(true);
+
+        const unsubscribe = setTimeout(() => {
+            setShowInvalidFieldsError(false);
+        }, 2000);
+
+        () => clearTimeout(unsubscribe);
     }
 
     return (
@@ -192,33 +206,53 @@ export default function PostCreation({
                             </button>
                         </div>
 
-                        <section className='flex flex-row items-center justify-end gap-5 lg:-mt-4'>
-                            <button
-                                onClick={() => setPostCreationToggled(false)}
-                                className='w-24 border-2 rounded py-2'
-                            >
-                                <span className='text-sm font-bold tracking-wider text-red-500'>
-                                    Cancel
-                                </span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setAlreadySubmitted(true);
+                        <section className='flex flex-row items-center justify-between gap-5 lg:-mt-4'>
+                            <div className='animate-bounce'>
+                                <AnimatePresence>
+                                    {showInvalidFieldsError && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                        >
+                                            <span className='text-sm text-red-500 tracking-wider italic'>
+                                                Invalid Fields!*
+                                            </span>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
 
-                                    const unsubscribe = setTimeout(() => {
-                                        setAlreadySubmitted(false);
-                                    }, 4000);
+                            <div>
+                                <button
+                                    onClick={() =>
+                                        setPostCreationToggled(false)
+                                    }
+                                    className='w-24 border-2 rounded py-2'
+                                >
+                                    <span className='text-sm font-bold tracking-wider text-red-500'>
+                                        Cancel
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setAlreadySubmitted(true);
 
-                                    clearTimeout(unsubscribe);
+                                        const unsubscribe = setTimeout(() => {
+                                            setAlreadySubmitted(false);
+                                        }, 4000);
 
-                                    createPost();
-                                }}
-                                className='w-24 border rounded py-2 bg-blue-500'
-                            >
-                                <span className='text-sm font-bold tracking-wider text-white'>
-                                    Post
-                                </span>
-                            </button>
+                                        clearTimeout(unsubscribe);
+
+                                        createPost();
+                                    }}
+                                    className='w-24 border rounded py-2 bg-blue-500'
+                                >
+                                    <span className='text-sm font-bold tracking-wider text-white'>
+                                        Post
+                                    </span>
+                                </button>
+                            </div>
                         </section>
                     </footer>
                 </form>
