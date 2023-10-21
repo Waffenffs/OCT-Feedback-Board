@@ -14,26 +14,22 @@ export default function StatusModal({
     message,
     setShowModal,
 }: TStatusModalProps) {
-    // TO-DO:
-    // 1. Fix stylings and widths
-
     return (
         <motion.article
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className='absolute top-0 w-full flex justify-center items-center z-50'
+            className='fixed top-0 w-full flex justify-center items-center z-100'
         >
             <div
                 className={` ${
                     isSuccess ? "bg-green-500" : "bg-red-500"
-                } mt-3 px-6 py-3 rounded shadow-xl text-sm text-white flex flex-row max-sm:w-80 justify-between self-center `}
+                } mt-3 px-6 py-3 rounded shadow-xl text-sm text-white flex flex-row max-sm:w-80 md:w-96 justify-between self-center `}
             >
                 <div className='md:w-3/4'>
                     <h1 className='text-xl tracking-wider font-semibold'>
-                        {type === "user_authentication"
-                            ? "Authentication"
-                            : "Database Write/Read"}
+                        {type === "user_authentication" && "Authentication"}
+                        {type === "user_database_write" && "Database"}
                     </h1>
                     <p>{message}</p>
                 </div>
