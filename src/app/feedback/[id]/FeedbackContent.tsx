@@ -22,7 +22,7 @@ import EditFeedbackModal from "@/app/components/feedback/EditFeedbackModal";
 import CommentInput from "@/app/components/feedback/CommentInput";
 
 export default function FeedbackContent() {
-    const id = useSearchParams().get("id")?.split("/")[0];
+    const feedbackId = useSearchParams().get("id")?.split("/")[0];
     const router = useRouter();
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
@@ -41,9 +41,9 @@ export default function FeedbackContent() {
     >(undefined);
 
     async function fetchDataFromFirebase() {
-        if (!id) return;
+        if (!feedbackId) return;
 
-        const docRef = doc(db, "posts", id as string);
+        const docRef = doc(db, "posts", feedbackId as string);
 
         try {
             const unsubscribe = onSnapshot(docRef, (doc) => {
@@ -82,7 +82,7 @@ export default function FeedbackContent() {
 
     async function upvoteFeedback() {
         try {
-            const docRef = doc(db, "posts", id as string);
+            const docRef = doc(db, "posts", feedbackId as string);
             const feedbackSnap = await getDoc(docRef);
 
             if (!feedbackSnap || !feedbackSnap.exists()) {
@@ -137,9 +137,9 @@ export default function FeedbackContent() {
 
         if (
             currentURL.pathname !==
-            `/feedback/redirect?id=${id}/${formattedTitle}`
+            `/feedback/redirect?id=${feedbackId}/${formattedTitle}`
         ) {
-            const newURL = `/feedback/redirect?id=${id}/${formattedTitle}`;
+            const newURL = `/feedback/redirect?id=${feedbackId}/${formattedTitle}`;
 
             router.replace(newURL);
         }
@@ -150,10 +150,10 @@ export default function FeedbackContent() {
     }, []);
 
     useEffect(() => {
-        if (!feedback || !id) return;
+        if (!feedback || !feedbackId) return;
 
         checkURLTitle();
-    }, [feedback, id]);
+    }, [feedback, feedbackId]);
 
     useEffect(() => {
         if (isLoading) return; // wait for it to load
@@ -213,7 +213,7 @@ export default function FeedbackContent() {
                         previous_description={feedback.description}
                         previous_tag={feedback.tag}
                         toggleEditing={setIsEditingFeedback}
-                        feedback_uid={id as string}
+                        feedback_uid={feedbackId as string}
                     />
                 )}
             </AnimatePresence>
@@ -358,7 +358,7 @@ export default function FeedbackContent() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.5 }}
                 >
-                    <CommentInput />
+                    <CommentInput feedback_id={feedbackId as string} />
                 </motion.div>
             </AnimatePresence>
         </main>

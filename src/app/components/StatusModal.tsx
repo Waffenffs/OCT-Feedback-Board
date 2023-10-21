@@ -14,6 +14,9 @@ export default function StatusModal({
     message,
     setShowModal,
 }: TStatusModalProps) {
+    // TO-DO:
+    // 1. Fix stylings and widths
+
     return (
         <motion.article
             initial={{ opacity: 0, y: -100 }}
