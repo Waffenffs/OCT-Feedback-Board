@@ -55,8 +55,6 @@ export default function Content({ tag }: TContentOptions) {
             setFeedbacks(firestoreFeedbacks);
         });
 
-        console.log("fetched content");
-
         return () => unsubscribe();
     }
 

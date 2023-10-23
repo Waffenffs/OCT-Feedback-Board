@@ -148,7 +148,7 @@ export default function LeftSection({
                         Feedback Board
                     </h3>
                 </div>
-                <img className='lg:hidden' src='/oct-logo.png' alt='' />
+                <img className='lg:hidden' src='/oct-logo.png' alt='...logo' />
             </div>
             <div className='bg-white shadow rounded px-3 py-7'>
                 <h2 className='mb-5 font-bold tracking-wider text-[#373e68]'>

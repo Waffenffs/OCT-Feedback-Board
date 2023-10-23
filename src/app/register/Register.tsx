@@ -102,12 +102,16 @@ export default function Register() {
             </AnimatePresence>
 
             <div className='hidden md:flex w-full h-full justify-center items-center px-10'>
-                <img src='/icon2.svg' alt='' />
+                <img src='/icon2.svg' alt='...icon' />
             </div>
 
             <article className='bg-white w-full h-full lg:w-[37rem] md:shadow-xl md:w-[40rem] md:mr-5 md:border md:mt-2 md:rounded-t-xl flex flex-col gap-16 md:gap-9 items-center relative'>
                 <div className='w-28 h-28 mt-14 md:w-24 md:h-24 md:mt-8'>
-                    <img src='/oct-logo.png' className='object-cover' />
+                    <img
+                        src='/oct-logo.png'
+                        alt='...icon'
+                        className='object-cover'
+                    />
                 </div>
 
                 <header className='text-center'>

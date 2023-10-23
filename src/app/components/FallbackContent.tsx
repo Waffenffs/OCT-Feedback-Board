@@ -15,7 +15,11 @@ export default function FallbackContent() {
                 404
             </h1>
             <div className='w-64 h-64 mt-6'>
-                <img src='/404_icon.svg' alt='' className='object-cover' />
+                <img
+                    src='/404_icon.svg'
+                    alt='...icon'
+                    className='object-cover'
+                />
             </div>
             <h3 className='font-semibold tracking-wider text-slate-600 text-sm'>
                 Seems like spilled paint.

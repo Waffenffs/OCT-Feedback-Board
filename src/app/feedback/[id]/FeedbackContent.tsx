@@ -394,14 +394,17 @@ export default function FeedbackContent() {
                         />
                     </div>
                     <section className='flex flex-col gap-3 px-5 lg:px-24 w-full mt-10'>
-                        {sortedFeedbackComments?.map((comment: IComment) => {
-                            return (
-                                <Comment
-                                    feedback_uid={feedbackId as string}
-                                    {...comment}
-                                />
-                            );
-                        })}
+                        {sortedFeedbackComments?.map(
+                            (comment: IComment, index: any) => {
+                                return (
+                                    <Comment
+                                        key={index}
+                                        feedback_uid={feedbackId as string}
+                                        {...comment}
+                                    />
+                                );
+                            }
+                        )}
                     </section>
                 </motion.section>
             </AnimatePresence>
