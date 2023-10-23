@@ -19,7 +19,28 @@ import {
 import Loading from "@/app/components/Loading";
 import FallbackContent from "@/app/components/FallbackContent";
 import EditFeedbackModal from "@/app/components/feedback/EditFeedbackModal";
-import CommentInput from "@/app/components/feedback/CommentInput";
+import CommentInput, { IComment } from "@/app/components/feedback/CommentInput";
+import Comment from "@/app/components/feedback/Comment";
+import DropdownModal from "@/app/components/ui/DropdownModal";
+
+export type TOptions = "New" | "Top" | "Controversial";
+
+export function formatTimestamp(timestamp: any) {
+    if (!timestamp) return null;
+
+    const INTLFormat: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+    };
+
+    const timestampToDate = new Date(timestamp.seconds * 1000);
+
+    return new Intl.DateTimeFormat("en-us", INTLFormat).format(timestampToDate);
+}
 
 export default function FeedbackContent() {
     const feedbackId = useSearchParams().get("id")?.split("/")[0];
@@ -34,8 +55,11 @@ export default function FeedbackContent() {
     const [isOwner, setIsOwner] = useState(false);
     const [isEditingFeedback, setIsEditingFeedback] = useState(false);
     const [feedback, setFeedback] = useState<any>();
+    const [sortedFeedbackComments, setSortedFeedbackComments] = useState<any>();
     const [convertedFeedbackDate, setConvertedFeedbackDate] = useState("");
     const [convertedEditDate, setConvertedEditDate] = useState("");
+    const [currentCommentSort, setCurrentCommentSort] =
+        useState<TOptions>("Top");
     const [documentDoesNotExist, setDocumentDoesNotExist] = useState<
         boolean | undefined
     >(undefined);
@@ -164,25 +188,6 @@ export default function FeedbackContent() {
 
         getAuthorUserIdentifier(feedback.creator);
 
-        function formatTimestamp(timestamp: any) {
-            if (!timestamp) return null;
-
-            const INTLFormat: Intl.DateTimeFormatOptions = {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-            };
-
-            const timestampToDate = new Date(timestamp.seconds * 1000);
-
-            return new Intl.DateTimeFormat("en-us", INTLFormat).format(
-                timestampToDate
-            );
-        }
-
         const creationTimestamp = feedback.creation_date;
         const formattedCreationTimestamp = formatTimestamp(creationTimestamp);
 
@@ -195,6 +200,24 @@ export default function FeedbackContent() {
         setConvertedEditDate(formattedLastEditedTimestamp as string);
     }, [feedback]);
 
+    useEffect(() => {
+        let comments = feedback?.post_comments;
+
+        if (comments) {
+            if (currentCommentSort === "Top") {
+                comments.sort(
+                    (a: any, b: any) => b.comment_upvotes - a.comment_upvotes
+                );
+            } else if (currentCommentSort === "Controversial") {
+                comments.sort(
+                    (a: any, b: any) => a.comment_upvotes - b.comment_upvotes
+                );
+            }
+
+            setSortedFeedbackComments(comments);
+        }
+    }, [currentCommentSort, feedback]);
+
     if (isLoading) {
         return <Loading />;
     }
@@ -202,6 +225,9 @@ export default function FeedbackContent() {
     if (documentDoesNotExist) {
         return <FallbackContent />;
     }
+
+    // TO-DO:
+    // 1. Fix sorting.
 
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] py-7 overflow-y-auto relative'>
@@ -353,13 +379,31 @@ export default function FeedbackContent() {
             </header>
 
             <AnimatePresence>
-                <motion.div
+                <motion.section
                     initial={{ opacity: 0, scale: 1 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.5 }}
                 >
                     <CommentInput feedback_id={feedbackId as string} />
-                </motion.div>
+                    <div className='w-full px-5 lg:px-24 flex flex-row items-center gap-1 mt-5'>
+                        <h2>Sort By: </h2>
+                        <DropdownModal
+                            options={["New", "Top", "Controversial"]}
+                            selectedOption={currentCommentSort}
+                            selectOptionStateSetter={setCurrentCommentSort}
+                        />
+                    </div>
+                    <section className='flex flex-col gap-3 px-5 lg:px-24 w-full mt-10'>
+                        {sortedFeedbackComments?.map((comment: IComment) => {
+                            return (
+                                <Comment
+                                    feedback_uid={feedbackId as string}
+                                    {...comment}
+                                />
+                            );
+                        })}
+                    </section>
+                </motion.section>
             </AnimatePresence>
         </main>
     );

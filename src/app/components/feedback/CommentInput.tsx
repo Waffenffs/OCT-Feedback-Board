@@ -14,12 +14,19 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import StatusModal from "../StatusModal";
 
-interface IComment {
+// Yes, I know it's bad infrastructure in my part--
+// -- as we could just get the lengths of comment_upvoters/comment_downvoters to get the amount
+
+export interface IComment {
     uid: string;
     user_identifier: string;
     email: string;
     comment_content: string;
     comment_upvotes: number;
+    comment_upvoters: string[];
+    comment_downvotes: number;
+    comment_downvoters: string[];
+    comment_identifier: string;
     comment_replies: {} | undefined;
     comment_creation_date: any;
 }
@@ -73,6 +80,10 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
             email: profile?.email as string,
             comment_content: commentContent.trim(),
             comment_upvotes: 0,
+            comment_upvoters: [],
+            comment_downvotes: 0,
+            comment_downvoters: [],
+            comment_identifier: generateUID(),
             comment_replies: {},
             comment_creation_date: Timestamp.now(),
         };
@@ -100,6 +111,10 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         }
     }
 
+    function generateUID() {
+        return Math.random().toString(36).substr(2, 9);
+    }
+
     function handlePostComment() {
         setShowStatusLoading(true);
 
@@ -117,7 +132,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         }, 1000);
     }
 
-    function checkCommentValidity() {
+    function checkCommentValidity(): EStatusModalType {
         const minimumCommentLength = 5;
 
         if (commentContent.trim().length <= minimumCommentLength) {
@@ -164,6 +179,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
                     />
                 )}
             </AnimatePresence>
+
             <div className='w-full flex flex-col gap-3 justify-start mt-20 px-5 lg:px-24'>
                 <div className='flex flex-row items-center gap-1 text-sm'>
                     <h3 className='tracking-wider'>Comment as</h3>{" "}
