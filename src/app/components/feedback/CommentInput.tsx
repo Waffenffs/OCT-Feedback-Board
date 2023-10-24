@@ -238,14 +238,17 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
 
 function LoadingCommentInput() {
     return (
-        <div className='w-full flex flex-col gap-3 justify-start animate-pulse mt-16'>
+        <div className='w-full flex flex-col gap-3 justify-start animate-pulse mt-16 px-5 lg:px-24'>
             <div className='h-2.5 w-24 bg-blue-200 dark:bg-blue-300'></div>
             <div className='w-full flex flex-col'>
                 <div className='px-4 h-24 w-full px-5 pt-2 border border-slate-300'>
                     <div className='h-4 w-24 bg-blue-200 dark:bg-blue-300'></div>
                 </div>
                 <div className='rounded-b-full h-10 bg-slate-300 rounded-b-xl flex items-center flex-row justify-end py-2 px-4'>
-                    <button className='rounded-full bg-blue-400 h-4 w-24'></button>
+                    <button
+                        disabled
+                        className='rounded-full bg-blue-400 h-4 w-24'
+                    ></button>
                 </div>
             </div>
         </div>

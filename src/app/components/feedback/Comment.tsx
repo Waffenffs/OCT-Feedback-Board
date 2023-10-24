@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IComment } from "./CommentInput";
 import { formatTimestamp } from "@/app/feedback/[id]/FeedbackContent";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/app/firebase/firebaseConfig";
 import { TbArrowBigUp, TbArrowBigDown, TbFlag } from "react-icons/tb";
+import { AiOutlineDelete } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
+import { AuthContext } from "@/app/context/AuthProvider";
+import { useRouter } from "next/navigation";
 
 interface ICommentProps extends IComment {
     feedback_uid: string;
@@ -23,10 +26,15 @@ export default function Comment({
     comment_identifier,
     comment_creation_date,
 }: ICommentProps) {
+    const { ...profileProps } = useContext(AuthContext);
+    const profile = profileProps.profile;
+    const router = useRouter();
+
     const [updatedUserIdentifier, setUpdatedUserIdentifier] =
         useState(user_identifier);
     const [loading, setLoading] = useState(true);
     const [showCommentOptions, setShowCommentOptions] = useState(false);
+    // Redirect user to login page if
 
     async function getUpdatedUserIdentifier() {
         try {
@@ -47,6 +55,10 @@ export default function Comment({
 
     async function upvoteComment() {
         try {
+            if (!profile?.authenticated) {
+                return router.push("/");
+            }
+
             const feedbackRef = doc(db, "posts", feedback_uid);
             const feedbackSnap = await getDoc(feedbackRef);
 
@@ -63,8 +75,6 @@ export default function Comment({
                 throw new Error("Comment does not exist! Origin: Comment.tsx");
 
             let comment = comments[commentIndex];
-
-            console.log(comment.comment_upvoters);
 
             if (comment.comment_upvoters.includes(uid)) {
                 comment.comment_upvotes -= 1;
@@ -88,6 +98,10 @@ export default function Comment({
 
     async function downvoteComment() {
         try {
+            if (!profile?.authenticated) {
+                return router.push("/");
+            }
+
             const feedbackRef = doc(db, "posts", feedback_uid);
             const feedbackSnap = await getDoc(feedbackRef);
 
@@ -110,14 +124,19 @@ export default function Comment({
                 comment.comment_downvoters = comment.comment_downvoters.filter(
                     (upvoter_uid: string) => upvoter_uid !== uid
                 );
-            } else if (!comment.comment_downvoters.includes(uid)) {
+            }
+            if (!comment.comment_downvoters.includes(uid)) {
                 comment.comment_downvotes += 1;
                 comment.comment_downvoters.push(uid);
             }
+            if (comment.comment_upvoters.includes(uid)) {
+                comment.comment_upvotes -= 1;
+                comment.comment_upvoters = comment.comment_upvoters.filter(
+                    (upvoter_uid: string) => upvoter_uid !== uid
+                );
+            }
 
             comments[commentIndex] = comment;
-
-            console.log(comment.comment_downvotes);
 
             await updateDoc(feedbackRef, {
                 post_comments: comments,
@@ -127,7 +146,30 @@ export default function Comment({
         }
     }
 
+    async function deleteComment() {
+        try {
+            const feedbackRef = doc(db, "posts", feedback_uid);
+            const feedbackSnap = await getDoc(feedbackRef);
+
+            if (!feedbackSnap.exists())
+                throw new Error(`Feedback does not exist! Origin: Comment.tsx`);
+
+            const comments = feedbackSnap.data().post_comments;
+            const updatedComments = comments.filter(
+                (comment: IComment) =>
+                    comment.comment_identifier !== comment_identifier
+            );
+
+            await updateDoc(feedbackRef, {
+                post_comments: updatedComments,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const convertedCommentCreationDate = formatTimestamp(comment_creation_date);
+    const currentUserIsCommentOwner = profile?.uid === uid;
 
     useEffect(() => {
         getUpdatedUserIdentifier();
@@ -189,12 +231,23 @@ export default function Comment({
                                 exit={{ opacity: 0, y: -10 }}
                                 className='absolute bg-gray-300 top-9 rounded shadow'
                             >
-                                <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded'>
+                                <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded-t'>
                                     <TbFlag className='text-slate-800 transition group-hover:text-white' />
                                     <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
                                         Report
                                     </span>
                                 </li>
+                                {currentUserIsCommentOwner && (
+                                    <li
+                                        onClick={() => deleteComment()}
+                                        className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-blue-500 rounded-b'
+                                    >
+                                        <AiOutlineDelete className='text-slate-800 transition group-hover:text-white' />
+                                        <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
+                                            Delete
+                                        </span>
+                                    </li>
+                                )}
                             </motion.ul>
                         )}
                     </AnimatePresence>

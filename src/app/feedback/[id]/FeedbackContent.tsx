@@ -204,17 +204,19 @@ export default function FeedbackContent() {
         let comments = feedback?.post_comments;
 
         if (comments) {
+            const commentsCopy = [...comments];
+
             if (currentCommentSort === "Top") {
-                comments.sort(
-                    (a: any, b: any) => b.comment_upvotes - a.comment_upvotes
+                commentsCopy.sort(
+                    (a, b) => b.comment_upvotes - a.comment_upvotes
                 );
             } else if (currentCommentSort === "Controversial") {
-                comments.sort(
-                    (a: any, b: any) => a.comment_upvotes - b.comment_upvotes
+                commentsCopy.sort(
+                    (a, b) => b.comment_downvotes - a.comment_downvotes
                 );
             }
 
-            setSortedFeedbackComments(comments);
+            setSortedFeedbackComments(commentsCopy);
         }
     }, [currentCommentSort, feedback]);
 
@@ -225,6 +227,16 @@ export default function FeedbackContent() {
     if (documentDoesNotExist) {
         return <FallbackContent />;
     }
+
+    const sortedCommentElements = sortedFeedbackComments?.map(
+        (comment: IComment, index: any) => (
+            <Comment
+                key={index}
+                feedback_uid={feedbackId as string}
+                {...comment}
+            />
+        )
+    );
 
     // TO-DO:
     // 1. Fix sorting.
@@ -385,29 +397,31 @@ export default function FeedbackContent() {
                     transition={{ delay: 1.5 }}
                 >
                     <CommentInput feedback_id={feedbackId as string} />
-                    <div className='w-full px-5 lg:px-24 flex flex-row items-center gap-1 mt-5'>
-                        <h2>Sort By: </h2>
-                        <DropdownModal
-                            options={["New", "Top", "Controversial"]}
-                            selectedOption={currentCommentSort}
-                            selectOptionStateSetter={setCurrentCommentSort}
-                        />
-                    </div>
-                    <section className='flex flex-col gap-3 px-5 lg:px-24 w-full mt-10'>
-                        {sortedFeedbackComments?.map(
-                            (comment: IComment, index: any) => {
-                                return (
-                                    <Comment
-                                        key={index}
-                                        feedback_uid={feedbackId as string}
-                                        {...comment}
-                                    />
-                                );
-                            }
-                        )}
-                    </section>
+                    {feedback?.post_comments.length !== 0 ? (
+                        <>
+                            <div className='w-full px-5 lg:px-24 flex flex-row items-center gap-1 mt-5'>
+                                <h2>Sort By: </h2>
+                                <DropdownModal
+                                    options={["New", "Top", "Controversial"]}
+                                    selectedOption={currentCommentSort}
+                                    selectOptionStateSetter={
+                                        setCurrentCommentSort
+                                    }
+                                />
+                            </div>
+                            <section className='flex flex-col gap-3 px-5 lg:px-24 w-full mt-10'>
+                                {sortedCommentElements}
+                            </section>
+                        </>
+                    ) : (
+                        <EmptyCommentsPlaceholder />
+                    )}
                 </motion.section>
             </AnimatePresence>
         </main>
     );
+}
+
+function EmptyCommentsPlaceholder() {
+    return <>Do something with this thing.</>;
 }
