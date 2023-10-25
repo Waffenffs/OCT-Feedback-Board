@@ -223,7 +223,7 @@ export default function PostCreation({
                                 </AnimatePresence>
                             </div>
 
-                            <div>
+                            <div className='flex flex-row items-center gap-4'>
                                 <button
                                     onClick={() =>
                                         setPostCreationToggled(false)

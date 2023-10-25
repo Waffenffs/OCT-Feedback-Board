@@ -31,12 +31,12 @@ export default function LeftSection({
     const [currentFeedbackCount, setCurrentFeedbackCount] = useState<
         number | null
     >(null);
-    const [editedUserIdentifier, setEditedUserIdentifier] = useState("");
-    const [isEditingUserIdentifier, setIsEditingUserIdentifier] =
-        useState(false);
     const [currentUserIdentifier, setCurrentUserIdentifier] = useState<
         any | null
     >(null);
+    const [editedUserIdentifier, setEditedUserIdentifier] = useState("");
+    const [isEditingUserIdentifier, setIsEditingUserIdentifier] =
+        useState(false);
     const [displayUIDStatusModal, setDisplayUIDStatusModal] = useState(false);
 
     const { ...profileProps } = useContext(AuthContext);
