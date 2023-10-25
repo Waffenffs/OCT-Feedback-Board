@@ -194,6 +194,12 @@ export default function Comment({
                 </span>
             </header>
 
+            <section className='md:hidden mb-3'>
+                <span className='text-xs text-slate-600 font-semibold tracking-wide'>
+                    {convertedCommentCreationDate}
+                </span>
+            </section>
+
             <main className='text-slate-900 tracking-wider mt-1'>
                 {comment_content}
             </main>

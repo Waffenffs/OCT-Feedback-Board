@@ -35,7 +35,7 @@ type TCommentInputProps = {
     feedback_id: string;
 };
 
-enum EStatusModalType {
+enum EStatusModal {
     Success = "success",
     Error = "error",
 }
@@ -48,14 +48,14 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [showStatusLoading, setShowStatusLoading] = useState(false);
     const [statusModalIsSuccess, setStatusModalIsSuccess] =
-        useState<EStatusModalType>(EStatusModalType.Success);
+        useState<EStatusModal>(EStatusModal.Success);
 
     const { ...profileProps } = useContext(AuthContext);
     const { profile } = profileProps;
 
     const statusMessages = {
-        [EStatusModalType.Success]: "Successfully posted your comment!",
-        [EStatusModalType.Error]: "Failed posting your comment! Try again.",
+        [EStatusModal.Success]: "Successfully posted your comment!",
+        [EStatusModal.Error]: "Failed posting your comment! Try again.",
     };
 
     async function getUserIdentifier() {
@@ -95,7 +95,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
                 post_comments: arrayUnion(newComment),
             });
 
-            setStatusModalIsSuccess(EStatusModalType.Success);
+            setStatusModalIsSuccess(EStatusModal.Success);
             setShowStatusLoading(false);
 
             clearCommentContent();
@@ -103,7 +103,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         } catch (error) {
             console.error(error);
 
-            setStatusModalIsSuccess(EStatusModalType.Error);
+            setStatusModalIsSuccess(EStatusModal.Error);
             setShowStatusLoading(false);
 
             clearCommentContent();
@@ -121,8 +121,8 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         setTimeout(() => {
             const commentValidity = checkCommentValidity();
 
-            if (commentValidity === EStatusModalType.Error) {
-                setStatusModalIsSuccess(EStatusModalType.Error);
+            if (commentValidity === EStatusModal.Error) {
+                setStatusModalIsSuccess(EStatusModal.Error);
                 setShowStatusLoading(false);
 
                 displayStatusModal();
@@ -132,14 +132,14 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         }, 1000);
     }
 
-    function checkCommentValidity(): EStatusModalType {
+    function checkCommentValidity(): EStatusModal {
         const minimumCommentLength = 5;
 
         if (commentContent.trim().length <= minimumCommentLength) {
-            return EStatusModalType.Error;
+            return EStatusModal.Error;
         }
 
-        return EStatusModalType.Success;
+        return EStatusModal.Success;
     }
 
     function clearCommentContent() {
@@ -172,7 +172,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
                         message={statusMessages[statusModalIsSuccess]}
                         setShowModal={setShowStatusModal}
                         isSuccess={
-                            statusModalIsSuccess === EStatusModalType.Success
+                            statusModalIsSuccess === EStatusModal.Success
                                 ? true
                                 : false
                         }

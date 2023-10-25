@@ -420,5 +420,16 @@ export default function FeedbackContent() {
 }
 
 function EmptyCommentsPlaceholder() {
-    return <>Do something with this thing.</>;
+    return (
+        <div className='w-full px-5 lg:px-24 flex flex-col gap-3 justify-center items-center mt-10'>
+            <img
+                src='/halloween.svg'
+                alt='...halloween_icon'
+                className='w-52 md:w-80 h-auto'
+            />
+            <h1 className='font-extrabold md:text-xl text-slate-600 tracking-wider italic text-center'>
+                Comments seem pretty empty to me! Why don&apos;t you add some?
+            </h1>
+        </div>
+    );
 }

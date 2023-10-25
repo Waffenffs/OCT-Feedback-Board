@@ -19,12 +19,12 @@ export default function StatusModal({
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className='fixed top-0 w-full flex justify-center items-center z-100'
+            className='fixed top-0 w-full flex justify-center items-center z-50'
         >
             <div
                 className={` ${
                     isSuccess ? "bg-green-500" : "bg-red-500"
-                } mt-3 px-6 py-3 rounded shadow-xl text-sm text-white flex flex-row max-sm:w-80 md:w-96 justify-between self-center `}
+                } z-50 mt-3 px-6 py-3 rounded shadow-xl text-sm text-white flex flex-row max-sm:w-80 md:w-96 justify-between self-center `}
             >
                 <div className='md:w-3/4'>
                     <h1 className='text-xl tracking-wider font-semibold'>
