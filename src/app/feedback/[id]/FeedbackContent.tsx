@@ -180,7 +180,7 @@ export default function FeedbackContent() {
     }, [feedback, feedbackId]);
 
     useEffect(() => {
-        if (isLoading) return; // wait for it to load
+        if (isLoading) return;
 
         if (feedback.creator_email === profile?.email) {
             setIsOwner(true);
@@ -218,15 +218,7 @@ export default function FeedbackContent() {
 
             setSortedFeedbackComments(commentsCopy);
         }
-    }, [currentCommentSort, feedback]);
-
-    if (isLoading) {
-        return <Loading />;
-    }
-
-    if (documentDoesNotExist) {
-        return <FallbackContent />;
-    }
+    }, [feedback, currentCommentSort]);
 
     const sortedCommentElements = sortedFeedbackComments?.map(
         (comment: IComment, index: any) => (
@@ -238,8 +230,13 @@ export default function FeedbackContent() {
         )
     );
 
-    // TO-DO:
-    // 1. Fix sorting.
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (documentDoesNotExist) {
+        return <FallbackContent />;
+    }
 
     return (
         <main className='w-screen h-screen bg-[#f7f8fd] py-7 overflow-y-auto relative'>
