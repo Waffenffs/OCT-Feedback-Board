@@ -28,7 +28,7 @@ export default function Main() {
     const [currentTag, setCurrentTag] = useState<TTags>("All");
 
     useEffect(() => {
-        if (profile === undefined) return; // wait for it to load
+        if (profile === undefined) return;
 
         setIsNotMounted(false);
 

@@ -5,9 +5,9 @@ import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { motion } from "framer-motion";
-import { BiLogOutCircle } from "react-icons/bi";
 import { FeedbackContext } from "@/app/context/FeedbackProvider";
 import { HiOutlineLightBulb } from "react-icons/hi";
+import { HiBars3 } from "react-icons/hi2";
 
 type TMainHeaderNav = {
     setPostCreationToggled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,21 +39,18 @@ export default function MainHeaderNav({
             transition={{ delay: 0.2 }}
         >
             <nav className='md:hidden flex flex-col'>
-                <header className='flex flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-6 px-4'>
+                <header className='flex flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-5 px-4'>
                     <section>
                         <h1 className='text-white font-semibold tracking-wider text-lg'>
                             OCT Feedback Board
                         </h1>
                     </section>
-                    <button
-                        onClick={() => handleSignOut()}
-                        className='tracking-wider flex flex-row items-center gap-2 text-white bg-blue-400 rounded-full py-2 px-3 shadow'
-                    >
-                        <BiLogOutCircle className='text-xl' />
-                        <h2 className='font-bold tracking-wider text-sm'>
-                            SIGN OUT
-                        </h2>
+                    <button>
+                        <HiBars3 className='text-2xl text-white' />
                     </button>
+
+                    {/* 1. Implement LeftSection in Mobile UI
+                    2. Implement Sign Out Option */}
                 </header>
             </nav>
 

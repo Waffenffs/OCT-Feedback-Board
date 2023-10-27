@@ -4,6 +4,8 @@ import { ImLink } from "react-icons/im";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+import Link from "next/link";
+
 type TSuccessPostCreationModalProps = {
     setPostCreationSuccessful: React.Dispatch<React.SetStateAction<boolean>>;
     latestCreatedFeedbackId: string;
@@ -14,6 +16,9 @@ export default function SuccessPostCreationModal({
     latestCreatedFeedbackId,
 }: TSuccessPostCreationModalProps) {
     const [clicked, setClicked] = useState(false);
+
+    const domain = window.location.origin;
+    const generatedURL = `${domain}/feedback/redirect?id=${latestCreatedFeedbackId}`;
 
     return (
         <motion.article
@@ -54,29 +59,32 @@ export default function SuccessPostCreationModal({
                     </h3>
                 </footer>
 
-                <button
-                    onClick={() => {
-                        const domain = window.location.origin;
+                <div className='w-full flex flex-row items-center justify-between px-5'>
+                    <button
+                        onClick={() => {
+                            navigator.clipboard.writeText(generatedURL);
 
-                        navigator.clipboard.writeText(
-                            `${domain}/feedback/redirect?id=${latestCreatedFeedbackId}`
-                        );
+                            setClicked(true);
 
-                        setClicked(true);
+                            const unsubscribe = setTimeout(() => {
+                                setClicked(false);
+                            }, 1000);
 
-                        const unsubscribe = setTimeout(() => {
-                            setClicked(false);
-                        }, 1000);
-
-                        return () => clearTimeout(unsubscribe);
-                    }}
-                    className='flex flex-row justify-center w-full items-center gap-1 cursor-pointer'
-                >
-                    <ImLink className='text-blue-500 text-2xl' />
-                    <span className='font-bold text-blue-500 whitespace-nowrap'>
-                        {!clicked ? "Copy Link" : "Link Copied!"}
-                    </span>
-                </button>
+                            return () => clearTimeout(unsubscribe);
+                        }}
+                        className='flex flex-row justify-center items-center gap-1 cursor-pointer'
+                    >
+                        <ImLink className='text-blue-500 text-2xl' />
+                        <span className='font-bold text-blue-500 whitespace-nowrap'>
+                            {!clicked ? "Copy Link" : "Link Copied!"}
+                        </span>
+                    </button>
+                    <Link href={generatedURL}>
+                        <span className='font-bold text-blue-500 text-sm tracking-wider'>
+                            Open
+                        </span>
+                    </Link>
+                </div>
             </div>
         </motion.article>
     );

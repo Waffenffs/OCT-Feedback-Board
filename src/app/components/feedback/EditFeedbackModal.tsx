@@ -183,7 +183,7 @@ export default function EditFeedbackModal({
                             })}
                         </ul>
 
-                        <section className='flex flex-row items-center justify-between gap-5 lg:-mt-4'>
+                        <section className='flex flex-row items-center justify-between lg:-mt-4'>
                             <div className='animate-bounce'>
                                 <AnimatePresence>
                                     {showInvalidFieldsError && (
@@ -199,7 +199,7 @@ export default function EditFeedbackModal({
                                     )}
                                 </AnimatePresence>
                             </div>
-                            <div>
+                            <div className='flex flex-row items-center gap-4'>
                                 <button
                                     onClick={() => toggleEditing(false)}
                                     className='w-24 border-2 rounded py-2'

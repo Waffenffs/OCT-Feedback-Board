@@ -39,7 +39,7 @@ export default function PostCreation({
     ];
 
     async function createPost() {
-        if (alreadySubmitted) return; // do nothing
+        // if (alreadySubmitted) return; // do nothing
 
         if (!checkPostValidity()) {
             console.error(`Invalid fields!`);
@@ -66,6 +66,7 @@ export default function PostCreation({
         try {
             const feedbackRef = await addDoc(collection(db, "posts"), feedback);
 
+            setAlreadySubmitted(true);
             setLatestCreatedFeedbackId(feedbackRef.id);
             setPostCreationSuccessful(true);
             setPostCreationToggled(false);
@@ -246,7 +247,12 @@ export default function PostCreation({
 
                                         createPost();
                                     }}
-                                    className='w-24 border rounded py-2 bg-blue-500'
+                                    disabled={alreadySubmitted}
+                                    className={`w-24 border rounded py-2 ${
+                                        alreadySubmitted
+                                            ? "bg-gray-300"
+                                            : "bg-blue-500"
+                                    } transition`}
                                 >
                                     <span className='text-sm font-bold tracking-wider text-white'>
                                         Post
