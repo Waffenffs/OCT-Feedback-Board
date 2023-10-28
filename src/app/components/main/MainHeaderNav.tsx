@@ -91,12 +91,12 @@ export default function MainHeaderNav({
 
     return (
         <div className='relative'>
-            <nav className='md:hidden flex flex-col transition z-50'>
+            <nav className='fixed top-0 w-full md:hidden flex flex-col transition z-50 shadow'>
                 <motion.header
                     initial={{ opacity: 1, y: -1000 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.5 }}
-                    className='flex z-50 rounded-b-full transition flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-5 px-8'
+                    className='flex z-50 transition flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-5 px-8'
                 >
                     <section>
                         <h1 className='text-white font-semibold tracking-wider text-lg'>
@@ -117,11 +117,11 @@ export default function MainHeaderNav({
                         <motion.div
                             initial={{ opacity: 0, y: -1000 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -1000 }}
+                            exit={{ opacity: 1, y: -1000 }}
                             transition={{
                                 ease: "easeOut",
                             }}
-                            className='w-full px-8 transition-all absolute top-16 z-40'
+                            className='w-full transition-all absolute top-16 z-40'
                         >
                             <div className='shadow-xl bg-white w-full flex flex-col border rounded-b-xl -mt-3 z-20 pt-7 px-3 pb-7'>
                                 <header>
@@ -143,7 +143,7 @@ export default function MainHeaderNav({
 
                                 <button
                                     onClick={() => handleSignOut()}
-                                    className='mt-10 tracking-wider flex flex-row items-center gap-2 text-slate-400'
+                                    className='mt-10 tracking-wider flex flex-row items-center gap-2 text-slate-400 self-end'
                                 >
                                     <BiLogOutCircle className='text-xl' />
                                     <h2 className='font-bold'>SIGN OUT</h2>
@@ -158,7 +158,7 @@ export default function MainHeaderNav({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.6 }}
-                className='z-30 max-sm:rounded-full max-sm:mx-3 max-sm:mt-3 md:rounded-xl md:mx-10 lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'
+                className='z-30 max-sm:rounded-full max-sm:mx-3 max-sm:mt-20 md:rounded-xl md:mx-10 lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'
             >
                 <div className='z-30 flex flex-row items-center gap-1 relative w-48'>
                     <div className='z-30 flex flex-row items-center gap-2 font-bold tracking-wider text-lg md:text-xl mr-10'>
