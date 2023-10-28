@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "./context/AuthProvider";
 import { FeedbackProvider } from "./context/FeedbackProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 import type { Metadata } from "next";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
                 <AuthProvider>
                     <FeedbackProvider>{children}</FeedbackProvider>
                 </AuthProvider>
+                <Analytics />
             </body>
         </html>
     );
