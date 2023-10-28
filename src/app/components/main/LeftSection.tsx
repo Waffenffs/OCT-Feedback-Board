@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import {
     doc,
+    getDoc,
     onSnapshot,
     collection,
     query,
@@ -56,11 +57,17 @@ export default function LeftSection({
 
     async function getUserProfile() {
         const docRef = doc(db, "users", profile?.uid as string);
-        const unsubscribe = onSnapshot(docRef, (doc) => {
-            setCurrentUserIdentifier(doc.data()?.user_identifier);
-        });
+        const user = await getDoc(docRef);
 
-        return () => unsubscribe();
+        if (!user.exists()) throw new Error("User does not exist!");
+
+        setCurrentUserIdentifier(user.data()?.user_identifier);
+
+        // const unsubscribe = onSnapshot(docRef, (doc) => {
+        //     setCurrentUserIdentifier(doc.data()?.user_identifier);
+        // });
+
+        // return () => unsubscribe();
     }
 
     async function getUserFeedbacks() {
@@ -139,10 +146,10 @@ export default function LeftSection({
     }
 
     useEffect(() => {
-        if (profile) {
-            getUserProfile();
-            getUserFeedbacks();
-        }
+        if (!profile) return;
+
+        getUserProfile();
+        getUserFeedbacks();
     }, []);
 
     const isSameUserIdentifier = editedUserIdentifier === currentUserIdentifier;
