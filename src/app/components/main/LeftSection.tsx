@@ -280,6 +280,19 @@ export default function LeftSection({
                         </button>
                     </article>
                 )}
+
+                <footer className='w-full flex justify-center items-center mt-4'>
+                    <span className='text-slate-500  tracking-wide text-xs'>
+                        Developed by{" "}
+                        <a
+                            href='facebook.com/waffenSA'
+                            target='_blank`'
+                            className='text-blue-500 hover:underline cursor-pointer'
+                        >
+                            @Waffen_Ampatua
+                        </a>
+                    </span>
+                </footer>
             </motion.div>
         </>
     );

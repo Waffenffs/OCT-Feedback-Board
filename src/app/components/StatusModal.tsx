@@ -19,7 +19,7 @@ export default function StatusModal({
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className='fixed top-0 w-full flex justify-center items-center z-50'
+            className='fixed top-0 w-full flex justify-center items-center z-100'
         >
             <div
                 className={` ${
