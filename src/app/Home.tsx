@@ -156,57 +156,59 @@ export default function Home() {
                             e.preventDefault();
                             loginUser(loginEmail, loginPassword);
                         }}
-                        className='flex flex-col gap-10'
+                        className='flex flex-col '
                     >
-                        <div className='relative z-0'>
+                        <div className='w-full flex flex-col gap-1 justify-start mb-3'>
+                            <h1 className='font-bold text-gray-700 tracking-wide'>
+                                Email
+                            </h1>
                             <input
                                 type='text'
-                                id='floating_standard'
-                                className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 peer'
-                                placeholder=' '
+                                placeholder='Email'
                                 value={loginEmail}
                                 onChange={(e) => setLoginEmail(e.target.value)}
+                                required
+                                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                             />
-                            <label
-                                htmlFor='floating_standard'
-                                className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-                            >
-                                Email
-                            </label>
                         </div>
 
-                        <div className='relative z-0 flex items-center'>
-                            <input
-                                type={`${showPassword ? "text" : "password"}`}
-                                id='floating_standard'
-                                className='block py-2.5 px-0 w-full text-sm text-slate-900 bg-transparent border-t-0 border-l-0 border-r-0 border-b-2 border-gray-300 appearance-none dark:text-slate-800 dark:font-semibold dark:tracking-wider dark:text-lg dark:border-gray-600 dark:focus:border-slate-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                                placeholder=' '
-                                value={loginPassword}
-                                onChange={(e) =>
-                                    setLoginPassword(e.target.value)
-                                }
-                            />
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setShowPassword((prevState) => !prevState);
-                                }}
-                                className='absolute right-3 cursor-pointer bg-white'
-                            >
-                                {showPassword ? (
-                                    <PiEyeBold className='text-xl' />
-                                ) : (
-                                    <PiEyeClosedBold className='text-xl' />
-                                )}
-                            </button>
-                            <label
-                                htmlFor='floating_standard'
-                                className='absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-slate-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-                            >
+                        <div className='w-full flex flex-col gap-1 justify-start mb-10'>
+                            <h1 className='font-bold text-gray-700 tracking-wide'>
                                 Password
-                            </label>
-                        </div>
+                            </h1>
 
+                            <div className='w-full relative'>
+                                <input
+                                    type={`${
+                                        showPassword ? "text" : "password"
+                                    }`}
+                                    placeholder='Password'
+                                    value={loginPassword}
+                                    onChange={(e) =>
+                                        setLoginPassword(e.target.value)
+                                    }
+                                    required
+                                    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                />
+
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setShowPassword(
+                                            (prevState) => !prevState
+                                        );
+                                    }}
+                                    type='button'
+                                    className='absolute right-0 cursor-pointer bg-white h-full'
+                                >
+                                    {showPassword ? (
+                                        <PiEyeBold className='text-xl' />
+                                    ) : (
+                                        <PiEyeClosedBold className='text-xl' />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
                         <footer className='mt-10 flex flex-col'>
                             <button
                                 onClick={() =>
