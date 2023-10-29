@@ -304,7 +304,7 @@ export default function LeftSection({
                     Developed by{" "}
                     <a
                         href='https://facebook.com/waffenSA'
-                        target='_blank`'
+                        target='_blank'
                         className='text-blue-500 hover:underline cursor-pointer'
                     >
                         @Waffen_Ampatua
