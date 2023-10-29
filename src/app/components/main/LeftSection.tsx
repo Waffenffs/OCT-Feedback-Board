@@ -289,8 +289,8 @@ export default function LeftSection({
                     <span className='text-slate-500  tracking-wide text-xs'>
                         Developed by{" "}
                         <a
-                            href='facebook.com/waffenSA'
-                            target='_blank`'
+                            href='https://facebook.com/waffenSA'
+                            target='_blank'
                             className='text-blue-500 hover:underline cursor-pointer'
                         >
                             @Waffen_Ampatua
