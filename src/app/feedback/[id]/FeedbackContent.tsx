@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BsFillChatFill } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
@@ -407,7 +407,11 @@ export default function FeedbackContent() {
                                 />
                             </div>
                             <section className='flex flex-col gap-3 px-5 lg:px-24 w-full mt-10'>
-                                {sortedCommentElements}
+                                <LayoutGroup>
+                                    <AnimatePresence>
+                                        {sortedCommentElements}
+                                    </AnimatePresence>
+                                </LayoutGroup>
                             </section>
                         </>
                     ) : (

@@ -30,6 +30,8 @@ export default function Comment({
     const profile = profileProps.profile;
     const router = useRouter();
 
+    const [upvoted, setUpvoted] = useState(false);
+    const [downvoted, setDownvoted] = useState(false);
     const [updatedUserIdentifier, setUpdatedUserIdentifier] =
         useState(user_identifier);
     const [loading, setLoading] = useState(true);
@@ -168,6 +170,26 @@ export default function Comment({
         }
     }
 
+    function handleUpvoted() {
+        setUpvoted(true);
+
+        const unsubscribe = setTimeout(() => {
+            setUpvoted(false);
+        }, 500);
+
+        return () => unsubscribe;
+    }
+
+    function handleDownvoted() {
+        setDownvoted(true);
+
+        const unsubscribe = setTimeout(() => {
+            setDownvoted(false);
+        }, 500);
+
+        return () => unsubscribe;
+    }
+
     const convertedCommentCreationDate = formatTimestamp(comment_creation_date);
     const currentUserIsCommentOwner = profile?.uid === uid;
 
@@ -179,7 +201,12 @@ export default function Comment({
     if (loading) return <h1>Loading ...</h1>;
 
     return (
-        <article className='w-full flex flex-col justify-start bg-white rounded-xl shadow px-10 py-7'>
+        <motion.article
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            layout
+            className='w-full flex flex-col justify-start bg-white rounded-xl shadow px-10 py-7'
+        >
             <header className='flex flex-row items-center gap-2'>
                 <h3 className='font-semibold text-sm text-slate-700 tracking-wider'>
                     {updatedUserIdentifier}
@@ -200,25 +227,43 @@ export default function Comment({
                 </span>
             </section>
 
-            <main className='text-slate-900 tracking-wider mt-1'>
+            <main className='text-slate-900 tracking-wider mt-1 whitespace-pre-wrap'>
                 {comment_content}
             </main>
 
             <footer className='flex flex-row items-center gap-1 mt-5'>
                 <button
-                    onClick={() => upvoteComment()}
-                    className='flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200 transition'
+                    onClick={() => {
+                        upvoteComment();
+                        handleUpvoted();
+                    }}
+                    className={`${
+                        upvoted ? "-translate-y-2" : ""
+                    } transform transition flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
                 >
-                    <TbArrowBigUp className='text-xl text-gray-700 group-hover:text-green-500 transition' />
+                    {upvoted ? (
+                        <TbArrowBigUp className='text-xl text-green-500 fill-green-500 transition' />
+                    ) : (
+                        <TbArrowBigUp className='text-xl text-gray-700 group-hover:text-green-500 transition' />
+                    )}
                 </button>
                 <span className='font-semibold text-sm text-slate-700 tracking-wider'>
                     {comment_upvotes}
                 </span>
                 <button
-                    onClick={() => downvoteComment()}
-                    className='flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200 transition'
+                    onClick={() => {
+                        downvoteComment();
+                        handleDownvoted();
+                    }}
+                    className={`${
+                        downvoted ? "translate-y-2" : ""
+                    } transform transition duration-200 flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
                 >
-                    <TbArrowBigDown className='text-xl text-gray-700 group-hover:text-red-500 transition' />
+                    {downvoted ? (
+                        <TbArrowBigDown className='text-xl text-red-400 fill-red-400 transition' />
+                    ) : (
+                        <TbArrowBigDown className='text-xl text-gray-700 group-hover:text-red-500 transition' />
+                    )}
                 </button>
                 <div className='relative'>
                     <button
@@ -259,6 +304,6 @@ export default function Comment({
                     </AnimatePresence>
                 </div>
             </footer>
-        </article>
+        </motion.article>
     );
 }

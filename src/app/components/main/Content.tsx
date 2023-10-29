@@ -148,7 +148,12 @@ export default function Content({ tag }: TContentOptions) {
 
     const ContentLoaded = () => {
         return (
-            <div className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.6 }}
+                className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
+            >
                 {memoizedFeedbacks.map((feedback, index) => {
                     const isLastFeedback = index === feedbacks.length - 1;
 
@@ -174,7 +179,7 @@ export default function Content({ tag }: TContentOptions) {
                         </div>
                     );
                 })}
-            </div>
+            </motion.div>
         );
     };
 
