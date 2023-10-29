@@ -334,7 +334,12 @@ export default function MainHeaderNav({
                 </button>
             </motion.div>
 
-            <ul className='md:hidden mobile-scrollbar-hide w-full overflow-x-scroll flex flex-row items-center gap-1 px-3 mt-5'>
+            <motion.ul
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.6 }}
+                className='md:hidden mobile-scrollbar-hide w-full overflow-x-scroll flex flex-row items-center gap-1 px-3 mt-5'
+            >
                 {tags.map((tag, index) => (
                     <li
                         onClick={() => handleTagClick(tag)}
@@ -350,7 +355,7 @@ export default function MainHeaderNav({
                         {tag}
                     </li>
                 ))}
-            </ul>
+            </motion.ul>
         </div>
     );
 }
