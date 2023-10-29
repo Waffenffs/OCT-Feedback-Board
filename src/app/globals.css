@@ -29,3 +29,12 @@ body {
 }
 
 /* NON-NATIVE STYLINGS */
+
+.mobile-scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.mobile-scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

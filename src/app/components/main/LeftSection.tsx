@@ -18,7 +18,12 @@ import { BiLogOutCircle } from "react-icons/bi";
 
 import StatusModal from "../StatusModal";
 
-type TTags = "All" | "Academic" | "Faculty" | "Extracurricular" | "Technology";
+export type TTags =
+    | "All"
+    | "Academic"
+    | "Faculty"
+    | "Extracurricular"
+    | "Technology";
 
 type TLeftSectionProps = {
     currentTag: TTags;
@@ -280,8 +285,7 @@ export default function LeftSection({
                         </button>
                     </article>
                 )}
-
-                <footer className='w-full flex justify-center items-center mt-4'>
+                <footer className='max-lg:hidden w-full flex justify-center items-center mt-4'>
                     <span className='text-slate-500  tracking-wide text-xs'>
                         Developed by{" "}
                         <a
@@ -294,6 +298,19 @@ export default function LeftSection({
                     </span>
                 </footer>
             </motion.div>
+
+            <footer className='max-sm:hidden lg:hidden w-full flex justify-end items-center px-10 -my-6'>
+                <span className='text-slate-500  tracking-wide text-xs'>
+                    Developed by{" "}
+                    <a
+                        href='https://facebook.com/waffenSA'
+                        target='_blank`'
+                        className='text-blue-500 hover:underline cursor-pointer'
+                    >
+                        @Waffen_Ampatua
+                    </a>
+                </span>
+            </footer>
         </>
     );
 }

@@ -20,15 +20,20 @@ import { HiBars3 } from "react-icons/hi2";
 import { BiLogOutCircle } from "react-icons/bi";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db } from "@/app/firebase/firebaseConfig";
+import { TTags } from "./LeftSection";
 
 import StatusModal from "../StatusModal";
 
 type TMainHeaderNav = {
     setPostCreationToggled: React.Dispatch<React.SetStateAction<boolean>>;
+    currentTag: TTags;
+    setCurrentTag: React.Dispatch<React.SetStateAction<TTags>>;
 };
 
 export default function MainHeaderNav({
     setPostCreationToggled,
+    currentTag,
+    setCurrentTag,
 }: TMainHeaderNav) {
     const contextValue = useContext(FeedbackContext);
     const { feedbackAmount } = contextValue || {};
@@ -132,6 +137,10 @@ export default function MainHeaderNav({
         }, 2000);
     }
 
+    function handleTagClick(tag: TTags) {
+        setCurrentTag(tag);
+    }
+
     useEffect(() => {
         if (!profile) return;
 
@@ -144,6 +153,13 @@ export default function MainHeaderNav({
     }, []);
 
     const isSameUserIdentifier = editedUserIdentifier === currentUserIdentifier;
+    const tags: TTags[] = [
+        "All",
+        "Academic",
+        "Technology",
+        "Extracurricular",
+        "Faculty",
+    ];
 
     return (
         <div className='relative'>
@@ -317,6 +333,24 @@ export default function MainHeaderNav({
                     </span>
                 </button>
             </motion.div>
+
+            <ul className='md:hidden mobile-scrollbar-hide w-full overflow-x-scroll flex flex-row items-center gap-1 px-3 mt-5'>
+                {tags.map((tag, index) => (
+                    <li
+                        onClick={() => handleTagClick(tag)}
+                        key={index}
+                        className={`cursor-pointer rounded-full ${
+                            tag !== currentTag ? "bg-blue-100" : "bg-blue-500"
+                        } ${
+                            tag !== currentTag && "hover:bg-gray-200"
+                        } transition duration-500 py-1 px-5 tracking-wider font-semibold text-sm ${
+                            tag !== currentTag ? "text-blue-500" : "text-white"
+                        }`}
+                    >
+                        {tag}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }

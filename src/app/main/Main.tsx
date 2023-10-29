@@ -56,6 +56,8 @@ export default function Main() {
             <section className='lg:w-3/5 '>
                 <MainHeaderNav
                     setPostCreationToggled={setPostCreationToggled}
+                    currentTag={currentTag}
+                    setCurrentTag={setCurrentTag}
                 />
                 <Content tag={currentTag} />
             </section>

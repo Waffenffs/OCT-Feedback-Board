@@ -182,7 +182,7 @@ export default function Register() {
                                         );
                                     }}
                                     type='button'
-                                    className='absolute right-0 cursor-pointer bg-white h-full'
+                                    className='absolute right-0 cursor-pointer bg-white h-full border-t border-r border-b pr-1'
                                 >
                                     {showPassword ? (
                                         <PiEyeBold className='text-xl' />
