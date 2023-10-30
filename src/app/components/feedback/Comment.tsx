@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IComment } from "./CommentInput";
 import { formatTimestamp } from "@/app/feedback/[id]/FeedbackContent";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -10,6 +10,9 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { useRouter } from "next/navigation";
+
+import ReplyInput, { IReply } from "./ReplyInput";
+import Reply from "./Reply";
 
 interface ICommentProps extends IComment {
     feedback_uid: string;
@@ -36,7 +39,7 @@ export default function Comment({
         useState(user_identifier);
     const [loading, setLoading] = useState(true);
     const [showCommentOptions, setShowCommentOptions] = useState(false);
-    // Redirect user to login page if
+    const [isReplying, setIsReplying] = useState(false);
 
     async function getUpdatedUserIdentifier() {
         try {
@@ -200,110 +203,149 @@ export default function Comment({
 
     if (loading) return <h1>Loading ...</h1>;
 
+    // TO-DO:
+    // 1. Render comment_replies
+
     return (
-        <motion.article
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            layout
-            className='w-full flex flex-col justify-start bg-white rounded-xl shadow px-10 py-7'
-        >
-            <header className='flex flex-row items-center gap-2'>
-                <h3 className='font-semibold text-sm text-slate-700 tracking-wider'>
-                    {updatedUserIdentifier}
-                </h3>
+        <>
+            <motion.article
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                layout
+                className='w-full flex flex-col justify-start bg-white rounded-xl shadow px-10 py-7'
+            >
+                <header className='flex flex-row items-center gap-2'>
+                    <h3 className='font-semibold text-sm text-slate-700 tracking-wider'>
+                        {updatedUserIdentifier}
+                    </h3>
 
-                <span className='hidden md:block text-xl text-slate-600 font-semibold'>
-                    ·
-                </span>
+                    <span className='hidden md:block text-xl text-slate-600 font-semibold'>
+                        ·
+                    </span>
 
-                <span className='hidden md:block text-xs text-slate-600 font-semibold tracking-wide'>
-                    {convertedCommentCreationDate}
-                </span>
-            </header>
+                    <span className='hidden md:block text-xs text-slate-600 font-semibold tracking-wide'>
+                        {convertedCommentCreationDate}
+                    </span>
+                </header>
 
-            <section className='md:hidden mb-3'>
-                <span className='text-xs text-slate-600 font-semibold tracking-wide'>
-                    {convertedCommentCreationDate}
-                </span>
-            </section>
+                <section className='md:hidden mb-3'>
+                    <span className='text-xs text-slate-600 font-semibold tracking-wide'>
+                        {convertedCommentCreationDate}
+                    </span>
+                </section>
 
-            <main className='text-slate-900 tracking-wider mt-1 whitespace-pre-wrap'>
-                {comment_content}
-            </main>
+                <main className='text-slate-900 tracking-wider mt-1 whitespace-pre-wrap'>
+                    {comment_content}
+                </main>
 
-            <footer className='flex flex-row items-center gap-1 mt-5'>
-                <button
-                    onClick={() => {
-                        upvoteComment();
-                        handleUpvoted();
-                    }}
-                    className={`${
-                        upvoted ? "-translate-y-2" : ""
-                    } transform transition flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
-                >
-                    {upvoted ? (
-                        <TbArrowBigUp className='text-xl text-green-500 fill-green-500 transition' />
-                    ) : (
-                        <TbArrowBigUp className='text-xl text-gray-700 group-hover:text-green-500 transition' />
-                    )}
-                </button>
-                <span className='font-semibold text-sm text-slate-700 tracking-wider'>
-                    {comment_upvotes}
-                </span>
-                <button
-                    onClick={() => {
-                        downvoteComment();
-                        handleDownvoted();
-                    }}
-                    className={`${
-                        downvoted ? "translate-y-2" : ""
-                    } transform transition duration-200 flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
-                >
-                    {downvoted ? (
-                        <TbArrowBigDown className='text-xl text-red-400 fill-red-400 transition' />
-                    ) : (
-                        <TbArrowBigDown className='text-xl text-gray-700 group-hover:text-red-500 transition' />
-                    )}
-                </button>
-                <div className='relative'>
-                    <button
-                        onClick={() =>
-                            setShowCommentOptions((prevState) => !prevState)
-                        }
-                        className='flex justify-center items-center py-1 px-2 rounded flex-row items-center group focus:bg-gray-200 transition'
-                    >
-                        <span className='text-2xl text-gray-700'>···</span>
-                    </button>
-                    <AnimatePresence>
-                        {showCommentOptions && (
-                            <motion.ul
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className='absolute bg-gray-300 top-9 rounded shadow'
+                <footer className='flex items-center justify-between'>
+                    <div className='flex flex-row items-center gap-1 mt-5'>
+                        <button
+                            onClick={() => {
+                                upvoteComment();
+                                handleUpvoted();
+                            }}
+                            className={`${
+                                upvoted ? "-translate-y-2" : ""
+                            } transform transition flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
+                        >
+                            {upvoted ? (
+                                <TbArrowBigUp className='text-xl text-green-500 fill-green-500 transition' />
+                            ) : (
+                                <TbArrowBigUp className='text-xl text-gray-700 group-hover:text-green-500 transition' />
+                            )}
+                        </button>
+                        <span className='font-semibold text-sm text-slate-700 tracking-wider'>
+                            {comment_upvotes}
+                        </span>
+                        <button
+                            onClick={() => {
+                                downvoteComment();
+                                handleDownvoted();
+                            }}
+                            className={`${
+                                downvoted ? "translate-y-2" : ""
+                            } transform transition duration-200 flex py-1 px-2 rounded flex-row items-center group hover:bg-gray-200`}
+                        >
+                            {downvoted ? (
+                                <TbArrowBigDown className='text-xl text-red-400 fill-red-400 transition' />
+                            ) : (
+                                <TbArrowBigDown className='text-xl text-gray-700 group-hover:text-red-500 transition' />
+                            )}
+                        </button>
+                        <div className='relative'>
+                            <button
+                                onClick={() =>
+                                    setShowCommentOptions(
+                                        (prevState) => !prevState
+                                    )
+                                }
+                                className='flex justify-center items-center py-1 px-2 rounded flex-row items-center group focus:bg-gray-200 transition'
                             >
-                                <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded-t'>
-                                    <TbFlag className='text-slate-800 transition group-hover:text-white' />
-                                    <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
-                                        Report
-                                    </span>
-                                </li>
-                                {currentUserIsCommentOwner && (
-                                    <li
-                                        onClick={() => deleteComment()}
-                                        className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-blue-500 rounded-b'
+                                <span className='text-2xl text-gray-700'>
+                                    ···
+                                </span>
+                            </button>
+                            <AnimatePresence>
+                                {showCommentOptions && (
+                                    <motion.ul
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className='absolute bg-gray-300 top-9 rounded shadow'
                                     >
-                                        <AiOutlineDelete className='text-slate-800 transition group-hover:text-white' />
-                                        <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
-                                            Delete
-                                        </span>
-                                    </li>
+                                        <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded-t'>
+                                            <TbFlag className='text-slate-800 transition group-hover:text-white' />
+                                            <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
+                                                Report
+                                            </span>
+                                        </li>
+                                        {currentUserIsCommentOwner && (
+                                            <li
+                                                onClick={() => deleteComment()}
+                                                className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-blue-500 rounded-b'
+                                            >
+                                                <AiOutlineDelete className='text-slate-800 transition group-hover:text-white' />
+                                                <span className='text-sm font-semibold text-slate-800 tracking-wide transition group-hover:text-white'>
+                                                    Delete
+                                                </span>
+                                            </li>
+                                        )}
+                                    </motion.ul>
                                 )}
-                            </motion.ul>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </footer>
-        </motion.article>
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setIsReplying((prevState) => !prevState)}
+                        className='mt-4'
+                    >
+                        <span className='font-semibold tracking-wide text-blue-500'>
+                            Reply
+                        </span>
+                    </button>
+                </footer>
+            </motion.article>
+
+            {comment_replies &&
+                comment_replies.map((reply: IReply) => {
+                    return (
+                        <Reply
+                            {...reply}
+                            feedback_id={feedback_uid}
+                            comment_id={comment_identifier}
+                        />
+                    );
+                })}
+
+            {isReplying && (
+                <ReplyInput
+                    replying_to={updatedUserIdentifier}
+                    feedback_id={feedback_uid}
+                    comment_id={comment_identifier}
+                    setIsReplying={setIsReplying}
+                />
+            )}
+        </>
     );
 }

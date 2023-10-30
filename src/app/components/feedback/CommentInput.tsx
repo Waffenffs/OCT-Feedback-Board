@@ -14,9 +14,8 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import StatusModal from "../StatusModal";
 
-// Yes, I know it's bad infrastructure in my part--
+// Yes, I know it's bad infrastructure in my part
 // -- as we could just get the lengths of comment_upvoters/comment_downvoters to get the amount
-
 export interface IComment {
     uid: string;
     user_identifier: string;
@@ -27,7 +26,7 @@ export interface IComment {
     comment_downvotes: number;
     comment_downvoters: string[];
     comment_identifier: string;
-    comment_replies: {} | undefined;
+    comment_replies: [] | undefined;
     comment_creation_date: any;
 }
 
@@ -35,7 +34,7 @@ type TCommentInputProps = {
     feedback_id: string;
 };
 
-enum EStatusModal {
+export enum EStatusModal {
     Success = "success",
     Error = "error",
 }
@@ -84,7 +83,7 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
             comment_downvotes: 0,
             comment_downvoters: [],
             comment_identifier: generateUID(),
-            comment_replies: {},
+            comment_replies: [],
             comment_creation_date: Timestamp.now(),
         };
 
@@ -255,7 +254,7 @@ function LoadingCommentInput() {
     );
 }
 
-function MiniLoadingSpinner() {
+export function MiniLoadingSpinner() {
     return (
         <div className='w-full h-full flex justify-center items-center'>
             <div role='status'>
