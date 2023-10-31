@@ -13,6 +13,7 @@ import {
     onSnapshot,
     Timestamp,
 } from "firebase/firestore";
+import { useDetectClickOutside } from "react-detect-click-outside";
 import type { IComment } from "./CommentInput";
 
 import StatusModal from "../StatusModal";
@@ -35,6 +36,7 @@ type TReplyInputProps = {
     feedback_id: string;
     comment_id: string;
     setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
+    closeIsReplying(): void;
 };
 
 export default function ReplyInput({
@@ -42,6 +44,7 @@ export default function ReplyInput({
     feedback_id,
     comment_id,
     setIsReplying,
+    closeIsReplying,
 }: TReplyInputProps) {
     const [replyContent, setReplyContent] = useState("");
     const [showStatusLoading, setShowStatusLoading] = useState(false);
@@ -59,6 +62,8 @@ export default function ReplyInput({
         [EStatusModal.Success]: "Successfully replied!",
         [EStatusModal.Error]: "Failed replying to comment! Try again.",
     };
+
+    const ref = useDetectClickOutside({ onTriggered: closeIsReplying });
 
     async function getUserIdentifier() {
         try {
@@ -198,7 +203,7 @@ export default function ReplyInput({
                 )}
             </AnimatePresence>
 
-            <div className='pl-16 md:pl-48 flex flex-col gap-3'>
+            <div className='pl-16 md:pl-48 flex flex-col gap-3' ref={ref}>
                 <div className='flex flex-row items-center gap-1 text-sm'>
                     <h3 className='tracking-wider'>Replying to</h3>{" "}
                     <span className='font-semibold text-blue-500 tracking-wider'>

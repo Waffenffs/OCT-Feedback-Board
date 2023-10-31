@@ -5,7 +5,7 @@ import { AuthContext } from "@/app/context/AuthProvider";
 import { IReply } from "./ReplyInput";
 import { IComment } from "./CommentInput";
 import { AnimatePresence, motion } from "framer-motion";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/app/firebase/firebaseConfig";
 import { formatTimestamp } from "@/app/feedback/[id]/FeedbackContent";
 import { TbFlag } from "react-icons/tb";

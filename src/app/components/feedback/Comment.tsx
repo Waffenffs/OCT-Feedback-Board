@@ -10,6 +10,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { useRouter } from "next/navigation";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 import ReplyInput, { IReply } from "./ReplyInput";
 import Reply from "./Reply";
@@ -22,7 +23,6 @@ export default function Comment({
     feedback_uid,
     uid,
     user_identifier,
-    // email,
     comment_content,
     comment_upvotes,
     comment_replies,
@@ -40,6 +40,10 @@ export default function Comment({
     const [loading, setLoading] = useState(true);
     const [showCommentOptions, setShowCommentOptions] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
+
+    const ref = useDetectClickOutside({
+        onTriggered: () => setShowCommentOptions(false),
+    });
 
     async function getUpdatedUserIdentifier() {
         try {
@@ -193,6 +197,10 @@ export default function Comment({
         return () => unsubscribe;
     }
 
+    function closeIsReplying() {
+        setIsReplying(false);
+    }
+
     const convertedCommentCreationDate = formatTimestamp(comment_creation_date);
     const currentUserIsCommentOwner = profile?.uid === uid;
 
@@ -202,9 +210,6 @@ export default function Comment({
     }, []);
 
     if (loading) return <h1>Loading ...</h1>;
-
-    // TO-DO:
-    // 1. Render comment_replies
 
     return (
         <>
@@ -292,6 +297,7 @@ export default function Comment({
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -10 }}
+                                        ref={ref}
                                         className='absolute bg-gray-300 top-9 rounded shadow'
                                     >
                                         <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded-t'>
@@ -344,6 +350,7 @@ export default function Comment({
                     feedback_id={feedback_uid}
                     comment_id={comment_identifier}
                     setIsReplying={setIsReplying}
+                    closeIsReplying={closeIsReplying}
                 />
             )}
         </>
