@@ -334,9 +334,10 @@ export default function Comment({
             </motion.article>
 
             {comment_replies &&
-                comment_replies.map((reply: IReply) => {
+                comment_replies.map((reply: IReply, index) => {
                     return (
                         <Reply
+                            key={index}
                             {...reply}
                             feedback_id={feedback_uid}
                             comment_id={comment_identifier}
