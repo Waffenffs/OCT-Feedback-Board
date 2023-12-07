@@ -7,6 +7,7 @@ import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { BsFillChatFill } from "react-icons/bs";
+import { HiBars3 } from "react-icons/hi2";
 import { LiaEditSolid } from "react-icons/lia";
 import {
     BiSolidChevronLeft,
@@ -22,6 +23,7 @@ import EditFeedbackModal from "@/app/components/feedback/EditFeedbackModal";
 import CommentInput, { IComment } from "@/app/components/feedback/CommentInput";
 import Comment from "@/app/components/feedback/Comment";
 import DropdownModal from "@/app/components/ui/DropdownModal";
+import Headroom from "react-headroom";
 
 export type TOptions = "New" | "Top" | "Controversial";
 
@@ -338,8 +340,14 @@ export default function FeedbackContent() {
                                 <AnimatePresence>
                                     {convertedEditDate && (
                                         <motion.span
-                                            initial={{ opacity: 0, scale: 1 }}
-                                            animate={{ opacity: 1, scale: 1 }}
+                                            initial={{
+                                                opacity: 0,
+                                                scale: 1,
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                            }}
                                             exit={{ opacity: 0 }}
                                             transition={{ delay: 1 }}
                                             className='hidden md:flex flex-row items-center gap-1 text-xs font-semibold tracking-wider text-slate-500'

@@ -41,10 +41,6 @@ export default function Comment({
     const [showCommentOptions, setShowCommentOptions] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
 
-    const ref = useDetectClickOutside({
-        onTriggered: () => setShowCommentOptions(false),
-    });
-
     async function getUpdatedUserIdentifier() {
         try {
             const userRef = doc(db, "users", uid);
@@ -201,6 +197,10 @@ export default function Comment({
         setIsReplying(false);
     }
 
+    const ref = useDetectClickOutside({
+        onTriggered: () => setShowCommentOptions(false),
+    });
+
     const convertedCommentCreationDate = formatTimestamp(comment_creation_date);
     const currentUserIsCommentOwner = profile?.uid === uid;
 
@@ -214,9 +214,10 @@ export default function Comment({
     return (
         <>
             <motion.article
+                layout
+                ref={ref}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                layout
                 className='w-full flex flex-col justify-start bg-white rounded-xl shadow px-10 py-7'
             >
                 <header className='flex flex-row items-center gap-2'>
@@ -297,7 +298,7 @@ export default function Comment({
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -10 }}
-                                        ref={ref}
+                                        // ref={ref}
                                         className='absolute bg-gray-300 top-9 rounded shadow'
                                     >
                                         <li className='flex flex-row items-center gap-1 py-1 px-3 cursor-pointer transition group hover:bg-red-500 rounded-t'>
