@@ -6,8 +6,8 @@ import { AuthContext } from "@/app/context/AuthProvider";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+
 import { BsFillChatFill } from "react-icons/bs";
-import { HiBars3 } from "react-icons/hi2";
 import { LiaEditSolid } from "react-icons/lia";
 import {
     BiSolidChevronLeft,
@@ -23,7 +23,6 @@ import EditFeedbackModal from "@/app/components/feedback/EditFeedbackModal";
 import CommentInput, { IComment } from "@/app/components/feedback/CommentInput";
 import Comment from "@/app/components/feedback/Comment";
 import DropdownModal from "@/app/components/ui/DropdownModal";
-import Headroom from "react-headroom";
 
 export type TOptions = "New" | "Top" | "Controversial";
 

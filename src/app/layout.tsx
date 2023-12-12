@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "./context/AuthProvider";
 import { FeedbackProvider } from "./context/FeedbackProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import type { Metadata } from "next";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
                     <FeedbackProvider>{children}</FeedbackProvider>
                 </AuthProvider>
                 <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
