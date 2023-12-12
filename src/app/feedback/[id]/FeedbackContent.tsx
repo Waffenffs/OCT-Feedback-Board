@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useContext } from "react";
 import { db } from "@/app/firebase/firebaseConfig";
-import { AuthContext } from "@/app/context/AuthProvider";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { AuthContext, TUser } from "@/app/context/AuthProvider";
+import { doc, onSnapshot } from "firebase/firestore";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { upvoteFeedback, getAuthorUID } from "@/app/utils/feedbackUtils";
 
 import { BsFillChatFill } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
@@ -90,59 +91,8 @@ export default function FeedbackContent() {
         }
     }
 
-    async function getAuthorUserIdentifier(uid: string) {
-        try {
-            const authorUserIdentifier = doc(db, "users", uid);
-            const authorSnap = await getDoc(authorUserIdentifier);
-
-            if (!authorSnap.exists()) throw new Error("Author does not exist!");
-
-            const author = authorSnap.data();
-
-            setAuthorUserIdentifier(author.user_identifier);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function upvoteFeedback() {
-        try {
-            const docRef = doc(db, "posts", feedbackId as string);
-            const feedbackSnap = await getDoc(docRef);
-
-            if (!feedbackSnap || !feedbackSnap.exists()) {
-                throw new Error(
-                    "Error, feedback reference does not seem to be caught."
-                );
-            }
-
-            if (feedbackSnap.data().upvoters.includes(profile?.email)) {
-                const filteredUpvoters = feedbackSnap
-                    .data()
-                    .upvoters.filter(
-                        (upvoter: any) => upvoter !== profile?.email
-                    );
-
-                await updateDoc(docRef, {
-                    upvotes: feedbackSnap.data().upvotes - 1,
-                    upvoters: filteredUpvoters,
-                });
-
-                fetchDataFromFirebase();
-            } else {
-                const updatedVoters = feedbackSnap.data().upvoters;
-                updatedVoters.push(profile?.email);
-
-                await updateDoc(docRef, {
-                    upvotes: feedbackSnap.data().upvotes + 1,
-                    upvoters: updatedVoters,
-                });
-
-                fetchDataFromFirebase();
-            }
-        } catch (error) {
-            console.error(`Error with upvoting feedback: ${error}`);
-        }
+    async function handleUpvoteFeedback() {
+        await upvoteFeedback(feedbackId as string, profile as TUser);
     }
 
     function handleRedirectBack() {
@@ -187,7 +137,17 @@ export default function FeedbackContent() {
             setIsOwner(true);
         }
 
-        getAuthorUserIdentifier(feedback.creator);
+        const handleGetAuthorUID = async () => {
+            try {
+                const authorUID = await getAuthorUID(feedback.creator);
+
+                setAuthorUserIdentifier(authorUID);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        handleGetAuthorUID();
 
         const creationTimestamp = feedback.creation_date;
         const formattedCreationTimestamp = formatTimestamp(creationTimestamp);
@@ -289,7 +249,7 @@ export default function FeedbackContent() {
                     <div className='flex flex-row gap-5'>
                         <div className='md:block'>
                             <button
-                                onClick={() => upvoteFeedback()}
+                                onClick={() => handleUpvoteFeedback()}
                                 className='hidden hover:border-slate-500 border z-10 bg-[#f2f4ff] gap-1 md:flex flex-col justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
                             >
                                 <BiSolidChevronUp className='text-2xl text-blue-500' />
@@ -362,7 +322,7 @@ export default function FeedbackContent() {
                     <div className=' mt-5 px-5'>
                         <footer className='flex flex-row items-center justify-between mb-5'>
                             <button
-                                onClick={() => upvoteFeedback()}
+                                onClick={() => handleUpvoteFeedback()}
                                 className='z-10 md:hidden bg-[#f2f4ff] gap-2 flex justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
                             >
                                 <BiSolidChevronUp className='text-2xl text-blue-500' />

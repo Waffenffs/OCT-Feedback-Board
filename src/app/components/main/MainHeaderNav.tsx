@@ -2,15 +2,7 @@
 
 import { auth } from "@/app/firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
-import {
-    doc,
-    getDoc,
-    collection,
-    onSnapshot,
-    query,
-    where,
-    updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +13,7 @@ import { BiLogOutCircle } from "react-icons/bi";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db } from "@/app/firebase/firebaseConfig";
 import { TTags } from "./LeftSection";
+import { getUserFeedbacks, getUserUID } from "@/app/utils/feedbackUtils";
 
 import StatusModal from "../StatusModal";
 
@@ -63,31 +56,6 @@ export default function MainHeaderNav({
             .catch((error) => {
                 console.log(`Error with signing out: ${error}`);
             });
-    }
-
-    async function getUserProfile() {
-        const docRef = doc(db, "users", profile?.uid as string);
-        const user = await getDoc(docRef);
-
-        if (!user.exists()) throw new Error("User does not exist!");
-
-        setCurrentUserIdentifier(user.data()?.user_identifier);
-    }
-
-    async function getUserFeedbacks() {
-        const postsRef = collection(db, "posts");
-
-        let q = query(postsRef, where("creator", "==", profile?.uid as string));
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const userFeedbacks: any[] = [];
-
-            querySnapshot.forEach((doc) => userFeedbacks.push(doc.data()));
-
-            setUserFeedbacksAmount(userFeedbacks.length);
-        });
-
-        return () => unsubscribe();
     }
 
     async function updateUserIdentifier() {
@@ -145,8 +113,22 @@ export default function MainHeaderNav({
         if (!profile) return;
 
         try {
-            getUserProfile();
-            getUserFeedbacks();
+            const handleGetUserUID = async () => {
+                const userUID = await getUserUID(profile.uid as string);
+
+                setCurrentUserIdentifier(userUID);
+            };
+
+            const handleGetUserFeedbacks = async () => {
+                const userFeedbacks = await getUserFeedbacks(
+                    profile.uid as string
+                );
+
+                setUserFeedbacksAmount(userFeedbacks.length);
+            };
+
+            handleGetUserUID();
+            handleGetUserFeedbacks();
         } catch (error) {
             console.error(error);
         }

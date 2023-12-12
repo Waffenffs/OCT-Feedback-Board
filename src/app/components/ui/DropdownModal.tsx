@@ -34,12 +34,8 @@ export default function DropdownModal({
             </li>
         ));
 
-    // TO-DO:
-    // 1. Add stylings
-
     return (
         <div className='relative'>
-            {/* <h3>{selectedOption}</h3> */}
             <button
                 className='py-1 pl-3 pr-2 w-36 rounded bg-white border flex justify-between items-center cursor-pointer'
                 onClick={() => setShowModal((prevState) => !prevState)}

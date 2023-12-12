@@ -4,19 +4,22 @@ import { createContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 
+// Initialize context
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
+// Types
 type TAuthContext = {
     profile: TUser | undefined;
     setProfile: React.Dispatch<React.SetStateAction<TUser | undefined>>;
 };
 
-type TUser = {
+export type TUser = {
     authenticated: boolean;
     email: string | null;
     uid: string | number;
 };
 
+// Provider
 export function AuthProvider({ children }: React.PropsWithChildren) {
     const [profile, setProfile] = useState<TUser | undefined>(undefined);
 

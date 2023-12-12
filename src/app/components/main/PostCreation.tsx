@@ -23,7 +23,7 @@ export default function PostCreation({
     const [feedbackTitle, setFeedbackTitle] = useState("");
     const [feedbackReason, setFeedbackReason] = useState("");
     const [feedbackDescription, setFeedbackDescription] = useState("");
-    const [feedbackTag, setFeedbackTag] = useState<TFeedbackTag>("Academic"); // default
+    const [feedbackTag, setFeedbackTag] = useState<TFeedbackTag>("Academic"); // Default
     const [creatorAnonymity, setCreatorAnonymity] = useState(false);
     const [alreadySubmitted, setAlreadySubmitted] = useState(false);
     const [showInvalidFieldsError, setShowInvalidFieldsError] = useState(false);
@@ -39,14 +39,12 @@ export default function PostCreation({
     ];
 
     async function createPost() {
-        // if (alreadySubmitted) return; // do nothing
-
         if (!checkPostValidity()) {
             console.error(`Invalid fields!`);
 
             handleShowInvalidFieldsError();
 
-            return; // don't do anything.
+            return;
         }
 
         const feedback = {

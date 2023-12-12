@@ -6,15 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MiniLoadingSpinner } from "./CommentInput";
 import { EStatusModal } from "./CommentInput";
 import { db } from "@/app/firebase/firebaseConfig";
-import {
-    getDoc,
-    updateDoc,
-    doc,
-    onSnapshot,
-    Timestamp,
-} from "firebase/firestore";
+import { getDoc, updateDoc, doc, Timestamp } from "firebase/firestore";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import type { IComment } from "./CommentInput";
+import { getUserUID } from "@/app/utils/feedbackUtils";
 
 import StatusModal from "../StatusModal";
 
@@ -64,21 +59,6 @@ export default function ReplyInput({
     };
 
     const ref = useDetectClickOutside({ onTriggered: closeIsReplying });
-
-    async function getUserIdentifier() {
-        try {
-            const userRef = doc(db, "users", profile?.uid as string);
-            const unsubscribe = onSnapshot(userRef, (doc) => {
-                const identifier = doc.data()?.user_identifier;
-
-                setUserIdentifier(identifier);
-            });
-
-            return () => unsubscribe;
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function reply() {
         const newReply: IReply = {
@@ -182,7 +162,13 @@ export default function ReplyInput({
     }
 
     useEffect(() => {
-        getUserIdentifier();
+        const handleGetUserUID = async () => {
+            const userUID = await getUserUID(profile?.uid as string);
+
+            setUserIdentifier(userUID);
+        };
+
+        handleGetUserUID();
     }, []);
 
     return (

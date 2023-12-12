@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { getUserUID } from "@/app/utils/feedbackUtils";
 
 import ReplyInput, { IReply } from "./ReplyInput";
 import Reply from "./Reply";
@@ -40,23 +41,6 @@ export default function Comment({
     const [loading, setLoading] = useState(true);
     const [showCommentOptions, setShowCommentOptions] = useState(false);
     const [isReplying, setIsReplying] = useState(false);
-
-    async function getUpdatedUserIdentifier() {
-        try {
-            const userRef = doc(db, "users", uid);
-            const userSnap = await getDoc(userRef);
-
-            if (!userSnap.exists()) throw new Error("User does not exist!");
-
-            const firestoreUserIdentifier = userSnap.data().user_identifier;
-
-            if (firestoreUserIdentifier !== user_identifier) {
-                setUpdatedUserIdentifier(firestoreUserIdentifier);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function upvoteComment() {
         try {
@@ -205,7 +189,13 @@ export default function Comment({
     const currentUserIsCommentOwner = profile?.uid === uid;
 
     useEffect(() => {
-        getUpdatedUserIdentifier();
+        const handleGetUserUID = async () => {
+            const userUID = await getUserUID(profile?.uid as string);
+
+            setUpdatedUserIdentifier(userUID);
+        };
+
+        handleGetUserUID();
         setLoading(false);
     }, []);
 

@@ -2,15 +2,10 @@
 
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
-import {
-    doc,
-    onSnapshot,
-    updateDoc,
-    Timestamp,
-    arrayUnion,
-} from "firebase/firestore";
+import { doc, updateDoc, Timestamp, arrayUnion } from "firebase/firestore";
 import { db } from "@/app/firebase/firebaseConfig";
 import { AnimatePresence, motion } from "framer-motion";
+import { getUserUID } from "@/app/utils/feedbackUtils";
 
 import StatusModal from "../StatusModal";
 
@@ -56,21 +51,6 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
         [EStatusModal.Success]: "Successfully posted your comment!",
         [EStatusModal.Error]: "Failed posting your comment! Try again.",
     };
-
-    async function getUserIdentifier() {
-        try {
-            const userRef = doc(db, "users", profile?.uid as string);
-            const unsubscribe = onSnapshot(userRef, (doc) => {
-                const identifier = doc.data()?.user_identifier;
-
-                setUserIdentifier(identifier);
-            });
-
-            return () => unsubscribe();
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function postComment() {
         const newComment: IComment = {
@@ -156,7 +136,13 @@ export default function CommentInput({ feedback_id }: TCommentInputProps) {
     }
 
     useEffect(() => {
-        getUserIdentifier();
+        const handleGetUserUID = async () => {
+            const userUID = await getUserUID(profile?.uid as string);
+
+            setUserIdentifier(userUID);
+        };
+
+        handleGetUserUID();
     }, []);
 
     if (!userIdentifier) return <LoadingCommentInput />;

@@ -2,7 +2,9 @@
 
 import { BiSolidChevronUp, BiTime } from "react-icons/bi";
 import { BsFillChatFill } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { upvoteFeedback } from "@/app/utils/feedbackUtils";
+import { AuthContext, TUser } from "@/app/context/AuthProvider";
 
 import Link from "next/link";
 
@@ -18,26 +20,29 @@ export type TFeedbackCardProps = {
     upvotes_count: number;
     upvotes: number;
     upvoters: string[];
-    upvoteFeedback(id: string): Promise<void>;
     isLastFeedback: boolean;
 };
 
 export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
     const [feedbackDate, setFeedbackDate] = useState<any>(undefined);
 
+    const { ...profileProps } = useContext(AuthContext);
+    const { profile } = profileProps;
+
     const formattedFeedbackTitle = props.title
         .split(" ")
         .join("_")
         .toLowerCase();
 
-    function handleUpvoteClick(e: any) {
+    async function handleUpvoteFeedback(e: any) {
         e.stopPropagation();
         e.nativeEvent.preventDefault();
-        props.upvoteFeedback(props.id);
+
+        await upvoteFeedback(props.id, profile as TUser);
     }
 
     useEffect(() => {
-        if (!props.creation_date) return; // do nothing
+        if (!props.creation_date) return;
 
         const timestamp = props.creation_date;
         const thisFeedbackDate = new Date(timestamp.seconds * 1000);
@@ -62,7 +67,7 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
             <div className='flex flex-row gap-5'>
                 <div className='md:block'>
                     <button
-                        onClick={(e) => handleUpvoteClick(e)}
+                        onClick={(e) => handleUpvoteFeedback(e)}
                         className='hidden hover:border-slate-500 border z-10 bg-[#f2f4ff] gap-1 md:flex flex-col justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
                     >
                         <BiSolidChevronUp className='text-2xl text-blue-500' />
@@ -101,7 +106,7 @@ export default function FeedbackCard({ ...props }: TFeedbackCardProps) {
             </div>
             <footer className='flex flex-row items-center justify-between mt-5'>
                 <button
-                    onClick={(e) => handleUpvoteClick(e)}
+                    onClick={(e) => handleUpvoteFeedback(e)}
                     className='z-10 md:hidden bg-[#f2f4ff] gap-2 flex justify-center items-center w-16 cursor-pointer transition duration-200 rounded-xl py-2 px-3 font-semibold text-sm tracking-wider'
                 >
                     <BiSolidChevronUp className='text-2xl text-blue-500' />

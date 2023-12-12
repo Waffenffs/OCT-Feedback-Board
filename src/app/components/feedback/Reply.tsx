@@ -10,6 +10,7 @@ import { db } from "@/app/firebase/firebaseConfig";
 import { formatTimestamp } from "@/app/feedback/[id]/FeedbackContent";
 import { TbFlag } from "react-icons/tb";
 import { AiOutlineDelete } from "react-icons/ai";
+import { getUserUID } from "@/app/utils/feedbackUtils";
 
 interface IReplyProps extends IReply {
     feedback_id: string;
@@ -23,23 +24,6 @@ export default function Reply({ ...props }: IReplyProps) {
     const [showReplyOptions, setShowReplyOptions] = useState(false);
 
     const { ...profileProps } = useContext(AuthContext);
-
-    async function getUpdatedUserIdentifier() {
-        try {
-            const userRef = doc(db, "users", props.uid);
-            const userSnap = await getDoc(userRef);
-
-            if (!userSnap.exists()) throw new Error("User does not exist!");
-
-            const firestoreUserIdentifier = userSnap.data().user_identifier;
-
-            if (firestoreUserIdentifier !== updatedUserIdentifier) {
-                setUpdatedUserIdentifier(firestoreUserIdentifier);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function deleteReply() {
         try {
@@ -87,7 +71,13 @@ export default function Reply({ ...props }: IReplyProps) {
     const currentUserIsReplyOwner = profileProps?.profile?.uid === props.uid;
 
     useEffect(() => {
-        getUpdatedUserIdentifier();
+        const handleGetUserUID = async () => {
+            const userUID = await getUserUID(props.uid);
+
+            setUpdatedUserIdentifier(userUID);
+        };
+
+        handleGetUserUID();
     }, []);
 
     return (

@@ -1,20 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import {
-    doc,
-    getDoc,
-    onSnapshot,
-    collection,
-    query,
-    where,
-    updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/app/context/AuthProvider";
 import { db, auth } from "@/app/firebase/firebaseConfig";
 import { BiLogOutCircle } from "react-icons/bi";
+import { getUserUID, getUserFeedbacks } from "@/app/utils/feedbackUtils";
 
 import StatusModal from "../StatusModal";
 
@@ -58,39 +51,6 @@ export default function LeftSection({
 
     function handleTagClick(tag: TTags) {
         setCurrentTag(tag);
-    }
-
-    async function getUserProfile() {
-        const docRef = doc(db, "users", profile?.uid as string);
-        const user = await getDoc(docRef);
-
-        if (!user.exists()) throw new Error("User does not exist!");
-
-        setCurrentUserIdentifier(user.data()?.user_identifier);
-
-        // const unsubscribe = onSnapshot(docRef, (doc) => {
-        //     setCurrentUserIdentifier(doc.data()?.user_identifier);
-        // });
-
-        // return () => unsubscribe();
-    }
-
-    async function getUserFeedbacks() {
-        const postRef = collection(db, "posts");
-
-        let q = query(postRef, where("creator", "==", profile?.uid as string));
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const firestoreFeedbacks: any[] = [];
-
-            querySnapshot.forEach((doc) => {
-                firestoreFeedbacks.push(doc.data());
-            });
-
-            setCurrentFeedbackCount(firestoreFeedbacks.length);
-        });
-
-        return () => unsubscribe();
     }
 
     async function handleUserSignOut() {
@@ -153,8 +113,20 @@ export default function LeftSection({
     useEffect(() => {
         if (!profile) return;
 
-        getUserProfile();
-        getUserFeedbacks();
+        const handleGetUserUID = async () => {
+            const userUID = await getUserUID(profile.uid as string);
+
+            setCurrentUserIdentifier(userUID);
+        };
+
+        const handleGetUserFeedbacks = async () => {
+            const userFeedbacks = await getUserFeedbacks(profile.uid as string);
+
+            setCurrentFeedbackCount(userFeedbacks.length);
+        };
+
+        handleGetUserUID();
+        handleGetUserFeedbacks();
     }, []);
 
     const isSameUserIdentifier = editedUserIdentifier === currentUserIdentifier;
