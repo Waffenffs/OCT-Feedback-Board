@@ -160,7 +160,7 @@ export default function MainHeaderNav({
                 <motion.header
                     initial={{ opacity: 1, y: -1000 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.5 }}
+                    transition={{ delay: 0.4 }}
                     className='flex z-50 transition shadow flex-row justify-between items-center bg-gradient-to-tr from-emerald-500 to-lime-600 py-5 px-8'
                 >
                     <section>
@@ -292,7 +292,7 @@ export default function MainHeaderNav({
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.6 }}
+                transition={{ delay: 1.5 }}
                 className='z-30 max-sm:rounded-full max-sm:mx-3 max-sm:mt-20 md:rounded-xl md:mx-10 lg:px-10 flex flex-row items-center px-4 py-3 bg-[#373e68] text-white text-sm tracking-wider whitespace-nowrap'
             >
                 <div className='z-30 flex flex-row items-center gap-1 relative w-48'>

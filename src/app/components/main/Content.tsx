@@ -12,7 +12,6 @@ import {
 import { motion } from "framer-motion";
 import { FeedbackContext } from "../../context/FeedbackProvider";
 
-import FeedbackCardLoading from "./FeedbackCardLoading";
 import FeedbackCard from "./FeedbackCard";
 
 type TContentOptions = {
@@ -80,51 +79,35 @@ export default function Content({ tag }: TContentOptions) {
         }
     }, [feedbacks]);
 
-    const ContentLoading = () => {
-        return (
-            <motion.div
-                initial={{ opacity: 0, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
-            >
-                <FeedbackCardLoading />
-                <FeedbackCardLoading />
-                <FeedbackCardLoading />
-                <FeedbackCardLoading />
-            </motion.div>
-        );
-    };
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'
+        >
+            {memoizedFeedbacks.map((feedback, index) => {
+                const isLastFeedback = index === feedbacks.length - 1;
 
-    const ContentLoaded = () => {
-        return (
-            <div className='w-full h-full flex flex-col  mt-5 max-sm:items-center gap-3 md:px-10'>
-                {memoizedFeedbacks.map((feedback, index) => {
-                    const isLastFeedback = index === feedbacks.length - 1;
-
-                    return (
-                        <div key={index}>
-                            <FeedbackCard
-                                creation_date={feedback.creation_date}
-                                creator_email={feedback.creator_email}
-                                id={feedback.id}
-                                post_comments_length={
-                                    feedback.post_comments.length
-                                }
-                                reason={feedback.reason}
-                                tag={feedback.tag}
-                                title={feedback.title}
-                                upvotes_count={feedback.upvotes}
-                                upvoters={feedback.upvoters}
-                                post_comments={feedback.post_comments}
-                                upvotes={feedback.upvotes}
-                                isLastFeedback={isLastFeedback}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
-    return feedbacks.length === 0 ? <ContentLoading /> : <ContentLoaded />;
+                return (
+                    <div key={index}>
+                        <FeedbackCard
+                            creation_date={feedback.creation_date}
+                            creator_email={feedback.creator_email}
+                            id={feedback.id}
+                            post_comments_length={feedback.post_comments.length}
+                            reason={feedback.reason}
+                            tag={feedback.tag}
+                            title={feedback.title}
+                            upvotes_count={feedback.upvotes}
+                            upvoters={feedback.upvoters}
+                            post_comments={feedback.post_comments}
+                            upvotes={feedback.upvotes}
+                            isLastFeedback={isLastFeedback}
+                        />
+                    </div>
+                );
+            })}
+        </motion.div>
+    );
 }
